@@ -9,8 +9,6 @@ import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-    Stage mainStage;
-
     public DocDuckApplication() {
     }
 
@@ -26,13 +24,13 @@ public class DocDuckApplication extends Application {
 
     private Scene initialise() {
 
-        // Creating a Button
         Button button = new Button();
         // Setting text to the button
         button.setText("Sample Button");
         // Setting the location of the button
         button.setTranslateX(150);
         button.setTranslateY(60);
+        button.setOnAction(e -> System.out.println("Hello World!"));
         // Setting the stage
         Group root = new Group(button);
         Scene scene = new Scene(root, 595, 150, Color.BEIGE);
