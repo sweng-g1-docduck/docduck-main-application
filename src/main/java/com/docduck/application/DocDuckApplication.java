@@ -1,5 +1,7 @@
 package com.docduck.application;
 
+import com.docduck.application.parser.XMLReader;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -21,6 +23,11 @@ public class DocDuckApplication extends Application {
         primaryStage.setScene(myApp.initialise());
         primaryStage.setTitle("DocDuck");
         primaryStage.show();
+
+        XMLReader myReader = new XMLReader();
+        myReader.loadXML();
+        myReader.readXML();
+        myReader.printXMLData();
     }
 
     private Scene initialise() {
