@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <slideshow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="standard.xsd">
+           xsi:noNamespaceSchemaLocation="schema.xsd">
     <slide>
         <id id="loginPage"/>
-<!--         <background backgroundColour="#1f5398ff"/> -->
-        <textBox width="300" height="40" text="Username" font="Inter" fontSize="14" fontColour="#000000ff" characterSpacing="1.5" lineSpacing="1.5" xCoordinate="150" yCoordinate="200"/>
-        <textBox width="300" height="40" text="Password" font="Inter" fontSize="14" fontColour="#000000ff" characterSpacing="1.5" lineSpacing="1.5" xCoordinate="150" yCoordinate="250"/>
-<!--         <button width="200" height="40" text="Sign In" font="Inter" fontSize="14" fontColour="#FFFFFF" backgroundColour="#007bff" xCoordinate="250" yCoordinate="300"/> -->
-<!--         <hyperlink text="Forgot Password?" font="Inter" fontSize="12" fontColour="#FFFFFF" xCoordinate="250" yCoordinate="350" url="https://docduck.000webhostapp.com"/> -->
-        <image imageURL="/images/dockducklogo.png" imageScale="35" xCoordinate="150" yCoordinate="50"/>
+        <textBox width="300" height="40" text="Username" font="Inter" fontSize="14" fontColour="#000000" characterSpacing="1.5" lineSpacing="1.5" xCoordinate="150" yCoordinate="200"/>
+        <textBox width="300" height="40" text="Password" font="Inter" fontSize="14" fontColour="#000000" characterSpacing="1.5" lineSpacing="1.5" xCoordinate="150" yCoordinate="250"/>
+        
+        <!-- Sign Up for Business Button -->
+        <button width="200" height="40" text="Sign Up for Business" font="Inter" fontSize="14" fontColour="#FFFFFF" backgroundColour="#fbb12e" hoverBackgroundColour="darkorange" xCoordinate="250" yCoordinate="300"/>
+        
+        <hyperlink text="Forgot Password?" font="Inter" fontSize="12" fontColour="#FFFFFF" xCoordinate="250" yCoordinate="350" url="https://docduck.000webhostapp.com"/>
+        <imageView imageURL="/images/dockducklogo.png" width="300" height="150" xCoordinate="150" yCoordinate="50"/>
     </slide>
-    <info author="Luke Warbey" dateCreated="2024-03-12T00:00:00" comment="Login page for DocDuck Maintenance Tool"/>
+    <info author="Luke Warbey" dateCreated="2024-03-12T12:00:00" comment="Login page for DocDuck Maintenance Tool"/>
 </slideshow>
