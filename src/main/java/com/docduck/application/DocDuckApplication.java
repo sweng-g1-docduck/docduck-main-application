@@ -35,9 +35,7 @@ public class DocDuckApplication extends Application {
         // Display ID 1 slide
         // If buttons, add in their actions, do they go to slide 2? etc.
 
-        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
-        myReader.readXML();
-        myReader.printXMLData();
+        loadApplicationDesign();
 
     }
 
@@ -59,6 +57,12 @@ public class DocDuckApplication extends Application {
 
         return scene;
 
+    }
+
+    private void loadApplicationDesign() {
+        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
+        myReader.readXML();
+        myReader.printXMLData();
     }
 
     public static void main(String[] args) {
