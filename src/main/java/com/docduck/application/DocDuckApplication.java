@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -28,9 +29,12 @@ public class DocDuckApplication extends Application {
         myReader.loadXML();
         myReader.readXML();
         myReader.printXMLData();
+
     }
 
     private Scene initialise() {
+
+        Image logo = new Image("./src/main/resources/docducklogo.png");
 
         Button button = new Button();
         // Setting text to the button
@@ -41,6 +45,7 @@ public class DocDuckApplication extends Application {
         button.setOnAction(e -> System.out.println("Hello World!"));
         // Setting the stage
         Group root = new Group(button);
+
         Scene scene = new Scene(root, 595, 150, Color.BEIGE);
 
         return scene;
