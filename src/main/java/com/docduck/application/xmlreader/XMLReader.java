@@ -1,4 +1,4 @@
-package com.docduck.application.parser;
+package com.docduck.application.xmlreader;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -11,7 +11,7 @@ import com.docduck.xml.Parser;
 
 public class XMLReader {
 
-    private Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
+    protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private Parser myParser;
     private String xmlPath;
     private String schemaPath;
@@ -23,6 +23,10 @@ public class XMLReader {
         this.validate = validate;
 
         loadParser();
+    }
+
+    public XMLReader() {
+
     }
 
     private void loadParser() {

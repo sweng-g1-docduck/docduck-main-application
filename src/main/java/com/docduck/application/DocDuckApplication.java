@@ -1,6 +1,6 @@
 package com.docduck.application;
 
-import com.docduck.application.parser.XMLReader;
+import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -62,6 +62,7 @@ public class DocDuckApplication extends Application {
     private void loadApplicationDesign() {
         XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
         myReader.readXML();
+
         myReader.printXMLData();
     }
 
