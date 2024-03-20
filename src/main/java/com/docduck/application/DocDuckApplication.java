@@ -1,8 +1,9 @@
 package com.docduck.application;
 
 import com.docduck.application.xmlreader.XMLReader;
-
+import com.docduck.application.gui.GUIBuilder;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
@@ -11,22 +12,19 @@ import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-    public static Stage myStage;
-
-    public DocDuckApplication() {
-    }
+	private Node[] nodes;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage){
         System.out.println("Starting DocDuck Application");
 
-        DocDuckApplication myApp = new DocDuckApplication();
-
-        myStage = primaryStage;
-
-        myStage.setScene(myApp.initialise());
-        myStage.setTitle("DocDuck Application");
-        myStage.show();
+     // Set the stage title and scene, then show the stage
+        loadApplicationDesign();
+        Pane root = new Pane(nodes);
+        Scene scene = new Scene(root, 800, 800, Color.BEIGE);
+        stage.setTitle("Graphics Test Harness");
+        stage.setScene(scene);
+        stage.show();
 
         // ORDER OF PROGRAM
         // Load up JavaFX
@@ -35,44 +33,20 @@ public class DocDuckApplication extends Application {
         // Display ID 1 slide
         // If buttons, add in their actions, do they go to slide 2? etc.
 
-        loadApplicationDesign();
-
     }
 
-    private Scene initialise() {
-
-//        Image logo = new Image("./src/main/resources/docducklogo.png");
-
-        Button button = new Button();
-        // Setting text to the button
-        button.setText("Sample Button");
-        // Setting the location of the button
-        button.setTranslateX(150);
-        button.setTranslateY(60);
-        button.setOnAction(e -> System.out.println("Hello World!"));
-        // Setting the stage
-        Pane root = new Pane(button);
-
-        Scene scene = new Scene(root, 595, 150, Color.BEIGE);
-
-        return scene;
-
-    }
-
-    private void loadApplicationDesign() {
+    public void loadApplicationDesign() {
         XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
         myReader.readXML();
-
-        myReader.printXMLData();
+        GUIBuilder builder = new GUIBuilder(myReader.getData());
+        nodes = builder.buildSlide(1);
+        
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public static Stage getStage() {
-        return myStage;
-    }
 
     // COMMAND LINE ARGUMENTS CODE:
 //    Parameters parameters = getParameters();
