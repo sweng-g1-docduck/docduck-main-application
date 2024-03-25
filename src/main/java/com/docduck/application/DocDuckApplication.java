@@ -1,25 +1,24 @@
 package com.docduck.application;
 
-import com.docduck.application.xmlreader.XMLReader;
 import com.docduck.application.gui.GUIBuilder;
+import com.docduck.application.xmlreader.XMLReader;
+
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-	private Node[] nodes;
+    private Node[] nodes;
 
     @Override
-    public void start(Stage stage){
+    public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
 
-     // Set the stage title and scene, then show the stage
+        // Set the stage title and scene, then show the stage
         loadApplicationDesign();
         Pane root = new Pane(nodes);
         Scene scene = new Scene(root, 800, 800, Color.BEIGE);
@@ -41,13 +40,12 @@ public class DocDuckApplication extends Application {
         myReader.readXML();
         GUIBuilder builder = new GUIBuilder(myReader.getData());
         nodes = builder.buildSlide(1);
-        
+
     }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 
     // COMMAND LINE ARGUMENTS CODE:
 //    Parameters parameters = getParameters();
