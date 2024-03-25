@@ -1,53 +1,78 @@
 package com.docduck.application;
 
-import com.docduck.application.parser.XMLReader;
-
+import com.docduck.application.xmlreader.XMLReader;
+import com.docduck.application.gui.GUIBuilder;
 import javafx.application.Application;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-    public DocDuckApplication() {
-    }
+	private Node[] nodes;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage){
         System.out.println("Starting DocDuck Application");
 
-        DocDuckApplication myApp = new DocDuckApplication();
+     // Set the stage title and scene, then show the stage
+        loadApplicationDesign();
+        Pane root = new Pane(nodes);
+        Scene scene = new Scene(root, 800, 800, Color.BEIGE);
+        stage.setTitle("Graphics Test Harness");
+        stage.setScene(scene);
+        stage.show();
 
-        primaryStage.setScene(myApp.initialise());
-        primaryStage.setTitle("DocDuck");
-        primaryStage.show();
+        // ORDER OF PROGRAM
+        // Load up JavaFX
+        // Needs to check if there are any xml files to display a slide or slideshow
+        // If there are xml files, find ids of each and order them
+        // Display ID 1 slide
+        // If buttons, add in their actions, do they go to slide 2? etc.
 
-        XMLReader myReader = new XMLReader();
-        myReader.loadXML();
-        myReader.readXML();
-        myReader.printXMLData();
     }
 
-    private Scene initialise() {
-
-        Button button = new Button();
-        // Setting text to the button
-        button.setText("Sample Button");
-        // Setting the location of the button
-        button.setTranslateX(150);
-        button.setTranslateY(60);
-        button.setOnAction(e -> System.out.println("Hello World!"));
-        // Setting the stage
-        Pane root = new Pane(button);
-        Scene scene = new Scene(root, 595, 150, Color.BEIGE);
-
-        return scene;
-
+    public void loadApplicationDesign() {
+        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
+        myReader.readXML();
+        GUIBuilder builder = new GUIBuilder(myReader.getData());
+        nodes = builder.buildSlide(1);
+        
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
+
+    // COMMAND LINE ARGUMENTS CODE:
+//    Parameters parameters = getParameters();
+//    List<String> args = parameters.getRaw();
+//
+//    String xmlPath = null;
+//    String schemaPath = null;
+//    boolean validate = false;
+//
+//    if (args.size() == 0) {
+//        System.out.println("Please specify command line arguments with -xml 'PATH_TO_XML' etc.");
+//    }
+//
+//    for (int i = 0; i < args.size(); i++) {
+//
+//        if (args.get(i) == "-xml") {
+//            xmlPath = args.get(i + 1);
+//        }
+//        else if (args.get(i) == "-xsd") {
+//            schemaPath = args.get(i + 1);
+//        }
+//        else if (args.get(i) == "-validate") {
+//            validate = true;
+//        }
+//    }
+//
+//    XMLReader myReader = new XMLReader(xmlPath, schemaPath, validate);
 }
