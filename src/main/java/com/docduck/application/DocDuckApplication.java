@@ -2,6 +2,7 @@ package com.docduck.application;
 
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.xmlreader.XMLReader;
+import com.docduck.textlibrary.TextBoxPassword;
 
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -22,7 +23,7 @@ public class DocDuckApplication extends Application {
         loadApplicationDesign();
         Pane root = new Pane(nodes);
         Scene scene = new Scene(root, 800, 800, Color.BEIGE);
-        stage.setTitle("Graphics Test Harness");
+        stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
 
@@ -36,7 +37,7 @@ public class DocDuckApplication extends Application {
     }
 
     public void loadApplicationDesign() {
-        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
+        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
         GUIBuilder builder = new GUIBuilder(myReader.getData());
         nodes = builder.buildSlide(1);

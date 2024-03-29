@@ -2,16 +2,14 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-
-import com.docduck.textlibrary.TextBox;
+import javafx.scene.control.Button; 
+import com.docduck.textlibrary.*;
 
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 
 public class GUIBuilder {
 
     private Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
-    private Pane root;
 
     public GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData) {
         this.xmlData = xmlData;
@@ -20,18 +18,92 @@ public class GUIBuilder {
 
     public Node[] buildSlide(int slideNumber) {
         boolean hasDataRemaining = true;
+        String textField = "textField";
         String textBox = "textBox";
         String shape = "shape";
         String image = "image";
         String audio = "audio";
         String video = "video";
         String delimiter = "-";
+        String button = "button";
         int occurance = 1;
         ArrayList<Node> nodeList = new ArrayList<>();
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
 
+	        if (xmlData.containsKey(textField + delimiter + slideNumber + delimiter + occurance) == true) {
+	            Hashtable<String, Object> textFieldData = xmlData
+	                    .get(textField + delimiter + slideNumber + delimiter + occurance);
+	           
+	            if ((boolean)textFieldData.get("password")) {
+	            	TextBoxPassword textfield = new TextBoxPassword();
+	            	//Required Fields
+	            	textfield.setWidth((Double) textFieldData.get("width"));
+	            	textfield.setHeight((Double) textFieldData.get("height"));
+	            	textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
+	            	textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
+	            	textfield.setFont((String) textFieldData.get("font"));
+	            	textfield.setFontColour((String) textFieldData.get("fontColour"));
+	            	textfield.setPromptText((String) textFieldData.get("text"));
+	            	
+	            	//Optional Fields
+	            	
+	            	//Font size
+	            	//Text origin in box
+	            	//Filled Text
+	            	//Border
+	            	//Show/Hide button?
+	            	//Corner Radius
+	            	//Background Colour
+	            	//Prompt Text Colour
+	            	//Colour of the text when hovered over
+	            	///Colour of the text box when it is selected
+	            	
+	            	nodeList.add(textfield.returnPasswordField());
+	            	nodeList.add(textfield.returnTextField());
+	            	//add button?
+	            }
+	            else {
+	            	TextBoxField textfield = new TextBoxField();
+	            	//Required Fields
+	            	textfield.setWidth((Double) textFieldData.get("width"));
+	            	textfield.setHeight((Double) textFieldData.get("height"));
+	            	textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
+	            	textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
+	            	textfield.setFont((String) textFieldData.get("font"));
+	            	textfield.setFontColour((String) textFieldData.get("fontColour"));
+	            	textfield.setPromptText((String) textFieldData.get("text"));
+	            	
+	            	//Optional Fields
+	            	
+	            	//Font size
+	            	//Text origin in box
+	            	//Filled Text
+	            	//Border
+	            	//Corner Radius
+	            	//Background Colour
+	            	//Prompt Text Colour
+	            	//Colour of the text when hovered over
+	            	///Colour of the text box when it is selected
+	            	
+	            	nodeList.add(textfield.returnTextField());
+	            }
+	            
+	            hasDataRemaining = true;
+	        }
+            
+            if (xmlData.containsKey(button + delimiter + slideNumber + delimiter + occurance) == true) {
+            	Hashtable<String, Object> buttonData = xmlData.
+            			get(button + delimiter + slideNumber + delimiter + occurance);
+            	Button b = new Button();
+            	b.setPrefWidth((Double) buttonData.get("width"));
+            	b.setPrefHeight((Double) buttonData.get("height"));
+            	
+            	
+                hasDataRemaining = true;
+            }
+            
             if (xmlData.containsKey(textBox + delimiter + slideNumber + delimiter + occurance) == true) {
                 TextBox textbox = new TextBox();
                 Hashtable<String, Object> textBoxData = xmlData
