@@ -6,6 +6,8 @@ import com.docduck.application.xmlreader.XMLReader;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -29,6 +31,14 @@ public class DocDuckApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
+        //Hard coded logo as Image Library not done yet
+        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+        logo.setX(390); 
+        logo.setY(80); 
+        logo.setFitWidth(500); 
+        logo.setPreserveRatio(true);
+        root.getChildren().add(logo);
+        
         // ORDER OF PROGRAM
         // Load up JavaFX
         // Needs to check if there are any xml files to display a slide or slideshow
@@ -42,7 +52,7 @@ public class DocDuckApplication extends Application {
         XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
         root = new Pane();
-        GUIBuilder builder = new GUIBuilder(myReader.getData(), root, this.getHostServices());
+        GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
         nodes = builder.buildSlide(1);
 
     }

@@ -18,11 +18,24 @@ public class GUIBuilder {
     private Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private Pane root;
     private HostServices hostServices;
+    private static GUIBuilder instance;
+    private EventManager events = EventManager.createInstance(getInstance());
 
-    public GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
+    private GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
         this.xmlData = xmlData;
         this.root = root;
         this.hostServices = hostServices;
+    }
+    
+    public static GUIBuilder createInstance(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
+    	if (instance == null) {
+    	instance = new GUIBuilder(xmlData,root,hostServices);
+    	}
+    	return instance;
+    }
+    
+    public static GUIBuilder getInstance() {
+    	return instance;
     }
 
     public Node[] buildSlide(int slideNumber) {
