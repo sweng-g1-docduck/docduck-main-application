@@ -22,7 +22,9 @@ public class DocDuckApplication extends Application {
         // Set the stage title and scene, then show the stage
         loadApplicationDesign();
         root.getChildren().addAll(nodes);
-        Scene scene = new Scene(root, 800, 800, Color.BEIGE);
+        Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
+        stage.setMinHeight(720);
+        stage.setMinWidth(1280);
         stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
@@ -40,8 +42,8 @@ public class DocDuckApplication extends Application {
         XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
         root = new Pane();
-        GUIBuilder builder = new GUIBuilder(myReader.getData());
-        nodes = builder.buildSlide(1,root);
+        GUIBuilder builder = new GUIBuilder(myReader.getData(), root, this.getHostServices());
+        nodes = builder.buildSlide(1);
 
     }
 

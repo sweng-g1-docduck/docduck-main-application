@@ -330,6 +330,11 @@
                 <xs:documentation> The spacing between lines to adjust the visual density of the text. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="text" type="xs:string" use="optional">
+			<xs:annotation>
+                <xs:documentation> The text for the hyperlink. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
         <xs:attributeGroup ref="position"/>
     </xs:attributeGroup>
 

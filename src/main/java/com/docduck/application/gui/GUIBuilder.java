@@ -3,22 +3,29 @@ package com.docduck.application.gui;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.Pane;
 
 import com.docduck.textlibrary.*;
 
+import javafx.application.HostServices;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 
 public class GUIBuilder {
 
     private Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
+    private Pane root;
+    private HostServices hostServices;
 
-    public GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData) {
+    public GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
         this.xmlData = xmlData;
-
+        this.root = root;
+        this.hostServices = hostServices;
     }
 
-    public Node[] buildSlide(int slideNumber, Pane root) {
+    public Node[] buildSlide(int slideNumber) {
         boolean hasDataRemaining = true;
         String textField = "textField";
         String textBox = "textBox";
@@ -28,6 +35,7 @@ public class GUIBuilder {
         String video = "video";
         String delimiter = "-";
         String button = "button";
+        String hyperlink = "hyperlink";
         String backgroundColour = "backgroundColour";
         int occurance = 1;
         ArrayList<Node> nodeList = new ArrayList<>();
@@ -138,6 +146,36 @@ public class GUIBuilder {
             			get(backgroundColour + delimiter + slideNumber + delimiter + occurance);
             	String colour = (String) backgroundColourData.get("colour");
             	root.setStyle("-fx-background-color: " + colour);
+            	
+                hasDataRemaining = true;
+            }
+            
+            if (xmlData.containsKey(hyperlink + delimiter + slideNumber + delimiter + occurance) == true) {
+            	Hashtable<String, Object> hyperlinkData = xmlData.
+            			get(hyperlink + delimiter + slideNumber + delimiter + occurance);
+            	Hyperlink link = new Hyperlink((String) hyperlinkData.get("URL"));
+            	
+            	link.setStyle("-fx-color: " + (String) hyperlinkData.get("fontColour"));
+            	link.setStyle("-fx-font: " + (String) hyperlinkData.get("font"));
+            	link.setStyle("-fx-font-size: " + (Integer) hyperlinkData.get("fontSize"));
+            	link.setLineSpacing((Double) hyperlinkData.get("lineSpacing"));
+            	Integer xCoordinate = (Integer) hyperlinkData.get("xCoordinate");
+            	Integer yCoordinate = (Integer) hyperlinkData.get("yCoordinate");
+            	link.setLayoutX(xCoordinate.doubleValue());
+            	link.setLayoutY(yCoordinate.doubleValue());
+            	
+            	if (hyperlinkData.get("text") != null) {
+            		link.setText((String) hyperlinkData.get("text"));
+            	}
+            	
+            	EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
+        			public void handle(ActionEvent e) {
+        				hostServices.showDocument((String) hyperlinkData.get("URL"));
+        			}
+        		};
+            	
+            	link.setOnAction(e);
+            	nodeList.add(link);
             	
                 hasDataRemaining = true;
             }
