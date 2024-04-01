@@ -394,12 +394,86 @@
                 <xs:documentation> Indicates if this field is a normal text field or a password field. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
-        <xs:attribute name="actionName" type="xs:string" use="required">
+		<xs:attribute name="passwordButton" type="xs:boolean" use="optional" default="false">
 			<xs:annotation>
-                <xs:documentation> Identifier to acknowledge the action upon pressing enter. </xs:documentation>
+                <xs:documentation> Indicates if this field should have a show/hide password button. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
-        <xs:attributeGroup ref="textBox"/>
+        <xs:attribute name="width" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation> The width of the text field. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="height" type="xs:decimal" use="required">
+            <xs:annotation>
+                <xs:documentation> The height of the text field. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cornerRadius" type="xs:int" use="optional" default="0">
+            <xs:annotation>
+                <xs:documentation> The corner radius of the text field. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="promptText" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation> The text to be displayed as a prompt in the textField. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="initialText" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation> The initial text to fill the textField. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="font" type="xs:string" use="required">
+			<xs:annotation>
+                <xs:documentation> The font to use for displaying the text. The application should provide the appropriate font.
+								   If the font given is not supported, the application should fallback on a default font. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+        <xs:attribute name="fontSize" type="xs:int" use="optional" default="10">
+			<xs:annotation>
+                <xs:documentation> The size of the text to be displayed. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+        <!--contains colour attribute group-->
+        <xs:attribute name="fontColour" type="colourType" use="required">
+			<xs:annotation>
+                <xs:documentation> The colour of the text to be displayed. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="backgroundColour" type="colourType" use="optional" default="#ffffffff">
+			<xs:annotation>
+                <xs:documentation> The colour of the background of the text field. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="promptTextColour" type="colourType" use="optional" default="#808080ff">
+			<xs:annotation>
+                <xs:documentation> The colour of the background of the text field. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hoverColour" type="colourType" use="optional">
+			<xs:annotation>
+                <xs:documentation> The colour of the text when hovered over. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="highlightColour" type="colourType" use="optional" default="#005A9Cff">
+			<xs:annotation>
+                <xs:documentation> The colour of the highlight when text is selected. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="fontHighlightColour" type="colourType" use="optional" default="#ffffffff">
+			<xs:annotation>
+                <xs:documentation> The colour of the font when highlighted. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="selectColour" type="colourType" use="optional">
+			<xs:annotation>
+                <xs:documentation> The colour of the text field when selected. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		
+		<xs:attributeGroup ref="position"/>
+        <xs:attributeGroup ref="border"/>
     </xs:attributeGroup>
    
    <!--slide complex type-->

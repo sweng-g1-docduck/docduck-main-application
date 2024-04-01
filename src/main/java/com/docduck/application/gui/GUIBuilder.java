@@ -2,7 +2,9 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import javafx.scene.control.Button; 
+import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
+
 import com.docduck.textlibrary.*;
 
 import javafx.scene.Node;
@@ -16,7 +18,7 @@ public class GUIBuilder {
 
     }
 
-    public Node[] buildSlide(int slideNumber) {
+    public Node[] buildSlide(int slideNumber, Pane root) {
         boolean hasDataRemaining = true;
         String textField = "textField";
         String textBox = "textBox";
@@ -26,6 +28,7 @@ public class GUIBuilder {
         String video = "video";
         String delimiter = "-";
         String button = "button";
+        String backgroundColour = "backgroundColour";
         int occurance = 1;
         ArrayList<Node> nodeList = new ArrayList<>();
 
@@ -38,54 +41,80 @@ public class GUIBuilder {
 	           
 	            if ((boolean)textFieldData.get("password")) {
 	            	TextBoxPassword textfield = new TextBoxPassword();
-	            	//Required Fields
+	            
 	            	textfield.setWidth((Double) textFieldData.get("width"));
 	            	textfield.setHeight((Double) textFieldData.get("height"));
 	            	textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
 	            	textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
 	            	textfield.setFont((String) textFieldData.get("font"));
 	            	textfield.setFontColour((String) textFieldData.get("fontColour"));
-	            	textfield.setPromptText((String) textFieldData.get("text"));
+	            	textfield.setFontSize((Integer) textFieldData.get("fontSize"));
+	            	textfield.addBorder();
+	            	textfield.setBorderColour((String) textFieldData.get("borderColour"));
+	            	Double borderWidth = (Double) textFieldData.get("borderWidth");
+	            	textfield.setBorderWidth(borderWidth.intValue());
+	            	textfield.setCornerRadius((Integer) textFieldData.get("cornerRadius"));
+	            	textfield.setBackgroundColour((String) textFieldData.get("backgroundColour"));
+	            	textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
+	            	textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
+	            	textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
 	            	
-	            	//Optional Fields
+	            	if (textFieldData.get("promptText") != null) {
+	            		textfield.setPromptText((String) textFieldData.get("promptText"));
+	            	}
+	            	if (textFieldData.get("initialText") != null) {
+	            		textfield.setInitialContent((String) textFieldData.get("initialText"));
+	            	}
+	            	if (textFieldData.get("hoverColour") != null) {
+	            		textfield.setHoverColour((String) textFieldData.get("hoverColour"));
+	            	}
+	            	if (textFieldData.get("selectColour") != null) {
+	            		textfield.setSelectColour((String) textFieldData.get("selectColour"));
+	            	}
 	            	
-	            	//Font size
-	            	//Text origin in box
-	            	//Filled Text
-	            	//Border
-	            	//Show/Hide button?
-	            	//Corner Radius
-	            	//Background Colour
-	            	//Prompt Text Colour
-	            	//Colour of the text when hovered over
-	            	///Colour of the text box when it is selected
+	            	//Could add text origin?
 	            	
 	            	nodeList.add(textfield.returnPasswordField());
 	            	nodeList.add(textfield.returnTextField());
-	            	//add button?
+	            	if ((boolean) textFieldData.get("passwordButton")) {
+	            		textfield.createButton();
+	            		nodeList.add(textfield.returnButton());
+	            	}
 	            }
 	            else {
 	            	TextBoxField textfield = new TextBoxField();
-	            	//Required Fields
+
 	            	textfield.setWidth((Double) textFieldData.get("width"));
 	            	textfield.setHeight((Double) textFieldData.get("height"));
 	            	textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
 	            	textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
 	            	textfield.setFont((String) textFieldData.get("font"));
 	            	textfield.setFontColour((String) textFieldData.get("fontColour"));
-	            	textfield.setPromptText((String) textFieldData.get("text"));
+	            	textfield.setFontSize((Integer) textFieldData.get("fontSize"));
+	            	textfield.addBorder();
+	            	textfield.setBorderColour((String) textFieldData.get("borderColour"));
+	            	Double borderWidth = (Double) textFieldData.get("borderWidth");
+	            	textfield.setBorderWidth(borderWidth.intValue());
+	            	textfield.setCornerRadius((Integer) textFieldData.get("cornerRadius"));
+	            	textfield.setBackgroundColour((String) textFieldData.get("backgroundColour"));
+	            	textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
+	            	textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
+	            	textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
 	            	
-	            	//Optional Fields
+	            	if (textFieldData.get("promptText") != null) {
+	            		textfield.setPromptText((String) textFieldData.get("promptText"));
+	            	}
+	            	if (textFieldData.get("initialText") != null) {
+	            		textfield.setInitialContent((String) textFieldData.get("initialText"));
+	            	}
+	            	if (textFieldData.get("hoverColour") != null) {
+	            		textfield.setHoverColour((String) textFieldData.get("hoverColour"));
+	            	}
+	            	if (textFieldData.get("selectColour") != null) {
+	            		textfield.setSelectColour((String) textFieldData.get("selectColour"));
+	            	}
 	            	
-	            	//Font size
-	            	//Text origin in box
-	            	//Filled Text
-	            	//Border
-	            	//Corner Radius
-	            	//Background Colour
-	            	//Prompt Text Colour
-	            	//Colour of the text when hovered over
-	            	///Colour of the text box when it is selected
+	            	//Could add text origin?
 	            	
 	            	nodeList.add(textfield.returnTextField());
 	            }
@@ -100,6 +129,15 @@ public class GUIBuilder {
             	b.setPrefWidth((Double) buttonData.get("width"));
             	b.setPrefHeight((Double) buttonData.get("height"));
             	
+            	
+                hasDataRemaining = true;
+            }
+            
+            if (xmlData.containsKey(backgroundColour + delimiter + slideNumber + delimiter + occurance) == true) {
+            	Hashtable<String, Object> backgroundColourData = xmlData.
+            			get(backgroundColour + delimiter + slideNumber + delimiter + occurance);
+            	String colour = (String) backgroundColourData.get("colour");
+            	root.setStyle("-fx-background-color: " + colour);
             	
                 hasDataRemaining = true;
             }

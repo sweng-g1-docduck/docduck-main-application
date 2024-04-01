@@ -2,7 +2,6 @@ package com.docduck.application;
 
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.xmlreader.XMLReader;
-import com.docduck.textlibrary.TextBoxPassword;
 
 import javafx.application.Application;
 import javafx.scene.Node;
@@ -14,6 +13,7 @@ import javafx.stage.Stage;
 public class DocDuckApplication extends Application {
 
     private Node[] nodes;
+    private Pane root;
 
     @Override
     public void start(Stage stage) {
@@ -21,7 +21,7 @@ public class DocDuckApplication extends Application {
 
         // Set the stage title and scene, then show the stage
         loadApplicationDesign();
-        Pane root = new Pane(nodes);
+        root.getChildren().addAll(nodes);
         Scene scene = new Scene(root, 800, 800, Color.BEIGE);
         stage.setTitle("DocDuck");
         stage.setScene(scene);
@@ -39,8 +39,9 @@ public class DocDuckApplication extends Application {
     public void loadApplicationDesign() {
         XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
+        root = new Pane();
         GUIBuilder builder = new GUIBuilder(myReader.getData());
-        nodes = builder.buildSlide(1);
+        nodes = builder.buildSlide(1,root);
 
     }
 
