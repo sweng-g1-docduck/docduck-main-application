@@ -50,8 +50,12 @@ public class XMLReader {
 
     public void printXMLData() {
 
-    	String id = "id";
+        String id = "id";
         String textBox = "textBox";
+        String textField = "textField";
+        String button = "button";
+        String hyperlink = "hyperlink";
+        String backgroundColour = "backgroundColour";
         String shape = "shape";
         String image = "image";
         String audio = "audio";
@@ -77,6 +81,26 @@ public class XMLReader {
 	            
 	            if (xmlData.containsKey(textBox + delimiter + i + delimiter + occurance) == true) {
 	                System.out.println("Text Box-" + i + "-" + occurance + ": " + xmlData.get(textBox + delimiter + i + delimiter + occurance));
+	                hasDataRemaining = true;
+	            }
+	            
+	            if (xmlData.containsKey(textField + delimiter + i + delimiter + occurance) == true) {
+	                System.out.println("Text Field-" + i + "-" + occurance + ": " + xmlData.get(textField + delimiter + i + delimiter + occurance));
+	                hasDataRemaining = true;
+	            }
+	            
+	            if (xmlData.containsKey(button + delimiter + i + delimiter + occurance) == true) {
+	                System.out.println("Button-" + i + "-" + occurance + ": " + xmlData.get(button + delimiter + i + delimiter + occurance));
+	                hasDataRemaining = true;
+	            }
+	            
+	            if (xmlData.containsKey(backgroundColour + delimiter + i + delimiter + occurance) == true) {
+	                System.out.println("Background Colour-" + i + "-" + occurance + ": " + xmlData.get(backgroundColour + delimiter + i + delimiter + occurance));
+	                hasDataRemaining = true;
+	            }
+	            
+	            if (xmlData.containsKey(hyperlink + delimiter + i + delimiter + occurance) == true) {
+	                System.out.println("Hyperlink-" + i + "-" + occurance + ": " + xmlData.get(hyperlink + delimiter + i + delimiter + occurance));
 	                hasDataRemaining = true;
 	            }
 	
@@ -105,7 +129,6 @@ public class XMLReader {
 	        
 	        occurance = 1;
         }
-
     }
 
 }

@@ -5,9 +5,8 @@ import java.util.Hashtable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.Pane;
-
+import com.docduck.buttonlibrary.*;
 import com.docduck.textlibrary.*;
-
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,12 +18,13 @@ public class GUIBuilder {
     private Pane root;
     private HostServices hostServices;
     private static GUIBuilder instance;
-    private EventManager events = EventManager.createInstance(getInstance());
+    private EventManager events;
 
     private GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
         this.xmlData = xmlData;
         this.root = root;
         this.hostServices = hostServices;
+        events = EventManager.createInstance(getInstance(),hostServices,root);
     }
     
     public static GUIBuilder createInstance(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
@@ -146,10 +146,42 @@ public class GUIBuilder {
             if (xmlData.containsKey(button + delimiter + slideNumber + delimiter + occurance) == true) {
             	Hashtable<String, Object> buttonData = xmlData.
             			get(button + delimiter + slideNumber + delimiter + occurance);
-            	Button b = new Button();
-            	b.setPrefWidth((Double) buttonData.get("width"));
-            	b.setPrefHeight((Double) buttonData.get("height"));
+            	ButtonWrapper b = new ButtonWrapper();
             	
+            	if ((boolean)buttonData.get("hasBackground")) {
+            		b.addBackground();
+            		b.setBackgroundColour((String) buttonData.get("backgroundColour"));
+            	}
+            	else {
+            		b.removeBackground();
+            	}
+            	if (buttonData.get("eventID") != null) {
+            		b.onClick(events.getActionEvent((String) buttonData.get("eventID")));
+            	}
+            	if (buttonData.get("clickColour") != null) {
+            		b.setClickcolour((String) buttonData.get("clickColour"));
+            	}
+            	if (buttonData.get("text") != null) {
+            		b.setText((String) buttonData.get("text"));
+            	}
+            	if (buttonData.get("hoverColour") != null) {
+            		 b.setHoverColour((String) buttonData.get("hoverColour"));
+            	}
+            	
+            	b.addBorder();
+            	b.setBorderColour((String) buttonData.get("borderColour"));
+            	Double borderWidth = (Double) buttonData.get("borderWidth");
+            	b.setBorderWidth(borderWidth.intValue());
+            	b.setWidth((Double) buttonData.get("width"));
+            	b.setHeight((Double) buttonData.get("height"));
+            	b.setCornerRadius((Integer) buttonData.get("cornerRadius"));
+            	b.setFont((String) buttonData.get("font"));
+            	b.setFontColour((String) buttonData.get("fontColour"));
+            	b.setFontSize((Integer) buttonData.get("fontSize"));
+            	b.setPositionX((Integer) buttonData.get("xCoordinate"));
+            	b.setPositionY((Integer) buttonData.get("yCoordinate"));
+            	
+            	nodeList.add(b.returnButton());
             	
                 hasDataRemaining = true;
             }

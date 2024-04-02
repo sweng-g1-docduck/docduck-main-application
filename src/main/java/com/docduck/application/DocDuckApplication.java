@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class DocDuckApplication extends Application {
 
     private Node[] nodes;
-    private Pane root;
+    private static Pane root;
 
     @Override
     public void start(Stage stage) {
@@ -23,7 +23,6 @@ public class DocDuckApplication extends Application {
 
         // Set the stage title and scene, then show the stage
         loadApplicationDesign();
-        root.getChildren().addAll(nodes);
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
@@ -51,10 +50,11 @@ public class DocDuckApplication extends Application {
     public void loadApplicationDesign() {
         XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
+        myReader.printXMLData();
         root = new Pane();
         GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
         nodes = builder.buildSlide(1);
-
+        root.getChildren().addAll(nodes);
     }
 
     public static void main(String[] args) {
