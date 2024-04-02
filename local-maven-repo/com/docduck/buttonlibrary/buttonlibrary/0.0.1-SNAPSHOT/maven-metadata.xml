@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata modelVersion="1.1.0">
-  <groupId>com.docduck.xml</groupId>
-  <artifactId>xml</artifactId>
+  <groupId>com.docduck.buttonlibrary</groupId>
+  <artifactId>buttonlibrary</artifactId>
   <versioning>
-    <lastUpdated>20240402125842</lastUpdated>
+    <lastUpdated>20240402125801</lastUpdated>
     <snapshot>
-      <timestamp>20240402.125842</timestamp>
-      <buildNumber>4</buildNumber>
+      <timestamp>20240402.125801</timestamp>
+      <buildNumber>1</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.0.1-20240402.125842-4</value>
-        <updated>20240402125842</updated>
+        <value>0.0.1-20240402.125801-1</value>
+        <updated>20240402125801</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.1-20240402.125842-4</value>
-        <updated>20240402125842</updated>
+        <value>0.0.1-20240402.125801-1</value>
+        <updated>20240402125801</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>

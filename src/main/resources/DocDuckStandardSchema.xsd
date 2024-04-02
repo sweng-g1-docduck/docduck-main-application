@@ -261,9 +261,14 @@
     </xs:attributeGroup>
 
     <xs:attributeGroup name="button">
-        <xs:attribute name="name" type="xs:string" use="required">
+        <xs:attribute name="text" type="xs:string" use="required">
 			<xs:annotation>
-                <xs:documentation> The name of the button and the text to place on the button. </xs:documentation>
+                <xs:documentation> The text to place on the button. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="eventID" type="xs:string" use="optional">
+			<xs:annotation>
+                <xs:documentation> The eventID of the event you want the button to do when clicked. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
         <xs:attribute name="width" type="xs:int" use="optional">
@@ -274,6 +279,11 @@
         <xs:attribute name="height" type="xs:int" use="optional">
 			<xs:annotation>
                 <xs:documentation> The height of the button to appear on the screen. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="cornerRadius" type="xs:int" use="optional" default="0">
+			<xs:annotation>
+                <xs:documentation> The corner radius of the button. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
         <xs:attribute name="font" type="xs:string" use="required">
@@ -293,9 +303,24 @@
                 <xs:documentation> The colour of the text to be displayed. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
-        <xs:attribute name="lineSpacing" type="xs:decimal" use="optional" default="1.5">
+		<xs:attribute name="clickColour" type="colourType" use="optional">
 			<xs:annotation>
-                <xs:documentation> The spacing between lines to adjust the visual density of the text. </xs:documentation>
+                <xs:documentation> The colour of the button when clicked. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hoverColour" type="colourType" use="optional">
+			<xs:annotation>
+                <xs:documentation> The colour of the button when hovered over. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="backgroundColour" type="colourType" use="optional" default="#ffffffff">
+			<xs:annotation>
+                <xs:documentation> The background colour of the button. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+        <xs:attribute name="hasBackground" type="xs:boolean" use="optional" default="true">
+			<xs:annotation>
+                <xs:documentation> Indicates if the button should have a background colour (not transparent). </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
         <xs:attributeGroup ref="position"/>
