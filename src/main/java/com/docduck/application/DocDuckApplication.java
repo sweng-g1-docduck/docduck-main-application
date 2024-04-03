@@ -4,6 +4,7 @@ import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -20,23 +21,34 @@ public class DocDuckApplication extends Application {
     @Override
     public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
-
-        // Set the stage title and scene, then show the stage
-        loadApplicationDesign();
+        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
+        myReader.readXML();
+        myReader.printXMLData();
+        root = new Pane();
+        GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
+        builder.buildSlide(1);
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
+        stage.setHeight(720);
+        stage.setWidth(1280);
         stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
 
         //Hard coded logo as Image Library not done yet
         ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
-        logo.setX(390); 
-        logo.setY(80); 
+        logo.setLayoutX(390); 
+        logo.setLayoutY(80); 
         logo.setFitWidth(500); 
         logo.setPreserveRatio(true);
         root.getChildren().add(logo);
+        
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->
+        builder.scaleNodes(stage.getWidth(), stage.getHeight());
+
+        stage.widthProperty().addListener(stageSizeListener);
+        stage.heightProperty().addListener(stageSizeListener); 
         
         // ORDER OF PROGRAM
         // Load up JavaFX
@@ -45,16 +57,6 @@ public class DocDuckApplication extends Application {
         // Display ID 1 slide
         // If buttons, add in their actions, do they go to slide 2? etc.
 
-    }
-
-    public void loadApplicationDesign() {
-        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
-        myReader.readXML();
-        myReader.printXMLData();
-        root = new Pane();
-        GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
-        nodes = builder.buildSlide(1);
-        root.getChildren().addAll(nodes);
     }
 
     public static void main(String[] args) {

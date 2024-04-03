@@ -1,8 +1,14 @@
 package com.docduck.application.gui;
 
+import com.docduck.textlibrary.TextBoxField;
+import com.docduck.textlibrary.TextBoxPassword;
+
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 
 public class EventManager {
@@ -38,7 +44,18 @@ public class EventManager {
 			case "signin":
 				EventHandler<ActionEvent> signin = new EventHandler<ActionEvent>() {
 					public void handle(ActionEvent e) {
-						System.out.println(root.getChildren());
+						TextBoxField username = (TextBoxField) root.getChildren().get(3);
+						TextBoxPassword password = (TextBoxPassword) root.getChildren().get(5);
+
+						if (username.getText().equals("admin") && password.getText().equals("password")) {
+							password.setBorderWidth(0);
+							System.out.println("Logged in!");
+							builder.buildSlide(2);
+						}
+						else {
+							password.setBorderWidth(2);
+							password.setBorderColour("#FF0000");
+						}
 					}
 				};
 				return signin;
