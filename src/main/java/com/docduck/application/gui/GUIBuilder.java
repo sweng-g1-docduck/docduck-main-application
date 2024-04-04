@@ -2,12 +2,12 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-
-import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.layout.Pane;
 import com.docduck.buttonlibrary.*;
 import com.docduck.textlibrary.*;
+import com.docduck.textlibrary.TextBox.Origin;
+
 import javafx.application.HostServices;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -60,6 +60,7 @@ public class GUIBuilder {
         ArrayList<Node> nodeList = new ArrayList<>();
         
         root.getChildren().clear();
+        root.setStyle("-fx-background-color: #f8f4f4");
         
         occurance = 1;
         hasDataRemaining = true;
@@ -69,9 +70,37 @@ public class GUIBuilder {
                 TextBox textbox = new TextBox();
                 Hashtable<String, Object> textBoxData = xmlData
                         .get(textBox + delimiter + slideNumber + delimiter + occurance);
-                textbox.setWidth((Double) textBoxData.get("width"));
-                textbox.setHeight((Double) textBoxData.get("height"));
-                textbox.setFont((String) textBoxData.get("font"));
+                
+                if (textBoxData.get("hasBackground") != null) {
+            		Boolean hasBackground = (Boolean) textBoxData.get("hasBackground");
+            		if (hasBackground) {
+            			textbox.addBackground();
+            		}
+            		else {
+            			textbox.removeBackground();
+            		}
+            	}
+                if (textBoxData.get("cornerRadius") != null) {
+            		textbox.setCornerRadius((Double) textBoxData.get("cornerRadius"));
+            	}
+                if (textBoxData.get("backgroundColour") != null) {
+            		textbox.setBackgroundColour((String) textBoxData.get("backgroundColour"));
+            	}
+                if (textBoxData.get("textOrigin") != null) {
+            		String textOrigin = (String) textBoxData.get("textOrigin");
+            		switch(textOrigin) {
+            		case "CORNER":
+            			textbox.setTextOrigin(Origin.CORNER);
+            			break;
+            		case "CENTRE":
+            			textbox.setTextOrigin(Origin.CENTRE);
+            			break;
+            		}
+            	}
+                
+                textbox.setBoxWidth((Double) textBoxData.get("width"));
+                textbox.setBoxHeight((Double) textBoxData.get("height"));
+                textbox.setFontName((String) textBoxData.get("font"));
                 textbox.setContent((String) textBoxData.get("text"));
                 textbox.setFontSize((Integer) textBoxData.get("fontSize"));
                 textbox.setFontColour((String) textBoxData.get("fontColour"));
@@ -79,8 +108,13 @@ public class GUIBuilder {
                 textbox.setLineSpacing((Double) textBoxData.get("lineSpacing"));
                 textbox.setPositionX((Integer) textBoxData.get("xCoordinate"));
                 textbox.setPositionY((Integer) textBoxData.get("yCoordinate"));
-                nodeList.add(textbox.returnBox());
-                nodeList.add(textbox.returnText());
+                textbox.addBorder();
+                textbox.setBorderColour((String) textBoxData.get("borderColour"));
+                Double borderWidth = (Double) textBoxData.get("borderWidth");
+                textbox.setBorderWidth(borderWidth.intValue());
+                
+                nodeList.add(textbox.returnBackground());
+                nodeList.add(textbox);
                 hasDataRemaining = true;
                 occurance++;
             }
@@ -134,6 +168,7 @@ public class GUIBuilder {
             }
         }
         
+        //Button - DONE (clickColour not working)
         occurance = 1;
         hasDataRemaining = true;
         while (hasDataRemaining == true) {
@@ -151,7 +186,7 @@ public class GUIBuilder {
             		b.removeBackground();
             	}
             	if (buttonData.get("eventID") != null) {
-            		b.onClick(events.getActionEvent((String) buttonData.get("eventID")));
+            		b.setOnAction(events.getActionEvent((String) buttonData.get("eventID")));
             	}
             	if (buttonData.get("text") != null) {
             		b.setText((String) buttonData.get("text"));
@@ -167,22 +202,23 @@ public class GUIBuilder {
             	b.setBorderColour((String) buttonData.get("borderColour"));
             	Double borderWidth = (Double) buttonData.get("borderWidth");
             	b.setBorderWidth(borderWidth.intValue());
-            	b.setWidth((Double) buttonData.get("width"));
-            	b.setHeight((Double) buttonData.get("height"));
+            	b.setButtonWidth((Double) buttonData.get("width"));
+            	b.setButtonHeight((Double) buttonData.get("height"));
             	b.setCornerRadius((Integer) buttonData.get("cornerRadius"));
-            	b.setFont((String) buttonData.get("font"));
+            	b.setFontName((String) buttonData.get("font"));
             	b.setFontColour((String) buttonData.get("fontColour"));
             	b.setFontSize((Integer) buttonData.get("fontSize"));
             	b.setPositionX((Integer) buttonData.get("xCoordinate"));
             	b.setPositionY((Integer) buttonData.get("yCoordinate"));
             	
-            	nodeList.add(b.returnButton());
+            	nodeList.add(b);
             	
                 hasDataRemaining = true;
                 occurance++;
             }
         }
         
+        //Hyperlink - DONE
         occurance = 1;
         hasDataRemaining = true;
         while (hasDataRemaining == true) {
@@ -219,6 +255,7 @@ public class GUIBuilder {
             }
         }
         
+        //Background Colour - DONE
         occurance = 1;
         hasDataRemaining = true;
         while (hasDataRemaining == true) {
@@ -343,6 +380,7 @@ public class GUIBuilder {
 			if (widthScale < heightScale) {
 				node.setScaleY(widthScale);
 				node.setScaleX(widthScale);
+				
 			}
 			else {
 				node.setScaleY(heightScale);
@@ -353,11 +391,13 @@ public class GUIBuilder {
     		double nodeCenterX = node.getLayoutX() + nodeWidth/2;
 	        double nodeCenterY = node.getLayoutY() + nodeHeight/2;
     		
-    		double newX = ((nodeCenterX-OLD_CENTER_X)*(windowWidth/OLD_WIDTH)) + NEW_CENTER_X - nodeWidth/2;
+    		//double newX = ((nodeCenterX-OLD_CENTER_X)*(windowWidth/OLD_WIDTH)) + NEW_CENTER_X - nodeWidth/2;
+	        double newX = (nodeCenterX * windowWidth/OLD_WIDTH) - nodeWidth/2;
     		if(node.layoutXProperty().isBound() != true) {
     			node.setLayoutX(newX);
     		}
-    		double newY = ((nodeCenterY-OLD_CENTER_Y)*(windowHeight/OLD_HEIGHT)) + NEW_CENTER_Y - nodeHeight/2;
+    		//double newY = ((nodeCenterY-OLD_CENTER_Y)*(windowHeight/OLD_HEIGHT)) + NEW_CENTER_Y - nodeHeight/2;
+    		double newY = (nodeCenterY * windowHeight/OLD_HEIGHT) - nodeHeight/2;
     		if(node.layoutYProperty().isBound() != true) {
     			node.setLayoutY(newY);
     		}

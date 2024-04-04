@@ -51,6 +51,15 @@
 		</xs:annotation>
         <xs:list itemType="xs:string"/>
     </xs:simpleType>
+    
+    <xs:simpleType name="originType">
+		<xs:annotation>
+            <xs:documentation> The origin for an attribute or element. </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+				<xs:pattern value="CENTRE|CORNER"/>
+		</xs:restriction>
+    </xs:simpleType>
    
     <!--attribute group that can be assigned as group in complex type definitions -->
     <xs:attributeGroup name="position">
@@ -109,6 +118,26 @@
                 <xs:documentation> The spacing between lines to adjust the visual density of the text. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="hasBackground" type="xs:boolean" use="optional">
+			<xs:annotation>
+                <xs:documentation> Indicates if the textBox should have a background. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="cornerRadius" type="xs:decimal" use="optional">
+			<xs:annotation>
+                <xs:documentation> The corner radius of the textBox. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="backgroundColour" type="colourType" use="optional">
+			<xs:annotation>
+                <xs:documentation> The background colour of the textBox. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="textOrigin" type="originType" use="optional">
+            <xs:annotation>
+                <xs:documentation> The text origin within the textBox. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
 		<xs:attributeGroup ref="position"/>
         <xs:attributeGroup ref="border"/>
 	</xs:attributeGroup>
