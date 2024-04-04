@@ -3,21 +3,21 @@
   <groupId>com.docduck.graphicslibrary</groupId>
   <artifactId>graphicslibrary</artifactId>
   <versioning>
-    <lastUpdated>20240319114348</lastUpdated>
+    <lastUpdated>20240404162807</lastUpdated>
     <snapshot>
-      <timestamp>20240319.114348</timestamp>
-      <buildNumber>1</buildNumber>
+      <timestamp>20240404.162807</timestamp>
+      <buildNumber>2</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.0.1-20240319.114348-1</value>
-        <updated>20240319114348</updated>
+        <value>0.0.1-20240404.162807-2</value>
+        <updated>20240404162807</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.1-20240319.114348-1</value>
-        <updated>20240319114348</updated>
+        <value>0.0.1-20240404.162807-2</value>
+        <updated>20240404162807</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
