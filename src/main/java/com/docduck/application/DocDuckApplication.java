@@ -7,8 +7,6 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -21,7 +19,8 @@ public class DocDuckApplication extends Application {
     @Override
     public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
-        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
+        XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
+                "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
         myReader.printXMLData();
         root = new Pane();
@@ -36,20 +35,20 @@ public class DocDuckApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-        //Hard coded logo as Image Library not done yet
-        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
-        logo.setLayoutX(390); 
-        logo.setLayoutY(80); 
-        logo.setFitWidth(500); 
-        logo.setPreserveRatio(true);
-        root.getChildren().add(logo);
-        
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->
-        builder.scaleNodes(stage.getWidth(), stage.getHeight());
+        // Hard coded logo as Image Library not done yet
+//        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+//        logo.setLayoutX(390); 
+//        logo.setLayoutY(80); 
+//        logo.setFitWidth(500); 
+//        logo.setPreserveRatio(true);
+//        root.getChildren().add(logo);
+
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> builder
+                .scaleNodes(stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
-        stage.heightProperty().addListener(stageSizeListener); 
-        
+        stage.heightProperty().addListener(stageSizeListener);
+
         // ORDER OF PROGRAM
         // Load up JavaFX
         // Needs to check if there are any xml files to display a slide or slideshow

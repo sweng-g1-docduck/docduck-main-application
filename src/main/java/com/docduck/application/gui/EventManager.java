@@ -47,8 +47,9 @@ public class EventManager {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    TextBoxField username = (TextBoxField) root.getChildren().get(3);
-                    TextBoxPassword password = (TextBoxPassword) root.getChildren().get(5);
+                    // Use node id's to compare and see which node to be used.
+                    TextBoxField username = (TextBoxField) root.getChildren().get(4);
+                    TextBoxPassword password = (TextBoxPassword) root.getChildren().get(6);
 
                     if (username.getText().equals("admin") && password.getText().equals("password")) {
                         password.setBorderWidth(0);
@@ -62,6 +63,26 @@ public class EventManager {
                 }
             };
             return signin;
+
+        case "statusPage":
+            EventHandler<ActionEvent> statusPage = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    builder.buildSlide(2);
+                }
+            };
+            return statusPage;
+
+        case "testPage":
+            EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    builder.buildSlide(3);
+                }
+            };
+            return testPage;
 
         default:
             EventHandler<ActionEvent> fault = new EventHandler<ActionEvent>() {

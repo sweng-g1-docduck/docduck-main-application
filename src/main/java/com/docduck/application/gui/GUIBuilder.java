@@ -15,6 +15,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 public class GUIBuilder {
@@ -153,8 +155,19 @@ public class GUIBuilder {
             hasDataRemaining = false;
 
             if (xmlData.containsKey(image + delimiter + slideNumber + delimiter + occurance) == true) {
-                System.out.println("Image-" + slideNumber + "-" + occurance + ": "
-                        + xmlData.get(image + delimiter + slideNumber + delimiter + occurance));
+                Hashtable<String, Object> imageData = xmlData
+                        .get(image + delimiter + slideNumber + delimiter + occurance);
+
+                // Hard coded logo as Image Library not done yet
+                ImageView logo = new ImageView(
+                        new Image(getClass().getResourceAsStream((String) imageData.get("imageURL"))));
+//                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+                logo.setLayoutX((int) imageData.get("xCoordinate"));
+                logo.setLayoutY((int) imageData.get("yCoordinate"));
+                logo.setFitWidth(500);
+                logo.setPreserveRatio(true);
+                nodeList.add(logo);
+
                 hasDataRemaining = true;
                 occurance++;
             }
