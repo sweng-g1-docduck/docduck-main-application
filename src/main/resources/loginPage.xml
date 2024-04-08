@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <slideshow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:noNamespaceSchemaLocation="standard.xsd">
+           xsi:noNamespaceSchemaLocation="DocDuckStandardSchema.xsd">
     <slide>
         <id id="loginPage"/>
-<!--         <background backgroundColour="#1f5398ff"/> -->
-        <textBox width="300" height="40" text="Username" font="Inter" fontSize="14" fontColour="#000000ff" characterSpacing="1.5" lineSpacing="1.5" xCoordinate="150" yCoordinate="200"/>
-        <textBox width="300" height="40" text="Password" font="Inter" fontSize="14" fontColour="#000000ff" characterSpacing="1.5" lineSpacing="1.5" xCoordinate="150" yCoordinate="250"/>
-<!--         <button width="200" height="40" text="Sign In" font="Inter" fontSize="14" fontColour="#FFFFFF" backgroundColour="#007bff" xCoordinate="250" yCoordinate="300"/> -->
-<!--         <hyperlink text="Forgot Password?" font="Inter" fontSize="12" fontColour="#FFFFFF" xCoordinate="250" yCoordinate="350" url="https://docduck.000webhostapp.com"/> -->
-        <image imageURL="/images/dockducklogo.png" imageScale="35" xCoordinate="150" yCoordinate="50"/>
+        <button cornerRadius="10" width="200" height="40" text="Sign Up for Business" eventID="signup" font="Arial" fontSize="14" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="495" yCoordinate="540"/>
+        <button cornerRadius="10" width="80" height="40" text="Sign In" eventID="signin" font="Arial" fontSize="14" fontColour="#FFFFFFff" backgroundColour="#007bffff" hoverColour="#0056b3ff" xCoordinate="700" yCoordinate="540"/>
+        <hyperlink text="Forgot Password?" font="Arial" fontSize="12" fontColour="#ffffffff" xCoordinate="585" yCoordinate="500" URL="https://docduck.000webhostapp.com"/>
+        <backgroundColour colour="#1f5398ff"/>
+        <textField password="false" cornerRadius="10" width="300" height="40" promptText="Username" font="Arial" fontSize="14" fontColour="#000000ff" xCoordinate="490" yCoordinate="400"/>
+        <textField password="true" cornerRadius="10" passwordButton="true" width="300" height="40" promptText="Password" font="Arial" fontSize="14" fontColour="#000000ff" xCoordinate="490" yCoordinate="450"/>
+<!--         <image imageURL="/images/dockducklogo.png" imageScale="35" xCoordinate="150" yCoordinate="50"/> -->
     </slide>
-    <info author="Luke Warbey" dateCreated="2024-03-12T00:00:00" comment="Login page for DocDuck Maintenance Tool"/>
+    <slide>
+        <id id="page2"/>
+        <textBox cornerRadius="10" lineSpacing="10" width="300" height="100" text="Logged in!" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="490" yCoordinate="450"/>
+    </slide>
+    <info author="Luke Warbey" dateCreated="2024-03-12T12:00:00" comment="Login page for DocDuck Maintenance Tool"/>
 </slideshow>

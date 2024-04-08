@@ -1,33 +1,55 @@
 package com.docduck.application;
 
+import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-    public static Stage myStage;
-
-    public DocDuckApplication() {
-    }
+    private Node[] nodes;
+    private static Pane root;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
+        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
+        myReader.readXML();
+        myReader.printXMLData();
+        root = new Pane();
+        GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
+        builder.buildSlide(1);
+        Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
+        stage.setMinHeight(720);
+        stage.setMinWidth(1280);
+        stage.setHeight(720);
+        stage.setWidth(1280);
+        stage.setTitle("DocDuck");
+        stage.setScene(scene);
+        stage.show();
 
-        DocDuckApplication myApp = new DocDuckApplication();
+        //Hard coded logo as Image Library not done yet
+        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+        logo.setLayoutX(390); 
+        logo.setLayoutY(80); 
+        logo.setFitWidth(500); 
+        logo.setPreserveRatio(true);
+        root.getChildren().add(logo);
+        
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->
+        builder.scaleNodes(stage.getWidth(), stage.getHeight());
 
-        myStage = primaryStage;
-
-        myStage.setScene(myApp.initialise());
-        myStage.setTitle("DocDuck Application");
-        myStage.show();
-
+        stage.widthProperty().addListener(stageSizeListener);
+        stage.heightProperty().addListener(stageSizeListener); 
+        
         // ORDER OF PROGRAM
         // Load up JavaFX
         // Needs to check if there are any xml files to display a slide or slideshow
@@ -35,43 +57,10 @@ public class DocDuckApplication extends Application {
         // Display ID 1 slide
         // If buttons, add in their actions, do they go to slide 2? etc.
 
-        loadApplicationDesign();
-
-    }
-
-    private Scene initialise() {
-
-//        Image logo = new Image("./src/main/resources/docducklogo.png");
-
-        Button button = new Button();
-        // Setting text to the button
-        button.setText("Sample Button");
-        // Setting the location of the button
-        button.setTranslateX(150);
-        button.setTranslateY(60);
-        button.setOnAction(e -> System.out.println("Hello World!"));
-        // Setting the stage
-        Pane root = new Pane(button);
-
-        Scene scene = new Scene(root, 595, 150, Color.BEIGE);
-
-        return scene;
-
-    }
-
-    private void loadApplicationDesign() {
-        XMLReader myReader = new XMLReader("src/main/resources/loginPage.xml", "src/main/resources/Standard.xsd", true);
-        myReader.readXML();
-
-        myReader.printXMLData();
     }
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    public static Stage getStage() {
-        return myStage;
     }
 
     // COMMAND LINE ARGUMENTS CODE:
