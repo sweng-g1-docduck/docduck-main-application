@@ -3,21 +3,21 @@
   <groupId>com.docduck.buttonlibrary</groupId>
   <artifactId>buttonlibrary</artifactId>
   <versioning>
-    <lastUpdated>20240404162706</lastUpdated>
+    <lastUpdated>20240408151349</lastUpdated>
     <snapshot>
-      <timestamp>20240404.162706</timestamp>
-      <buildNumber>2</buildNumber>
+      <timestamp>20240408.151349</timestamp>
+      <buildNumber>3</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.0.1-20240404.162706-2</value>
-        <updated>20240404162706</updated>
+        <value>0.0.1-20240408.151349-3</value>
+        <updated>20240408151349</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.1-20240404.162706-2</value>
-        <updated>20240404162706</updated>
+        <value>0.0.1-20240408.151349-3</value>
+        <updated>20240408151349</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>

@@ -3,21 +3,21 @@
   <groupId>com.docduck.textlibrary</groupId>
   <artifactId>textlibrary</artifactId>
   <versioning>
-    <lastUpdated>20240404162740</lastUpdated>
+    <lastUpdated>20240408150936</lastUpdated>
     <snapshot>
-      <timestamp>20240404.162740</timestamp>
-      <buildNumber>4</buildNumber>
+      <timestamp>20240408.150936</timestamp>
+      <buildNumber>5</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.0.1-20240404.162740-4</value>
-        <updated>20240404162740</updated>
+        <value>0.0.1-20240408.150936-5</value>
+        <updated>20240408150936</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.1-20240404.162740-4</value>
-        <updated>20240404162740</updated>
+        <value>0.0.1-20240408.150936-5</value>
+        <updated>20240408150936</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
