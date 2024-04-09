@@ -126,6 +126,7 @@ public class GUIBuilder {
                 textbox.setBorderColour((String) textBoxData.get("borderColour"));
                 Double borderWidth = (Double) textBoxData.get("borderWidth");
                 textbox.setBorderWidth(borderWidth.intValue());
+                textbox.setMargin(borderWidth / 2.0);
 
                 nodeList.add(textbox.returnBackground());
                 nodeList.add(textbox);
