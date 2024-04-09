@@ -3,7 +3,7 @@
            xsi:noNamespaceSchemaLocation="DocDuckStandardSchema.xsd">
     <slide>
         <id id="loginPage"/>
-        <image imageURL="/docducklogo.png" imageScale="35" xCoordinate="390" yCoordinate="80"/>
+        <image imageURL="/docducklogo.png" imageScale="500" xCoordinate="390" yCoordinate="80"/>
         <button cornerRadius="10" width="200" height="40" text="Sign Up for Business" eventID="signup" font="Arial" fontSize="14" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="495" yCoordinate="540"/>
         <button cornerRadius="10" width="80" height="40" text="Sign In" eventID="signin" font="Arial" fontSize="14" fontColour="#FFFFFFff" backgroundColour="#007bffff" hoverColour="#0056b3ff" xCoordinate="700" yCoordinate="540"/>
         <hyperlink text="Forgot Password?" font="Arial" fontSize="12" fontColour="#ffffffff" xCoordinate="585" yCoordinate="500" URL="https://docduck.000webhostapp.com"/>
@@ -14,7 +14,7 @@
     <slide>
         <id id="statusPage"/>
         
-        <textBox cornerRadius="10" lineSpacing="10" width="80" height="30" text="DocDuck" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="50" yCoordinate="20"/>
+<!--         <textBox cornerRadius="10" lineSpacing="10" width="80" height="30" text="DocDuck" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="50" yCoordinate="20"/> -->
 
         <!-- Top Bar with Search and Dropdowns -->
 <!--         <topBar width="100%" height="100" backgroundColor="#FFFFFF" x="0" y="0"> -->
@@ -36,27 +36,29 @@
 	
 	    
 	    <textBox cornerRadius="10" lineSpacing="1" width="150" height="100" text="Bunsen Burner 10" font="Arial" fontSize="14" fontColour="#000000ff" xCoordinate="900" yCoordinate="520" borderWidth="3.0" borderColour="#8ABAFAff"/>
-<!--	    	<shape type="" shapeColour="" shapeScale="" xCoordinate="" yCoordinate="" />-->
+	    <shape type="rectanlge" shapeColour="#1f5398ff" shapeScale="100" xCoordinate="500" yCoordinate="-200" />
 		<shape type="rectangle" shapeColour="#ffff0fff" shapeScale="100" xCoordinate="150" yCoordinate="420" />
 		<shape type="triangle" shapeColour="#ffff0fff" shapeScale="100" xCoordinate="400" yCoordinate="420" />
 		<shape type="circle" shapeColour="#ffff0fff" shapeScale="100" xCoordinate="650" yCoordinate="420" />
-		<shape type="Ellipse" shapeColour="#ffff0fff" shapeScale="100" xCoordinate="900" yCoordinate="420" />
-<!-- 	    <image imageURL="/physics_building_icon.png" imageScale="35" xCoordinate="400" yCoordinate="300"/> -->
+		<shape type="ellipse" shapeColour="#ffff0fff" shapeScale="100" xCoordinate="900" yCoordinate="420" />
+	    <image imageURL="/docducklogo.png" imageScale="130" xCoordinate="10" yCoordinate="10"/>
 <!-- 	    <image imageURL="/chemistry_lab_icon.png" imageScale="35" xCoordinate="900" yCoordinate="300"/> -->
 <!-- 	    <image imageURL="/engineering_block_icon.png" imageScale="35" xCoordinate="650" yCoordinate="300"/> -->
 <!-- 	    <image imageURL="/biocentre_icon.png" imageScale="35" xCoordinate="150" yCoordinate="300"/> -->
-	    <button cornerRadius="10" width="120" height="30" text="Status Overview" eventID="statusPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="150" yCoordinate="20"/>
-        <button cornerRadius="10" width="80" height="30" text="Test Page" eventID="testPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="290" yCoordinate="20"/>
-        <button cornerRadius="10" width="120" height="30" text="Calendar Page" eventID="calendarPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="390" yCoordinate="20"/>
-        
+	    <button cornerRadius="10" width="120" height="30" text="Status Overview" eventID="statusPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="150" yCoordinate="30"/>
+        <button cornerRadius="10" width="80" height="30" text="Test Page" eventID="testPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="290" yCoordinate="30"/>
+        <button cornerRadius="10" width="120" height="30" text="Calendar Page" eventID="calendarPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="390" yCoordinate="30"/>
+        <textField password="false" cornerRadius="10" width="300" height="40" promptText="Search..." font="Arial" fontSize="14" fontColour="#000000ff" xCoordinate="920" yCoordinate="30"/>
     </slide>
     <slide>
         <id id="testPage"/>
         <textBox cornerRadius="10" lineSpacing="10" width="80" height="30" text="DocDuck" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="50" yCoordinate="20"/>
         <textBox cornerRadius="10" lineSpacing="10" width="300" height="100" text="Test Page" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="490" yCoordinate="450"/>
-        <button cornerRadius="10" width="120" height="30" text="Status Overview" eventID="statusPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="150" yCoordinate="20"/>
-        <button cornerRadius="10" width="80" height="30" text="Test Page" eventID="testPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="290" yCoordinate="20"/>
-        <button cornerRadius="10" width="120" height="30" text="Calendar Page" eventID="calendarPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="390" yCoordinate="20"/>
+        <image imageURL="/docducklogo.png" imageScale="130" xCoordinate="10" yCoordinate="10"/>
+        <button cornerRadius="10" width="120" height="30" text="Status Overview" eventID="statusPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="150" yCoordinate="30"/>
+        <button cornerRadius="10" width="80" height="30" text="Test Page" eventID="testPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="290" yCoordinate="30"/>
+        <button cornerRadius="10" width="120" height="30" text="Calendar Page" eventID="calendarPage" font="Arial" fontSize="12" fontColour="#FFFFFFff" backgroundColour="#fbb12eff" clickColour="#ffffffff" hoverColour="#ff8c00ff" xCoordinate="390" yCoordinate="30"/>
     </slide>
     <info author="." dateCreated="2024-03-12T12:00:00" comment="Pages for DocDuck Maintenance Tool"/>
 </slideshow>
+

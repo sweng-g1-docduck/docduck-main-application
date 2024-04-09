@@ -6,6 +6,7 @@ import com.docduck.textlibrary.TextBoxPassword;
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 public class EventManager {
@@ -83,12 +84,40 @@ public class EventManager {
                 }
             };
             return testPage;
-
         default:
             EventHandler<ActionEvent> fault = new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent e) {
+                    System.out.println("ERROR: Event not attached, check eventID");
+                }
+            };
+            return fault;
+        }
+    }
+
+    public EventHandler<KeyEvent> getKeyEvent(String eventID) {
+
+        System.out.println("hi");
+
+        switch (eventID) {
+        case "Search...":
+            EventHandler<KeyEvent> searchEvent = new EventHandler<KeyEvent>() {
+
+                @Override
+                public void handle(KeyEvent event) {
+                    TextBoxField tf = (TextBoxField) event.getSource();
+                    tf.getText();
+                    System.out.println(tf.getText());
+
+                }
+            };
+            return searchEvent;
+        default:
+            EventHandler<KeyEvent> fault = new EventHandler<KeyEvent>() {
+
+                @Override
+                public void handle(KeyEvent event) {
                     System.out.println("ERROR: Event not attached, check eventID");
                 }
             };
