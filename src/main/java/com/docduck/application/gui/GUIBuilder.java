@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.docduck.buttonlibrary.ButtonWrapper;
+import com.docduck.graphicslibrary.Ellipse;
+import com.docduck.graphicslibrary.Rectangle;
+import com.docduck.graphicslibrary.RegularShape;
 import com.docduck.textlibrary.TextBox;
 import com.docduck.textlibrary.TextBox.Origin;
 import com.docduck.textlibrary.TextBoxField;
@@ -18,6 +21,8 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class GUIBuilder {
 
@@ -142,8 +147,65 @@ public class GUIBuilder {
             hasDataRemaining = false;
 
             if (xmlData.containsKey(shape + delimiter + slideNumber + delimiter + occurance) == true) {
-                System.out.println("Shape-" + slideNumber + "-" + occurance + ": "
-                        + xmlData.get(shape + delimiter + slideNumber + delimiter + occurance));
+
+                Hashtable<String, Object> shapeData = xmlData
+                        .get(shape + delimiter + slideNumber + delimiter + occurance);
+
+                String shapeType = (String) shapeData.get("type");
+
+                switch (shapeType) {
+                case "circle":
+                    Circle circle = new Circle();
+                    circle.setLayoutX((Double) shapeData.get("xCoordinate"));
+                    circle.setLayoutY((Double) shapeData.get("yCoordinate"));
+                    circle.setScaleX((Double) shapeData.get("shapeScale"));
+//                    circle.setStroke(Color.web((String) shapeData.get("borderColour")));
+                    nodeList.add(circle);
+                    break;
+                case "ellipse":
+                    Ellipse ellipse = new Ellipse(5, Color.web((String) shapeData.get("shapeColour")), 100.0,
+                            (Double) shapeData.get("xCoordinate"), (Double) shapeData.get("yCoordinate"));
+                    ellipse.setScaleX((Double) shapeData.get("shapeScale"));
+                    ellipse.rotate((Double) shapeData.get("shapeRotation"));
+                    ellipse.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(ellipse);
+                    break;
+                case "lineSegment":
+//                    LineSegment line = new LineSegment((Double) shapeData.get("xCoordinate"),
+//                            (Double) shapeData.get("yCoordinate"), OLD_CENTER_X, OLD_CENTER_X, null, OLD_CENTER_X,
+//                            OLD_CENTER_X);
+                    break;
+                case "triangle":
+                    RegularShape triangle = new RegularShape(3, 5, Color.web((String) shapeData.get("shapeColour")),
+                            100.0, (Double) shapeData.get("xCoordinate"), (Double) shapeData.get("yCoordinate"));
+                    triangle.setScaleX((Double) shapeData.get("shapeScale"));
+                    triangle.rotate((Double) shapeData.get("shapeRotation"));
+                    triangle.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(triangle);
+                    break;
+                case "square":
+                    RegularShape square = new RegularShape(4, 5, Color.web((String) shapeData.get("shapeColour")),
+                            100.0, (Double) shapeData.get("xCoordinate"), (Double) shapeData.get("yCoordinate"));
+                    square.setScaleX((Double) shapeData.get("shapeScale"));
+                    square.rotate((Double) shapeData.get("shapeRotation"));
+                    square.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(square);
+                    break;
+                case "rectangle":
+                    Rectangle rectangle = new Rectangle();
+                    rectangle.setLayoutX((Double) shapeData.get("xCoordinate"));
+                    rectangle.setLayoutY((Double) shapeData.get("yCoordinate"));
+                    rectangle.rotate((Double) shapeData.get("shapeRotation"));
+                    rectangle.setScaleX((Double) shapeData.get("shapeScale"));
+                    rectangle.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(rectangle);
+                    break;
+                }
+
                 hasDataRemaining = true;
                 occurance++;
             }
