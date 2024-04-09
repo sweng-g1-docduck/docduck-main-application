@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.docduck.buttonlibrary.ButtonWrapper;
+import com.docduck.graphicslibrary.Ellipse;
+import com.docduck.graphicslibrary.Rectangle;
+import com.docduck.graphicslibrary.RegularShape;
 import com.docduck.textlibrary.TextBox;
 import com.docduck.textlibrary.TextBox.Origin;
 import com.docduck.textlibrary.TextBoxField;
@@ -15,7 +18,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class GUIBuilder {
 
@@ -50,25 +57,30 @@ public class GUIBuilder {
     }
 
     public void buildSlide(int slideNumber) {
-        boolean hasDataRemaining;
-        String textField = "textField";
-        String textBox = "textBox";
-        String shape = "shape";
-        String image = "image";
-        String audio = "audio";
-        String video = "video";
-        String delimiter = "-";
-        String button = "button";
-        String hyperlink = "hyperlink";
-        String backgroundColour = "backgroundColour";
-        int occurance;
+
         ArrayList<Node> nodeList = new ArrayList<>();
 
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #f8f4f4");
 
-        occurance = 1;
-        hasDataRemaining = true;
+        nodeList = buildShapes(nodeList, slideNumber);
+        nodeList = buildTextBoxes(nodeList, slideNumber);
+        nodeList = buildImages(nodeList, slideNumber);
+        nodeList = buildAudio(nodeList, slideNumber);
+        nodeList = buildVideos(nodeList, slideNumber);
+        nodeList = buildButtons(nodeList, slideNumber);
+        nodeList = buildHyperlinks(nodeList, slideNumber);
+        nodeList = buildBackgroundColours(nodeList, slideNumber);
+        nodeList = buildTextFields(nodeList, slideNumber);
+
+        root.getChildren().addAll(nodeList);
+    }
+
+    private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String textBox = "textBox";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -124,6 +136,7 @@ public class GUIBuilder {
                 textbox.setBorderColour((String) textBoxData.get("borderColour"));
                 Double borderWidth = (Double) textBoxData.get("borderWidth");
                 textbox.setBorderWidth(borderWidth.intValue());
+                textbox.setMargin(borderWidth / 2.0);
 
                 nodeList.add(textbox.returnBackground());
                 nodeList.add(textbox);
@@ -131,37 +144,121 @@ public class GUIBuilder {
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildShapes(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String shape = "shape";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
 
             if (xmlData.containsKey(shape + delimiter + slideNumber + delimiter + occurance) == true) {
-                System.out.println("Shape-" + slideNumber + "-" + occurance + ": "
-                        + xmlData.get(shape + delimiter + slideNumber + delimiter + occurance));
+
+                Hashtable<String, Object> shapeData = xmlData
+                        .get(shape + delimiter + slideNumber + delimiter + occurance);
+
+                String shapeType = (String) shapeData.get("type");
+
+                switch (shapeType) {
+                case "circle":
+                    Circle circle = new Circle();
+                    circle.setLayoutX((Integer) shapeData.get("xCoordinate"));
+                    circle.setLayoutY((Integer) shapeData.get("yCoordinate"));
+                    circle.setScaleX((Double) shapeData.get("shapeScale"));
+//                    circle.setStroke(Color.web((String) shapeData.get("borderColour")));
+                    nodeList.add(circle);
+                    break;
+                case "ellipse":
+                    Ellipse ellipse = new Ellipse(50, Color.web((String) shapeData.get("shapeColour")), 100.0,
+                            (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
+                    ellipse.setScaleX((Double) shapeData.get("shapeScale"));
+                    ellipse.rotate((Double) shapeData.get("shapeRotation"));
+                    ellipse.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(ellipse);
+                    break;
+                case "lineSegment":
+//                    LineSegment line = new LineSegment((Double) shapeData.get("xCoordinate"),
+//                            (Double) shapeData.get("yCoordinate"), OLD_CENTER_X, OLD_CENTER_X, null, OLD_CENTER_X,
+//                            OLD_CENTER_X);
+                    break;
+                case "triangle":
+                    RegularShape triangle = new RegularShape(3, 50, Color.web((String) shapeData.get("shapeColour")),
+                            100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
+                    triangle.setScaleX((Double) shapeData.get("shapeScale"));
+                    triangle.rotate((Double) shapeData.get("shapeRotation"));
+                    triangle.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(triangle);
+                    break;
+                case "square":
+                    RegularShape square = new RegularShape(4, 50, Color.web((String) shapeData.get("shapeColour")),
+                            100.0, (Double) shapeData.get("xCoordinate"), (Double) shapeData.get("yCoordinate"));
+                    square.setScaleX((Double) shapeData.get("shapeScale"));
+                    square.rotate((Double) shapeData.get("shapeRotation"));
+                    square.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(square);
+                    break;
+                case "rectangle":
+                    Rectangle rectangle = new Rectangle(100.0, 50.0, Color.web((String) shapeData.get("shapeColour")),
+                            100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
+                    rectangle.setLayoutX((Integer) shapeData.get("xCoordinate"));
+                    rectangle.setLayoutY((Integer) shapeData.get("yCoordinate"));
+                    rectangle.rotate((Double) shapeData.get("shapeRotation"));
+                    rectangle.setScaleX((Double) shapeData.get("shapeScale"));
+                    rectangle.setStroke(Color.web((String) shapeData.get("borderColour")),
+                            (Double) shapeData.get("borderWidth"));
+                    nodeList.add(rectangle);
+                    break;
+                }
+
                 hasDataRemaining = true;
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildImages(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String image = "image";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
 
             if (xmlData.containsKey(image + delimiter + slideNumber + delimiter + occurance) == true) {
-                System.out.println("Image-" + slideNumber + "-" + occurance + ": "
-                        + xmlData.get(image + delimiter + slideNumber + delimiter + occurance));
+                Hashtable<String, Object> imageData = xmlData
+                        .get(image + delimiter + slideNumber + delimiter + occurance);
+
+                // Hard coded logo as Image Library not done yet
+                ImageView logo = new ImageView(
+                        new Image(getClass().getResourceAsStream((String) imageData.get("imageURL"))));
+//                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+                logo.setLayoutX((int) imageData.get("xCoordinate"));
+                logo.setLayoutY((int) imageData.get("yCoordinate"));
+                logo.setFitWidth((Double) imageData.get("imageScale"));
+                logo.setPreserveRatio(true);
+                nodeList.add(logo);
+
                 hasDataRemaining = true;
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildAudio(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String audio = "audio";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -173,9 +270,14 @@ public class GUIBuilder {
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildVideos(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String video = "video";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -187,10 +289,14 @@ public class GUIBuilder {
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        // Button - DONE (clickColour not working)
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildButtons(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String button = "button";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -243,10 +349,14 @@ public class GUIBuilder {
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        // Hyperlink - DONE
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildHyperlinks(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String hyperlink = "hyperlink";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -284,10 +394,14 @@ public class GUIBuilder {
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        // Background Colour - DONE
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildBackgroundColours(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String backgroundColour = "backgroundColour";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -302,9 +416,14 @@ public class GUIBuilder {
                 occurance++;
             }
         }
+        return nodeList;
+    }
 
-        occurance = 1;
-        hasDataRemaining = true;
+    private ArrayList<Node> buildTextFields(ArrayList<Node> nodeList, int slideNumber) {
+        int occurance = 1;
+        boolean hasDataRemaining = true;
+        final String textField = "textField";
+        final String delimiter = "-";
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
@@ -396,6 +515,7 @@ public class GUIBuilder {
                     }
 
                     // Could add text origin?
+                    textfield.setOnKeyTyped(events.getKeyEvent((String) textFieldData.get("promptText")));
 
                     nodeList.add(textfield);
                 }
@@ -404,7 +524,7 @@ public class GUIBuilder {
                 occurance++;
             }
         }
-        root.getChildren().addAll(nodeList);
+        return nodeList;
     }
 
     public void scaleNodes(double windowWidth, double windowHeight) {
