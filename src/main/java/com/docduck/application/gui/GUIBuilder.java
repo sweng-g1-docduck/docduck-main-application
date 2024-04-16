@@ -175,7 +175,7 @@ public class GUIBuilder {
                 case "ellipse":
                     Ellipse ellipse = new Ellipse(50, Color.web((String) shapeData.get("shapeColour")), 100.0,
                             (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-                    ellipse.setScaleX((Double) shapeData.get("shapeScale"));
+//                    ellipse.setScaleX((Double) shapeData.get("shapeScale"));
                     ellipse.rotate((Double) shapeData.get("shapeRotation"));
                     ellipse.setStroke(Color.web((String) shapeData.get("borderColour")),
                             (Double) shapeData.get("borderWidth"));
@@ -189,7 +189,7 @@ public class GUIBuilder {
                 case "triangle":
                     RegularShape triangle = new RegularShape(3, 50, Color.web((String) shapeData.get("shapeColour")),
                             100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-                    triangle.setScaleX((Double) shapeData.get("shapeScale"));
+//                    triangle.setScaleX((Double) shapeData.get("shapeScale"));
                     triangle.rotate((Double) shapeData.get("shapeRotation"));
                     triangle.setStroke(Color.web((String) shapeData.get("borderColour")),
                             (Double) shapeData.get("borderWidth"));
@@ -210,7 +210,7 @@ public class GUIBuilder {
                     rectangle.setLayoutX((Integer) shapeData.get("xCoordinate"));
                     rectangle.setLayoutY((Integer) shapeData.get("yCoordinate"));
                     rectangle.rotate((Double) shapeData.get("shapeRotation"));
-                    rectangle.setScaleX((Double) shapeData.get("shapeScale"));
+//                    rectangle.setScaleX((Double) shapeData.get("shapeScale"));
                     rectangle.setStroke(Color.web((String) shapeData.get("borderColour")),
                             (Double) shapeData.get("borderWidth"));
                     nodeList.add(rectangle);

@@ -25,7 +25,7 @@ public class DocDuckApplication extends Application {
         myReader.printXMLData();
         root = new Pane();
         GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
-        builder.buildSlide(2);
+        builder.buildSlide(1);
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
