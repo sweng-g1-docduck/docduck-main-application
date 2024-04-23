@@ -23,6 +23,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.transform.Scale;
 
 public class GUIBuilder {
 
@@ -31,15 +32,15 @@ public class GUIBuilder {
     private HostServices hostServices;
     private static GUIBuilder instance;
     private static EventManager events;
-    private double OLD_CENTER_X = 640;
-    private double OLD_CENTER_Y = 360;
     private double OLD_WIDTH = 1280;
     private double OLD_HEIGHT = 720;
+    private Scale scale;
 
     private GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
         this.xmlData = xmlData;
         this.root = root;
         this.hostServices = hostServices;
+        this.scale = new Scale();
     }
 
     public static GUIBuilder createInstance(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root,
@@ -74,6 +75,12 @@ public class GUIBuilder {
         nodeList = buildTextFields(nodeList, slideNumber);
 
         root.getChildren().addAll(nodeList);
+        
+        double windowWidth = OLD_WIDTH;
+        double windowHeight = OLD_HEIGHT;
+        OLD_WIDTH = 1280;
+        OLD_HEIGHT = 720;
+        scaleNodes(windowWidth, windowHeight);
     }
 
     private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
@@ -130,14 +137,13 @@ public class GUIBuilder {
                 textbox.setFontColour((String) textBoxData.get("fontColour"));
                 textbox.setCharacterSpacing((Double) textBoxData.get("characterSpacing"));
                 textbox.setLineSpacing((Double) textBoxData.get("lineSpacing"));
-                textbox.setPositionX((Integer) textBoxData.get("xCoordinate"));
-                textbox.setPositionY((Integer) textBoxData.get("yCoordinate"));
                 textbox.addBorder();
                 textbox.setBorderColour((String) textBoxData.get("borderColour"));
                 Double borderWidth = (Double) textBoxData.get("borderWidth");
                 textbox.setBorderWidth(borderWidth.intValue());
                 textbox.setMargin(borderWidth / 2.0);
-
+                textbox.setPositionX((Integer) textBoxData.get("xCoordinate"));
+                textbox.setPositionY((Integer) textBoxData.get("yCoordinate"));
                 nodeList.add(textbox.returnBackground());
                 nodeList.add(textbox);
                 hasDataRemaining = true;
@@ -340,9 +346,9 @@ public class GUIBuilder {
                 b.setFontName((String) buttonData.get("font"));
                 b.setFontColour((String) buttonData.get("fontColour"));
                 b.setFontSize((Integer) buttonData.get("fontSize"));
-                b.setPositionX((Integer) buttonData.get("xCoordinate"));
-                b.setPositionY((Integer) buttonData.get("yCoordinate"));
-
+                b.setLayoutX((Integer) buttonData.get("xCoordinate"));
+                b.setLayoutY((Integer) buttonData.get("yCoordinate"));
+                
                 nodeList.add(b);
 
                 hasDataRemaining = true;
@@ -437,8 +443,6 @@ public class GUIBuilder {
 
                     textfield.setBoxWidth((Double) textFieldData.get("width"));
                     textfield.setBoxHeight((Double) textFieldData.get("height"));
-                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
-                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
                     textfield.setFontName((String) textFieldData.get("font"));
                     textfield.setFontColour((String) textFieldData.get("fontColour"));
                     textfield.setFontSize((Integer) textFieldData.get("fontSize"));
@@ -451,6 +455,8 @@ public class GUIBuilder {
                     textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
                     textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
                     textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
+                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
+                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
 
                     if (textFieldData.get("promptText") != null) {
                         textfield.setPromptText((String) textFieldData.get("promptText"));
@@ -469,6 +475,7 @@ public class GUIBuilder {
                     }
 
                     // Could add text origin?
+                    
 
                     nodeList.add(textfield.returnPasswordField());
                     nodeList.add(textfield);
@@ -483,8 +490,6 @@ public class GUIBuilder {
 
                     textfield.setBoxWidth((Double) textFieldData.get("width"));
                     textfield.setBoxHeight((Double) textFieldData.get("height"));
-                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
-                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
                     textfield.setFontName((String) textFieldData.get("font"));
                     textfield.setFontColour((String) textFieldData.get("fontColour"));
                     textfield.setFontSize((Integer) textFieldData.get("fontSize"));
@@ -497,6 +502,8 @@ public class GUIBuilder {
                     textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
                     textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
                     textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
+                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
+                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
 
                     if (textFieldData.get("promptText") != null) {
                         textfield.setPromptText((String) textFieldData.get("promptText"));
@@ -528,8 +535,6 @@ public class GUIBuilder {
     }
 
     public void scaleNodes(double windowWidth, double windowHeight) {
-        double NEW_CENTER_X = windowWidth / 2;
-        double NEW_CENTER_Y = windowHeight / 2;
         double WIDTH = 1280;
         double HEIGHT = 720;
         double widthScale = windowWidth / WIDTH;
@@ -538,38 +543,30 @@ public class GUIBuilder {
 
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
-
+            
+            if (!node.getTransforms().contains(scale)) {
+            	node.getTransforms().add(scale);
+            }
+            
             if (widthScale < heightScale) {
-                node.setScaleY(widthScale);
-                node.setScaleX(widthScale);
-
+            	scale.setX(widthScale);
+            	scale.setY(widthScale);
             }
             else {
-                node.setScaleY(heightScale);
-                node.setScaleX(heightScale);
+            	scale.setX(heightScale);
+            	scale.setY(heightScale);
             }
             double nodeWidth = node.getLayoutBounds().getWidth();
             double nodeHeight = node.getLayoutBounds().getHeight();
             double nodeCenterX = node.getLayoutX() + nodeWidth / 2;
             double nodeCenterY = node.getLayoutY() + nodeHeight / 2;
 
-            // double newX = ((nodeCenterX-OLD_CENTER_X)*(windowWidth/OLD_WIDTH)) +
-            // NEW_CENTER_X - nodeWidth/2;
-            double newX = (nodeCenterX * windowWidth / OLD_WIDTH) - nodeWidth / 2;
+            double newX = (node.getLayoutX()*(widthScale-1));
+            node.setTranslateX(newX);
 
-            if (node.layoutXProperty().isBound() != true) {
-                node.setLayoutX(newX);
-            }
-            // double newY = ((nodeCenterY-OLD_CENTER_Y)*(windowHeight/OLD_HEIGHT)) +
-            // NEW_CENTER_Y - nodeHeight/2;
-            double newY = (nodeCenterY * windowHeight / OLD_HEIGHT) - nodeHeight / 2;
-
-            if (node.layoutYProperty().isBound() != true) {
-                node.setLayoutY(newY);
-            }
+            double newY = (node.getLayoutY()*(heightScale-1));
+            node.setTranslateY(newY);
         }
-        OLD_CENTER_X = NEW_CENTER_X;
-        OLD_CENTER_Y = NEW_CENTER_Y;
         OLD_WIDTH = windowWidth;
         OLD_HEIGHT = windowHeight;
     }
