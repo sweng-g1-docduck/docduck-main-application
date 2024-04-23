@@ -32,8 +32,8 @@ public class GUIBuilder {
     private HostServices hostServices;
     private static GUIBuilder instance;
     private static EventManager events;
-    private double OLD_WIDTH = 1280;
-    private double OLD_HEIGHT = 720;
+    private double CURRENT_WINDOW_WIDTH = 1280;
+    private double CURRENT_WINDOW_HEIGHT = 720;
     private Scale scale;
 
     private GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
@@ -76,11 +76,7 @@ public class GUIBuilder {
 
         root.getChildren().addAll(nodeList);
         
-        double windowWidth = OLD_WIDTH;
-        double windowHeight = OLD_HEIGHT;
-        OLD_WIDTH = 1280;
-        OLD_HEIGHT = 720;
-        scaleNodes(windowWidth, windowHeight);
+        scaleNodes(CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
     private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
@@ -563,7 +559,7 @@ public class GUIBuilder {
             double newY = (node.getLayoutY()*(heightScale-1));
             node.setTranslateY(newY);
         }
-        OLD_WIDTH = windowWidth;
-        OLD_HEIGHT = windowHeight;
+        CURRENT_WINDOW_WIDTH = windowWidth;
+        CURRENT_WINDOW_HEIGHT = windowHeight;
     }
 }
