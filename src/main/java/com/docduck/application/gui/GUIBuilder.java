@@ -540,6 +540,15 @@ public class GUIBuilder {
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
         ObservableList<Node> nodes = root.getChildren();
+        
+        if (widthScale < heightScale) {
+        	scale.setX(widthScale);
+        	scale.setY(widthScale);
+        }
+        else {
+        	scale.setX(heightScale);
+        	scale.setY(heightScale);
+        }
 
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
@@ -548,19 +557,6 @@ public class GUIBuilder {
             	node.getTransforms().add(scale);
             }
             
-            if (widthScale < heightScale) {
-            	scale.setX(widthScale);
-            	scale.setY(widthScale);
-            }
-            else {
-            	scale.setX(heightScale);
-            	scale.setY(heightScale);
-            }
-            double nodeWidth = node.getLayoutBounds().getWidth();
-            double nodeHeight = node.getLayoutBounds().getHeight();
-            double nodeCenterX = node.getLayoutX() + nodeWidth / 2;
-            double nodeCenterY = node.getLayoutY() + nodeHeight / 2;
-
             double newX = (node.getLayoutX()*(widthScale-1));
             node.setTranslateX(newX);
 
