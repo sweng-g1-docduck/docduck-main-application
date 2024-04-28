@@ -253,6 +253,26 @@
                 <xs:documentation> The scale of the shape; the size it takes up in the given space on the slide. </xs:documentation>
             </xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="radius" type="xs:decimal" use="optional">
+			<xs:annotation>
+                <xs:documentation> The radius of the shape; overrides scale if the shape takes a radius. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="radius2" type="xs:decimal" use="optional">
+			<xs:annotation>
+                <xs:documentation> The radius of the shape; overrides scale if the shape takes a radius. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="width" type="xs:decimal" use="optional">
+			<xs:annotation>
+                <xs:documentation> The radius of the shape; overrides scale if the shape takes a radius. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="height" type="xs:decimal" use="optional">
+			<xs:annotation>
+                <xs:documentation> The radius of the shape; overrides scale if the shape takes a radius. </xs:documentation>
+            </xs:annotation>
+		</xs:attribute>
 		<xs:attributeGroup ref="position"/>
         <xs:attributeGroup ref="border"/>
     </xs:attributeGroup>  

@@ -22,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.transform.Scale;
 
 public class GUIBuilder {
@@ -162,25 +161,76 @@ public class GUIBuilder {
 
                 Hashtable<String, Object> shapeData = xmlData
                         .get(shape + delimiter + slideNumber + delimiter + occurance);
-
+                
+                Double SHAPE_SCALE_RANGE = 100.0;
                 String shapeType = (String) shapeData.get("type");
+                String c = (String) shapeData.get("shapeColour");
+                String shapeColour = c.substring(0,c.length()-2);
+                Double shapeRotation = (Double) shapeData.get("shapeRotation");
+                Integer x = (Integer) shapeData.get("xCoordinate");
+                Double xCoordinate = x.doubleValue();
+                Integer y = (Integer) shapeData.get("yCoordinate");
+                Double yCoordinate = y.doubleValue();
+                Double shapeScale = (Double) shapeData.get("shapeScale");
+                String o = c.substring(c.length()-2);
+                Long hex = Long.parseLong(o,16);
+                Double shapeOpacity = hex.doubleValue() / 255;
+                System.out.println(shapeOpacity);
+                System.out.println(hex);
+                Double radius;
+                Double radius2;
+                Double width;
+                Double height;
+                String borderColour = (String) shapeData.get("borderColour");
+                Double borderWidth = (Double) shapeData.get("borderWidth");
+                
+                if (shapeData.get("radius") != null && shapeData.get("radius2") != null) {
+                	radius = (Double) shapeData.get("radius");
+                	radius2 = (Double) shapeData.get("radius2");
+                }
+            	else if (shapeData.get("radius") != null && shapeData.get("radius2") == null) {
+            		radius = (Double) shapeData.get("radius");
+            		radius2 = 1.5*radius;
+            	}
+            	else if (shapeData.get("radius") == null && shapeData.get("radius2") != null) {
+            		radius2 = (Double) shapeData.get("radius2");
+            		radius = radius2/1.5;
+            	}
+                else {
+                	radius = 720 * shapeScale/SHAPE_SCALE_RANGE;
+                	radius2 = 1.5*radius;
+                }
+                
+                if (shapeData.get("width") != null && shapeData.get("height") != null) {
+                	width = (Double) shapeData.get("width");
+                	height = (Double) shapeData.get("height");
+                }
+            	else if (shapeData.get("width") != null && shapeData.get("height") == null) {
+            		width = (Double) shapeData.get("width");
+            		height = width/1.5;
+            	}
+            	else if (shapeData.get("width") == null && shapeData.get("height") != null) {
+            		height = (Double) shapeData.get("height");
+            		width = height*1.5;
+            	}
+                else {
+                	height = 720 * shapeScale/SHAPE_SCALE_RANGE;
+                	width = 1.5*height;
+                }
 
                 switch (shapeType) {
                 case "circle":
-                    Circle circle = new Circle();
-                    circle.setLayoutX((Integer) shapeData.get("xCoordinate"));
-                    circle.setLayoutY((Integer) shapeData.get("yCoordinate"));
-                    circle.setScaleX((Double) shapeData.get("shapeScale"));
-//                    circle.setStroke(Color.web((String) shapeData.get("borderColour")));
+                    Ellipse circle = new Ellipse(radius, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    circle.rotate(shapeRotation);
+                    circle.setStroke(Color.web(borderColour), borderWidth);
+                    
                     nodeList.add(circle);
                     break;
                 case "ellipse":
-                    Ellipse ellipse = new Ellipse(50, Color.web((String) shapeData.get("shapeColour")), 100.0,
-                            (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-//                    ellipse.setScaleX((Double) shapeData.get("shapeScale"));
-                    ellipse.rotate((Double) shapeData.get("shapeRotation"));
-                    ellipse.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                    Ellipse ellipse = new Ellipse(radius, radius2, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    ellipse.rotate(shapeRotation);
+                    ellipse.setStroke(Color.web(borderColour), borderWidth);
+                    
                     nodeList.add(ellipse);
                     break;
                 case "lineSegment":
@@ -189,32 +239,33 @@ public class GUIBuilder {
 //                            OLD_CENTER_X);
                     break;
                 case "triangle":
-                    RegularShape triangle = new RegularShape(3, 50, Color.web((String) shapeData.get("shapeColour")),
-                            100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-//                    triangle.setScaleX((Double) shapeData.get("shapeScale"));
-                    triangle.rotate((Double) shapeData.get("shapeRotation"));
-                    triangle.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                	RegularShape triangle = new RegularShape(3, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    triangle.rotate(shapeRotation);
+                    triangle.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(triangle);
                     break;
                 case "square":
-                    RegularShape square = new RegularShape(4, 50, Color.web((String) shapeData.get("shapeColour")),
-                            100.0, (Double) shapeData.get("xCoordinate"), (Double) shapeData.get("yCoordinate"));
-                    square.setScaleX((Double) shapeData.get("shapeScale"));
-                    square.rotate((Double) shapeData.get("shapeRotation"));
-                    square.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                	RegularShape square = new RegularShape(4, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    square.rotate(shapeRotation);
+                    square.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(square);
                     break;
+                case "pentagon":
+                	RegularShape pentagon = new RegularShape(5, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    pentagon.rotate(shapeRotation);
+                    pentagon.setStroke(Color.web(borderColour), borderWidth);
+                    nodeList.add(pentagon);
+                    break;
+                case "hexagon":
+                	RegularShape hexagon = new RegularShape(6, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    hexagon.rotate(shapeRotation);
+                    hexagon.setStroke(Color.web(borderColour), borderWidth);
+                    nodeList.add(hexagon);
+                    break;
                 case "rectangle":
-                    Rectangle rectangle = new Rectangle(100.0, 50.0, Color.web((String) shapeData.get("shapeColour")),
-                            100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-                    rectangle.setLayoutX((Integer) shapeData.get("xCoordinate"));
-                    rectangle.setLayoutY((Integer) shapeData.get("yCoordinate"));
-                    rectangle.rotate((Double) shapeData.get("shapeRotation"));
-//                    rectangle.setScaleX((Double) shapeData.get("shapeScale"));
-                    rectangle.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                    Rectangle rectangle = new Rectangle(width, height, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    rectangle.rotate(shapeRotation);
+                    rectangle.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(rectangle);
                     break;
                 }
