@@ -37,11 +37,13 @@
 
 	    <textBox cornerRadius="10" lineSpacing="1" width="150" height="100" text="Bunsen Burner 10" font="Arial" fontSize="14" fontColour="#000000ff" xCoordinate="900" yCoordinate="520" borderWidth="3.0" borderColour="#8ABAFAff"/>
 
+
 	    <shape type="rectangle" shapeColour="#1f5398ff" shapeScale="10" xCoordinate="500" yCoordinate="-200" />
 		<shape type="rectangle" shapeColour="#ffff0fff" shapeScale="10" xCoordinate="150" yCoordinate="420" />
 		<shape type="triangle" shapeColour="#ffff0fff" shapeScale="10" xCoordinate="400" yCoordinate="420" />
 		<shape type="circle" shapeColour="#ffff0fff" shapeScale="10" xCoordinate="650" yCoordinate="420" />
 		<shape type="ellipse" shapeColour="#ffff0fff" shapeScale="10" xCoordinate="900" yCoordinate="420" />
+
 
 	    <image imageURL="/docducklogo.png" imageScale="130" xCoordinate="10" yCoordinate="10"/>
 <!-- 	    <image imageURL="/chemistry_lab_icon.png" imageScale="35" xCoordinate="900" yCoordinate="300"/> -->
