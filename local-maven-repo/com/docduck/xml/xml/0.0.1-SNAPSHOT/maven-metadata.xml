@@ -3,21 +3,21 @@
   <groupId>com.docduck.xml</groupId>
   <artifactId>xml</artifactId>
   <versioning>
-    <lastUpdated>20240404162356</lastUpdated>
+    <lastUpdated>20240428141147</lastUpdated>
     <snapshot>
-      <timestamp>20240404.162356</timestamp>
-      <buildNumber>5</buildNumber>
+      <timestamp>20240428.141147</timestamp>
+      <buildNumber>6</buildNumber>
     </snapshot>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.0.1-20240404.162356-5</value>
-        <updated>20240404162356</updated>
+        <value>0.0.1-20240428.141147-6</value>
+        <updated>20240428141147</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.0.1-20240404.162356-5</value>
-        <updated>20240404162356</updated>
+        <value>0.0.1-20240428.141147-6</value>
+        <updated>20240428141147</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>

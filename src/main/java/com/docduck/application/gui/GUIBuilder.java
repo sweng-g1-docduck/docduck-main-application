@@ -2,7 +2,6 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.graphicslibrary.Ellipse;
 import com.docduck.graphicslibrary.Rectangle;
@@ -11,6 +10,8 @@ import com.docduck.textlibrary.TextBox;
 import com.docduck.textlibrary.TextBox.Origin;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import javafx.application.HostServices;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
+import javafx.scene.transform.Scale;
 
 public class GUIBuilder {
 
@@ -31,15 +32,15 @@ public class GUIBuilder {
     private HostServices hostServices;
     private static GUIBuilder instance;
     private static EventManager events;
-    private double OLD_CENTER_X = 640;
-    private double OLD_CENTER_Y = 360;
-    private double OLD_WIDTH = 1280;
-    private double OLD_HEIGHT = 720;
+    private double CURRENT_WINDOW_WIDTH = 1280;
+    private double CURRENT_WINDOW_HEIGHT = 720;
+    private Scale scale;
 
     private GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
         this.xmlData = xmlData;
         this.root = root;
         this.hostServices = hostServices;
+        this.scale = new Scale();
     }
 
     public static GUIBuilder createInstance(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root,
@@ -74,6 +75,8 @@ public class GUIBuilder {
         nodeList = buildTextFields(nodeList, slideNumber);
 
         root.getChildren().addAll(nodeList);
+        
+        scaleNodes(CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
     private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
@@ -130,14 +133,13 @@ public class GUIBuilder {
                 textbox.setFontColour((String) textBoxData.get("fontColour"));
                 textbox.setCharacterSpacing((Double) textBoxData.get("characterSpacing"));
                 textbox.setLineSpacing((Double) textBoxData.get("lineSpacing"));
-                textbox.setPositionX((Integer) textBoxData.get("xCoordinate"));
-                textbox.setPositionY((Integer) textBoxData.get("yCoordinate"));
                 textbox.addBorder();
                 textbox.setBorderColour((String) textBoxData.get("borderColour"));
                 Double borderWidth = (Double) textBoxData.get("borderWidth");
                 textbox.setBorderWidth(borderWidth.intValue());
                 textbox.setMargin(borderWidth / 2.0);
-
+                textbox.setPositionX((Integer) textBoxData.get("xCoordinate"));
+                textbox.setPositionY((Integer) textBoxData.get("yCoordinate"));
                 nodeList.add(textbox.returnBackground());
                 nodeList.add(textbox);
                 hasDataRemaining = true;
@@ -160,25 +162,76 @@ public class GUIBuilder {
 
                 Hashtable<String, Object> shapeData = xmlData
                         .get(shape + delimiter + slideNumber + delimiter + occurance);
-
+                
+                Double SHAPE_SCALE_RANGE = 100.0;
                 String shapeType = (String) shapeData.get("type");
+                String c = (String) shapeData.get("shapeColour");
+                String shapeColour = c.substring(0,c.length()-2);
+                Double shapeRotation = (Double) shapeData.get("shapeRotation");
+                Integer x = (Integer) shapeData.get("xCoordinate");
+                Double xCoordinate = x.doubleValue();
+                Integer y = (Integer) shapeData.get("yCoordinate");
+                Double yCoordinate = y.doubleValue();
+                Double shapeScale = (Double) shapeData.get("shapeScale");
+                String o = c.substring(c.length()-2);
+                Long hex = Long.parseLong(o,16);
+                Double shapeOpacity = hex.doubleValue() / 255;
+                System.out.println(shapeOpacity);
+                System.out.println(hex);
+                Double radius;
+                Double radius2;
+                Double width;
+                Double height;
+                String borderColour = (String) shapeData.get("borderColour");
+                Double borderWidth = (Double) shapeData.get("borderWidth");
+                
+                if (shapeData.get("radius") != null && shapeData.get("radius2") != null) {
+                	radius = (Double) shapeData.get("radius");
+                	radius2 = (Double) shapeData.get("radius2");
+                }
+            	else if (shapeData.get("radius") != null && shapeData.get("radius2") == null) {
+            		radius = (Double) shapeData.get("radius");
+            		radius2 = 1.5*radius;
+            	}
+            	else if (shapeData.get("radius") == null && shapeData.get("radius2") != null) {
+            		radius2 = (Double) shapeData.get("radius2");
+            		radius = radius2/1.5;
+            	}
+                else {
+                	radius = 720 * shapeScale/SHAPE_SCALE_RANGE;
+                	radius2 = 1.5*radius;
+                }
+                
+                if (shapeData.get("width") != null && shapeData.get("height") != null) {
+                	width = (Double) shapeData.get("width");
+                	height = (Double) shapeData.get("height");
+                }
+            	else if (shapeData.get("width") != null && shapeData.get("height") == null) {
+            		width = (Double) shapeData.get("width");
+            		height = width/1.5;
+            	}
+            	else if (shapeData.get("width") == null && shapeData.get("height") != null) {
+            		height = (Double) shapeData.get("height");
+            		width = height*1.5;
+            	}
+                else {
+                	height = 720 * shapeScale/SHAPE_SCALE_RANGE;
+                	width = 1.5*height;
+                }
 
                 switch (shapeType) {
                 case "circle":
-                    Circle circle = new Circle();
-                    circle.setLayoutX((Integer) shapeData.get("xCoordinate"));
-                    circle.setLayoutY((Integer) shapeData.get("yCoordinate"));
-                    circle.setScaleX((Double) shapeData.get("shapeScale"));
-//                    circle.setStroke(Color.web((String) shapeData.get("borderColour")));
+                    Ellipse circle = new Ellipse(radius, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    circle.rotate(shapeRotation);
+                    circle.setStroke(Color.web(borderColour), borderWidth);
+                    
                     nodeList.add(circle);
                     break;
                 case "ellipse":
-                    Ellipse ellipse = new Ellipse(50, Color.web((String) shapeData.get("shapeColour")), 100.0,
-                            (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-//                    ellipse.setScaleX((Double) shapeData.get("shapeScale"));
-                    ellipse.rotate((Double) shapeData.get("shapeRotation"));
-                    ellipse.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                    Ellipse ellipse = new Ellipse(radius, radius2, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    ellipse.rotate(shapeRotation);
+                    ellipse.setStroke(Color.web(borderColour), borderWidth);
+                    
                     nodeList.add(ellipse);
                     break;
                 case "lineSegment":
@@ -187,32 +240,33 @@ public class GUIBuilder {
 //                            OLD_CENTER_X);
                     break;
                 case "triangle":
-                    RegularShape triangle = new RegularShape(3, 50, Color.web((String) shapeData.get("shapeColour")),
-                            100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-//                    triangle.setScaleX((Double) shapeData.get("shapeScale"));
-                    triangle.rotate((Double) shapeData.get("shapeRotation"));
-                    triangle.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                	RegularShape triangle = new RegularShape(3, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    triangle.rotate(shapeRotation);
+                    triangle.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(triangle);
                     break;
                 case "square":
-                    RegularShape square = new RegularShape(4, 50, Color.web((String) shapeData.get("shapeColour")),
-                            100.0, (Double) shapeData.get("xCoordinate"), (Double) shapeData.get("yCoordinate"));
-                    square.setScaleX((Double) shapeData.get("shapeScale"));
-                    square.rotate((Double) shapeData.get("shapeRotation"));
-                    square.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                	RegularShape square = new RegularShape(4, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    square.rotate(shapeRotation);
+                    square.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(square);
                     break;
+                case "pentagon":
+                	RegularShape pentagon = new RegularShape(5, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    pentagon.rotate(shapeRotation);
+                    pentagon.setStroke(Color.web(borderColour), borderWidth);
+                    nodeList.add(pentagon);
+                    break;
+                case "hexagon":
+                	RegularShape hexagon = new RegularShape(6, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    hexagon.rotate(shapeRotation);
+                    hexagon.setStroke(Color.web(borderColour), borderWidth);
+                    nodeList.add(hexagon);
+                    break;
                 case "rectangle":
-                    Rectangle rectangle = new Rectangle(100.0, 50.0, Color.web((String) shapeData.get("shapeColour")),
-                            100.0, (Integer) shapeData.get("xCoordinate"), (Integer) shapeData.get("yCoordinate"));
-                    rectangle.setLayoutX((Integer) shapeData.get("xCoordinate"));
-                    rectangle.setLayoutY((Integer) shapeData.get("yCoordinate"));
-                    rectangle.rotate((Double) shapeData.get("shapeRotation"));
-//                    rectangle.setScaleX((Double) shapeData.get("shapeScale"));
-                    rectangle.setStroke(Color.web((String) shapeData.get("borderColour")),
-                            (Double) shapeData.get("borderWidth"));
+                    Rectangle rectangle = new Rectangle(width, height, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    rectangle.rotate(shapeRotation);
+                    rectangle.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(rectangle);
                     break;
                 }
@@ -238,8 +292,13 @@ public class GUIBuilder {
                         .get(image + delimiter + slideNumber + delimiter + occurance);
 
                 // Hard coded logo as Image Library not done yet
-                ImageView logo = new ImageView(
-                        new Image(getClass().getResourceAsStream((String) imageData.get("imageURL"))));
+                ImageView logo = null;
+				try {
+					logo = new ImageView(
+					        new Image(new FileInputStream("src/main/resources" + (String) imageData.get("imageURL"))));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 //                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
                 logo.setLayoutX((int) imageData.get("xCoordinate"));
                 logo.setLayoutY((int) imageData.get("yCoordinate"));
@@ -340,9 +399,9 @@ public class GUIBuilder {
                 b.setFontName((String) buttonData.get("font"));
                 b.setFontColour((String) buttonData.get("fontColour"));
                 b.setFontSize((Integer) buttonData.get("fontSize"));
-                b.setPositionX((Integer) buttonData.get("xCoordinate"));
-                b.setPositionY((Integer) buttonData.get("yCoordinate"));
-
+                b.setLayoutX((Integer) buttonData.get("xCoordinate"));
+                b.setLayoutY((Integer) buttonData.get("yCoordinate"));
+                
                 nodeList.add(b);
 
                 hasDataRemaining = true;
@@ -437,8 +496,6 @@ public class GUIBuilder {
 
                     textfield.setBoxWidth((Double) textFieldData.get("width"));
                     textfield.setBoxHeight((Double) textFieldData.get("height"));
-                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
-                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
                     textfield.setFontName((String) textFieldData.get("font"));
                     textfield.setFontColour((String) textFieldData.get("fontColour"));
                     textfield.setFontSize((Integer) textFieldData.get("fontSize"));
@@ -451,6 +508,8 @@ public class GUIBuilder {
                     textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
                     textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
                     textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
+                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
+                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
 
                     if (textFieldData.get("promptText") != null) {
                         textfield.setPromptText((String) textFieldData.get("promptText"));
@@ -469,6 +528,7 @@ public class GUIBuilder {
                     }
 
                     // Could add text origin?
+                    
 
                     nodeList.add(textfield.returnPasswordField());
                     nodeList.add(textfield);
@@ -483,8 +543,6 @@ public class GUIBuilder {
 
                     textfield.setBoxWidth((Double) textFieldData.get("width"));
                     textfield.setBoxHeight((Double) textFieldData.get("height"));
-                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
-                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
                     textfield.setFontName((String) textFieldData.get("font"));
                     textfield.setFontColour((String) textFieldData.get("fontColour"));
                     textfield.setFontSize((Integer) textFieldData.get("fontSize"));
@@ -497,6 +555,8 @@ public class GUIBuilder {
                     textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
                     textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
                     textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
+                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
+                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
 
                     if (textFieldData.get("promptText") != null) {
                         textfield.setPromptText((String) textFieldData.get("promptText"));
@@ -528,49 +588,35 @@ public class GUIBuilder {
     }
 
     public void scaleNodes(double windowWidth, double windowHeight) {
-        double NEW_CENTER_X = windowWidth / 2;
-        double NEW_CENTER_Y = windowHeight / 2;
         double WIDTH = 1280;
         double HEIGHT = 720;
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
         ObservableList<Node> nodes = root.getChildren();
+        
+        if (widthScale < heightScale) {
+        	scale.setX(widthScale);
+        	scale.setY(widthScale);
+        }
+        else {
+        	scale.setX(heightScale);
+        	scale.setY(heightScale);
+        }
 
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
-
-            if (widthScale < heightScale) {
-                node.setScaleY(widthScale);
-                node.setScaleX(widthScale);
-
+            
+            if (!node.getTransforms().contains(scale)) {
+            	node.getTransforms().add(scale);
             }
-            else {
-                node.setScaleY(heightScale);
-                node.setScaleX(heightScale);
-            }
-            double nodeWidth = node.getLayoutBounds().getWidth();
-            double nodeHeight = node.getLayoutBounds().getHeight();
-            double nodeCenterX = node.getLayoutX() + nodeWidth / 2;
-            double nodeCenterY = node.getLayoutY() + nodeHeight / 2;
+            
+            double newX = (node.getLayoutX()*(widthScale-1));
+            node.setTranslateX(newX);
 
-            // double newX = ((nodeCenterX-OLD_CENTER_X)*(windowWidth/OLD_WIDTH)) +
-            // NEW_CENTER_X - nodeWidth/2;
-            double newX = (nodeCenterX * windowWidth / OLD_WIDTH) - nodeWidth / 2;
-
-            if (node.layoutXProperty().isBound() != true) {
-                node.setLayoutX(newX);
-            }
-            // double newY = ((nodeCenterY-OLD_CENTER_Y)*(windowHeight/OLD_HEIGHT)) +
-            // NEW_CENTER_Y - nodeHeight/2;
-            double newY = (nodeCenterY * windowHeight / OLD_HEIGHT) - nodeHeight / 2;
-
-            if (node.layoutYProperty().isBound() != true) {
-                node.setLayoutY(newY);
-            }
+            double newY = (node.getLayoutY()*(heightScale-1));
+            node.setTranslateY(newY);
         }
-        OLD_CENTER_X = NEW_CENTER_X;
-        OLD_CENTER_Y = NEW_CENTER_Y;
-        OLD_WIDTH = windowWidth;
-        OLD_HEIGHT = windowHeight;
+        CURRENT_WINDOW_WIDTH = windowWidth;
+        CURRENT_WINDOW_HEIGHT = windowHeight;
     }
 }
