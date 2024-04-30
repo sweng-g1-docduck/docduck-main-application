@@ -19,8 +19,8 @@ public class DocDuckApplication extends Application {
     @Override
     public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
-        FTPHandler FTPHandler = new FTPHandler();
-        FTPHandler.downloadAllFiles();
+//        FTPHandler FTPHandler = new FTPHandler();
+//        FTPHandler.downloadAllFiles();
         XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
                 "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();

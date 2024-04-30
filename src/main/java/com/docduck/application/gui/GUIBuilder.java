@@ -2,7 +2,6 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.graphicslibrary.Ellipse;
 import com.docduck.graphicslibrary.Rectangle;
@@ -11,6 +10,8 @@ import com.docduck.textlibrary.TextBox;
 import com.docduck.textlibrary.TextBox.Origin;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import javafx.application.HostServices;
 import javafx.collections.ObservableList;
@@ -291,8 +292,13 @@ public class GUIBuilder {
                         .get(image + delimiter + slideNumber + delimiter + occurance);
 
                 // Hard coded logo as Image Library not done yet
-                ImageView logo = new ImageView(
-                        new Image(getClass().getResourceAsStream((String) imageData.get("imageURL"))));
+                ImageView logo = null;
+				try {
+					logo = new ImageView(
+					        new Image(new FileInputStream("src/main/resources" + (String) imageData.get("imageURL"))));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
 //                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
                 logo.setLayoutX((int) imageData.get("xCoordinate"));
                 logo.setLayoutY((int) imageData.get("yCoordinate"));

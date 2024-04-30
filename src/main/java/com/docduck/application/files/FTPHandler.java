@@ -3,6 +3,8 @@ package com.docduck.application.files;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -66,6 +68,7 @@ public class FTPHandler {
 
             ftp.logout();
             ftp.disconnect();
+            //TimeUnit.SECONDS.sleep(1);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
