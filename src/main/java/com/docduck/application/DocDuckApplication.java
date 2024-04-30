@@ -1,8 +1,9 @@
 package com.docduck.application;
 
 import com.docduck.application.gui.GUIBuilder;
+import com.docduck.application.xmldom.XMLDOM;
 import com.docduck.application.xmlreader.XMLReader;
-import com.docduck.application.files.FTPHandler;
+
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Node;
@@ -18,16 +19,32 @@ public class DocDuckApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+
         System.out.println("Starting DocDuck Application");
+
+        XMLDOM xmlDom = new XMLDOM("src/main/resources/DocDuckDataExample.xml",
+                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true);
+
+        try {
+            xmlDom.setupDOM();
+        }
+        catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
 //        FTPHandler FTPHandler = new FTPHandler();
 //        FTPHandler.downloadAllFiles();
         XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
                 "src/main/resources/DocDuckStandardSchema.xsd", true);
         myReader.readXML();
-        myReader.printXMLData();
+//        myReader.printXMLData();
+
         root = new Pane();
+
         GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
         builder.buildSlide(1);
+
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
@@ -37,26 +54,11 @@ public class DocDuckApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-        // Hard coded logo as Image Library not done yet
-//        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
-//        logo.setLayoutX(390); 
-//        logo.setLayoutY(80); 
-//        logo.setFitWidth(500); 
-//        logo.setPreserveRatio(true);
-//        root.getChildren().add(logo);
-
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> builder
                 .scaleNodes(stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
-
-        // ORDER OF PROGRAM
-        // Load up JavaFX
-        // Needs to check if there are any xml files to display a slide or slideshow
-        // If there are xml files, find ids of each and order them
-        // Display ID 1 slide
-        // If buttons, add in their actions, do they go to slide 2? etc.
 
     }
 

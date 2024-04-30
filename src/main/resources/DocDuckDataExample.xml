@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docduckData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DocDuckStandardSchema_WithData.xsd">
+  <machineData>
+    <machine id="1">
+      <name>Computer 1</name>
+      <components>
+        <component id="1">
+          <name>Motherboard</name>
+          <quantity>1</quantity>
+          <parts>
+            <part id="1">
+              <name>CPU</name>
+              <serialNumber>39df84kdu4</serialNumber>
+              <quantity>1</quantity>
+            </part>
+            <part id="2">
+              <name>GPU</name>
+              <serialNumber>4k38fu3746</serialNumber>
+              <quantity>1</quantity>
+            </part>
+          </parts>
+        </component>
+      </components>
+    </machine>
+  </machineData>
+  
+  <userData>
+    <user id="1">
+      <name>James Stevenson</name>
+      <username>js2140</username>
+      <password>js12345</password>
+      <email>js2140@york.ac.uk</email>
+      <role>Admin</role>
+    </user>
+    <user id="2">
+      <name>William Betteridge</name>
+      <username>wab513</username>
+      <password>wab12345</password>
+      <email>wab513@york.ac.uk</email>
+      <role>Admin</role>
+    </user>
+  </userData>
+</docduckData>

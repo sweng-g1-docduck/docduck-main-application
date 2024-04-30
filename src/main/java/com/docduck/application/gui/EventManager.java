@@ -98,8 +98,6 @@ public class EventManager {
 
     public EventHandler<KeyEvent> getKeyEvent(String eventID) {
 
-        System.out.println("hi");
-
         switch (eventID) {
         case "Search...":
             EventHandler<KeyEvent> searchEvent = new EventHandler<KeyEvent>() {
