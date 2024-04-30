@@ -42,6 +42,7 @@
 		<shape type="triangle" shapeColour="#ffff0fff" shapeScale="10" xCoordinate="400" yCoordinate="420" />
 		<shape type="circle" shapeColour="#ffff0f60" shapeScale="10" xCoordinate="650" yCoordinate="420" />
 		<shape type="ellipse" shapeColour="#ffff0fff" shapeScale="10" xCoordinate="900" yCoordinate="420" />
+=======
         <shape type="rectangle" shapeColour="#1f5398ff" shapeScale="1000" xCoordinate="500" yCoordinate="-200" />
 	    <shape type="rectangle" shapeColour="#1f5398ff" shapeScale="100" xCoordinate="500" yCoordinate="-200" />
 		<shape type="rectangle" shapeColour="#ffff0fff" shapeScale="100" xCoordinate="150" yCoordinate="420" />
