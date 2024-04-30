@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1db53b8f-f6d1-4040-9291-436c6e3d12d3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/docduck-application-slides.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/docduck-application-slides.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,7 +33,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "iteration-two-luke",
+    "git-widget-placeholder": "iteration-one-rob",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -55,19 +56,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="docduck-main-application" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="docduck-main-application" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.DocDuckApplication" />
@@ -84,6 +72,8 @@
       <updated>1714427250352</updated>
       <workItem from="1714427251737" duration="1713000" />
       <workItem from="1714429527289" duration="1353000" />
+      <workItem from="1714478662220" duration="304000" />
+      <workItem from="1714478977822" duration="287000" />
     </task>
     <servers />
   </component>
