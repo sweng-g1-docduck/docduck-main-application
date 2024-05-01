@@ -29,6 +29,7 @@ public class XMLDOM {
     private int indent = 0;
     private final String basicIndent = " ";
 
+    // The document that stores the whole xml file
     private Document doc;
 
     public XMLDOM(String xmlFilename, String schemaFilename, boolean validate) {
