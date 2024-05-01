@@ -94,11 +94,40 @@ public class XMLDOM {
             Node subnode = list.item(i);
 
             if (subnode.getNodeType() == Node.ELEMENT_NODE) {
-                return subnode;
+
+                if (subnode.getNodeName().equals(name)) {
+                    return subnode;
+                }
             }
         }
-
         return node;
+    }
+
+    public String getText(Node node) {
+
+        StringBuffer result = new StringBuffer();
+
+        if (node.hasChildNodes() == false) {
+            return "";
+        }
+
+        NodeList list = node.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            Node subnode = list.item(i);
+
+            if (subnode.getNodeType() == Node.TEXT_NODE) {
+                result.append(subnode.getNodeValue());
+            }
+            else if (subnode.getNodeType() == Node.CDATA_SECTION_NODE) {
+                result.append(subnode.getNodeValue());
+            }
+            else if (subnode.getNodeType() == Node.ENTITY_REFERENCE_NODE) {
+                // Recurse into the subtree for text
+                result.append(getText(subnode));
+            }
+        }
+        return result.toString();
     }
 
     /**
