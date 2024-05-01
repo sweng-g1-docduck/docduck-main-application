@@ -13,6 +13,7 @@ import org.w3c.dom.DocumentType;
 import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class XMLDOM {
 
@@ -27,6 +28,8 @@ public class XMLDOM {
     private PrintWriter out;
     private int indent = 0;
     private final String basicIndent = " ";
+
+    private Document doc;
 
     public XMLDOM(String xmlFilename, String schemaFilename, boolean validate) {
         this.xmlFilename = xmlFilename;
@@ -71,11 +74,45 @@ public class XMLDOM {
 
         db.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
 
-        Document doc = db.parse(new File(xmlFilename));
+        this.doc = db.parse(new File(xmlFilename));
+    }
 
+    public Node findSubNode(String name, Node node) {
+
+        if (node.getNodeType() != Node.ELEMENT_NODE) {
+            System.err.println("Error: Search node not of element type");
+        }
+
+        if (node.hasChildNodes() == false) {
+            System.out.println("Warning: Search does not have any child nodes");
+            return null;
+        }
+
+        NodeList list = node.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            Node subnode = list.item(i);
+
+            if (subnode.getNodeType() == Node.ELEMENT_NODE) {
+                return subnode;
+            }
+        }
+
+        return node;
+    }
+
+    /**
+     * Prints the whole DOM Tree in full
+     */
+    public void printDOMTree() {
         echo(doc.getFirstChild());
     }
 
+    /**
+     * Provides the node type information
+     * 
+     * @param n The current node
+     */
     private void printlnCommon(Node n) {
         out.print(" nodeName=\"" + n.getNodeName() + "\"");
 
@@ -113,6 +150,9 @@ public class XMLDOM {
         out.println();
     }
 
+    /**
+     * Prints the indentation required when printing the whole DOM tree
+     */
     private void outputIndentation() {
 
         for (int i = 0; i < indent; i++) {
@@ -120,6 +160,12 @@ public class XMLDOM {
         }
     }
 
+    /**
+     * Prints out the DOM tree nodes with the appropriate indentation.
+     * 
+     * @param n The node to start printing from. Give it the start node to print the
+     *          whole tree
+     */
     private void echo(Node n) {
         outputIndentation();
         int type = n.getNodeType();

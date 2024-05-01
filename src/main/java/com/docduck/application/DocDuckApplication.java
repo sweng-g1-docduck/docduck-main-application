@@ -33,6 +33,8 @@ public class DocDuckApplication extends Application {
             e.printStackTrace();
         }
 
+        xmlDom.printDOMTree();
+
 //        FTPHandler FTPHandler = new FTPHandler();
 //        FTPHandler.downloadAllFiles();
         XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
