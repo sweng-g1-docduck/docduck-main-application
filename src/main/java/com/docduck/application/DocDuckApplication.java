@@ -27,7 +27,7 @@ public class DocDuckApplication extends Application {
         myReader.printXMLData();
         root = new Pane();
         GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
-        builder.buildSlide(1);
+        builder.buildLoginPage();
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
@@ -46,7 +46,7 @@ public class DocDuckApplication extends Application {
 //        root.getChildren().add(logo);
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> builder
-                .scaleNodes(stage.getWidth(), stage.getHeight());
+                .scaleNodes(root, stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);

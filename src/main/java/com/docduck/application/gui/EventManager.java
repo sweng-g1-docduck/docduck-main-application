@@ -55,6 +55,8 @@ public class EventManager {
                     if (username.getText().equals("admin") && password.getText().equals("password")) {
                         password.setBorderWidth(0);
                         System.out.println("Logged in!");
+                        root.getChildren().clear();
+                        root.getChildren().add(builder.buildMenu());
                         builder.buildSlide(2);
                     }
                     else {

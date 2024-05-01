@@ -69,6 +69,11 @@
         	<artifactId>buttonlibrary</artifactId>
         	<version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+			<groupId>uk.co.bookcook</groupId>
+        	<artifactId>media-library</artifactId>
+        	<version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     
     <build>

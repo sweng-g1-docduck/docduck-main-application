@@ -17,13 +17,21 @@ import javafx.application.HostServices;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Scale;
+import uk.co.bookcook.BCMediaPlayer;
 
 public class GUIBuilder {
 
@@ -57,12 +65,9 @@ public class GUIBuilder {
         return instance;
     }
 
-    public void buildSlide(int slideNumber) {
+    public ArrayList<Node> buildSlide(int slideNumber) {
 
         ArrayList<Node> nodeList = new ArrayList<>();
-
-        root.getChildren().clear();
-        root.setStyle("-fx-background-color: #f8f4f4");
 
         nodeList = buildShapes(nodeList, slideNumber);
         nodeList = buildTextBoxes(nodeList, slideNumber);
@@ -74,9 +79,52 @@ public class GUIBuilder {
         nodeList = buildBackgroundColours(nodeList, slideNumber);
         nodeList = buildTextFields(nodeList, slideNumber);
 
-        root.getChildren().addAll(nodeList);
+        return nodeList;
+    }
+    
+    public void buildLoginPage() {
+    	root.getChildren().clear();
+    	ArrayList<Node> nodes = buildSlide(1);
+    	root.getChildren().addAll(nodes);
+    	scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+    }
+    
+    public HBox buildMenu() {
+    	 // create a HBox 
+        HBox hbox = new HBox(10); 
         
-        scaleNodes(CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+
+        // setAlignment 
+        hbox.setAlignment(Pos.CENTER); 
+        hbox.setStyle("-fx-background-color: #FFFFFF");
+        hbox.prefWidth(1280);
+        hbox.minWidth(1280);
+        hbox.maxWidth(1280);
+
+        // create a label 
+        Label label = new Label("This is a Menu example"); 
+
+        // add label to hbox 
+        hbox.getChildren().add(label); 
+
+        // add buttons to HBox 
+        for (int i = 0; i < 5; i++)  
+        { 
+        	ButtonWrapper b = new ButtonWrapper();
+        	b.setText("Button " + (int)(i + 1));
+            hbox.getChildren().add(b); 
+        } 
+        return hbox;
+    }
+    
+    public void buildStatusPage() {
+    	SplitPane split = new SplitPane();
+    	Pane status = new Pane();
+    	status.getChildren().addAll(buildSlide(2));
+    	split.getItems().addAll(buildMenu(),status);
+    	root.getChildren().clear();
+    	root.getChildren().addAll(split);
+    	scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
     private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
@@ -344,6 +392,25 @@ public class GUIBuilder {
             if (xmlData.containsKey(video + delimiter + slideNumber + delimiter + occurance) == true) {
                 System.out.println("Video-" + slideNumber + "-" + occurance + ": "
                         + xmlData.get(video + delimiter + slideNumber + delimiter + occurance));
+                
+                Hashtable<String, Object> videoData = xmlData
+                        .get(video + delimiter + slideNumber + delimiter + occurance);
+                
+                String videoURL = "/src/main/resources" + (String) videoData.get("videoURL");
+                Integer videoStartTime = (Integer) videoData.get("videoStartTime");
+                Integer videoStopTime = (Integer) videoData.get("videoStopTime");
+                Double videoVolume = (Double) videoData.get("videoVolume");
+                Boolean videoLooping = (Boolean) videoData.get("videoLooping");
+                Double videoScale = (Double) videoData.get("videoScale");
+                Double xCoordinate = (Double) videoData.get("xCoordinate");
+                Double yCoordinate = (Double) videoData.get("yCoordinate");
+                Double borderWidth = (Double) videoData.get("BorderWidth");
+                String borderColour = (String) videoData.get("borderColour");
+                
+                BCMediaPlayer v = new BCMediaPlayer(videoURL);
+                
+                
+                
                 hasDataRemaining = true;
                 occurance++;
             }
@@ -587,12 +654,17 @@ public class GUIBuilder {
         return nodeList;
     }
 
-    public void scaleNodes(double windowWidth, double windowHeight) {
+    public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
         double WIDTH = 1280;
         double HEIGHT = 720;
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
-        ObservableList<Node> nodes = root.getChildren();
+        ObservableList<Node> nodes = null;
+        
+        if (container instanceof Pane) {
+        	Pane pane = (Pane) container;
+        	nodes = pane.getChildren();
+        }
         
         if (widthScale < heightScale) {
         	scale.setX(widthScale);
