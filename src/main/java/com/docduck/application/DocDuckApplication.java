@@ -1,11 +1,10 @@
 package com.docduck.application;
 
+import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
-import com.docduck.application.xmlreader.XMLReader;
-import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.XMLBuilder;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -13,21 +12,18 @@ import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-    private Node[] nodes;
     private static Pane root;
 
     @Override
     public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
-//        FTPHandler FTPHandler = new FTPHandler();
-//        FTPHandler.downloadAllFiles();
-        XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
-                "src/main/resources/DocDuckStandardSchema.xsd", true);
-        myReader.readXML();
-        myReader.printXMLData();
         root = new Pane();
-        GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
-        builder.buildLoginPage();
+        XMLBuilder xmlBuilder = XMLBuilder.createInstance(root);
+        GUIBuilder guiBuilder = GUIBuilder.createInstance(root);
+        EventManager eventManager = EventManager.createInstance(root, this.getHostServices(), stage);
+        guiBuilder.updateInstances();
+        eventManager.updateInstances();
+        xmlBuilder.updateInstances();
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
@@ -36,16 +32,9 @@ public class DocDuckApplication extends Application {
         stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
+        guiBuilder.StartPage();
 
-        // Hard coded logo as Image Library not done yet
-//        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
-//        logo.setLayoutX(390); 
-//        logo.setLayoutY(80); 
-//        logo.setFitWidth(500); 
-//        logo.setPreserveRatio(true);
-//        root.getChildren().add(logo);
-
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> builder
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder
                 .scaleNodes(root, stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
@@ -63,31 +52,4 @@ public class DocDuckApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
-    // COMMAND LINE ARGUMENTS CODE:
-//    Parameters parameters = getParameters();
-//    List<String> args = parameters.getRaw();
-//
-//    String xmlPath = null;
-//    String schemaPath = null;
-//    boolean validate = false;
-//
-//    if (args.size() == 0) {
-//        System.out.println("Please specify command line arguments with -xml 'PATH_TO_XML' etc.");
-//    }
-//
-//    for (int i = 0; i < args.size(); i++) {
-//
-//        if (args.get(i) == "-xml") {
-//            xmlPath = args.get(i + 1);
-//        }
-//        else if (args.get(i) == "-xsd") {
-//            schemaPath = args.get(i + 1);
-//        }
-//        else if (args.get(i) == "-validate") {
-//            validate = true;
-//        }
-//    }
-//
-//    XMLReader myReader = new XMLReader(xmlPath, schemaPath, validate);
 }

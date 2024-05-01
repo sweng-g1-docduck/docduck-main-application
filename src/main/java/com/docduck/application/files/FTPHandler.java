@@ -4,10 +4,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
-
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+
+import com.docduck.application.gui.GUIBuilder;
+import com.docduck.application.gui.XMLBuilder;
+import com.docduck.application.xmlreader.XMLReader;
  
 /**
  * A program demonstrates how to upload files from local computer to a remote
@@ -15,9 +18,12 @@ import org.apache.commons.net.ftp.FTPReply;
  * @author www.codejava.net
  */
 public class FTPHandler {
+	static XMLBuilder xmlBuilder;
+	static GUIBuilder guiBuilder;
 	
 	public FTPHandler() {
-		
+		xmlBuilder = XMLBuilder.getInstance();
+		guiBuilder = GUIBuilder.getInstance();
 	}
 	
     public void downloadAllFiles() {
@@ -59,18 +65,21 @@ public class FTPHandler {
                     ftp.retrieveFile(file.getName(), output);
                     //close output stream
                     output.close();
-
                     //delete the file
                     // ftp.deleteFile(file.getName());
-
+                    
                 }
             }
 
             ftp.logout();
             ftp.disconnect();
-            //TimeUnit.SECONDS.sleep(1);
+            XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
+        	myReader.readXML();
+        	xmlBuilder.setData(myReader.getData());
+        	guiBuilder.setData(myReader.getData());
+        	guiBuilder.LoginPage();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            guiBuilder.OfflinePage();
         }
     }
 }

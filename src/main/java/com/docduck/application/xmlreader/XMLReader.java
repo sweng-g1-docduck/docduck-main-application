@@ -16,6 +16,7 @@ public class XMLReader {
     private String xmlPath;
     private String schemaPath;
     private boolean validate;
+    private int slideCount;
 
     public XMLReader(String xmlPath, String schemaPath, boolean validate) {
         this.xmlPath = xmlPath;
@@ -38,6 +39,7 @@ public class XMLReader {
 
         try {
             xmlData = myParser.parse();
+            slideCount = myParser.getSlideCount();
         }
         catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
@@ -46,6 +48,10 @@ public class XMLReader {
     
     public Hashtable<String, Hashtable<String, Object>> getData(){
     	return xmlData;
+    }
+    
+    public int getSlideCount(){
+    	return slideCount;
     }
 
     public void printXMLData() {
