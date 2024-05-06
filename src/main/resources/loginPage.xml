@@ -13,7 +13,7 @@
     </slide>
     <slide>
         <id id="page2"/>
-        <textBox cornerRadius="10" lineSpacing="10" width="300" height="100" text="Logged in!" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="490" yCoordinate="450"/>
+        <textBox cornerRadius="10" lineSpacing="10" width="300" height="100" text="Logged in!!" font="Arial" fontSize="25" fontColour="#000000ff" xCoordinate="490" yCoordinate="450"/>
     </slide>
     <info author="Luke Warbey" dateCreated="2024-03-12T12:00:00" comment="Login page for DocDuck Maintenance Tool"/>
 </slideshow>

@@ -20,6 +20,7 @@ public class EventManager {
 
     private static XMLBuilder xmlBuilder;
     private static GUIBuilder guiBuilder;
+    private static FTPHandler ftpHandler;
     private HostServices hostServices;
     private Pane root;
     private Stage stage;
@@ -46,6 +47,7 @@ public class EventManager {
     public void updateInstances() {
     	xmlBuilder = XMLBuilder.getInstance();
     	guiBuilder = GUIBuilder.getInstance();
+    	ftpHandler = FTPHandler.getInstance();
     }
 
     public EventHandler<ActionEvent> getActionEvent(String eventID) {
@@ -77,8 +79,7 @@ public class EventManager {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    FTPHandler handler = new FTPHandler();
-                    handler.downloadAllFiles();
+                    ftpHandler.startApp();
                 }
             };
             return loadApp;

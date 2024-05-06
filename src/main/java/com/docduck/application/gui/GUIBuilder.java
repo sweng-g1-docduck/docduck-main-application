@@ -22,7 +22,7 @@ import javafx.scene.image.ImageView;
 public class GUIBuilder {
 	
     private Pane root;
-    private FTPHandler fileHandler;
+    private static FTPHandler ftpHandler;
     private static GUIBuilder instance = null;
     private static XMLBuilder xmlBuilder;
     private static EventManager events;
@@ -51,6 +51,7 @@ public class GUIBuilder {
     public void updateInstances() {
     	xmlBuilder = XMLBuilder.getInstance();
     	events = EventManager.getInstance();
+    	ftpHandler = FTPHandler.getInstance();
     }
     
     public void setData(Hashtable<String, Hashtable<String, Object>> xmlData) {
