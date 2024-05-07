@@ -32,6 +32,16 @@ public class XMLDOM {
     // The document that stores the whole xml file
     private Document doc;
 
+    public enum DocDuckData {
+        USER,
+        MACHINE_REPORT,
+        MACHINE,
+        MACHINE_COMPONENT,
+        COMPONENT_PART,
+        MACHINE_PART,
+        MACHINE_STATUS
+    }
+
     public XMLDOM(String xmlFilename, String schemaFilename, boolean validate) {
         this.xmlFilename = xmlFilename;
         this.schemaFilename = schemaFilename;
@@ -76,8 +86,73 @@ public class XMLDOM {
         db.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
 
         this.doc = db.parse(new File(xmlFilename));
+
     }
 
+    /**
+     * 
+     * @param name
+     * @return
+     */
+    public String getChildNodeValue(String nodeName, Node parentNode) {
+
+        String nodeValue = null;
+
+        if (parentNode.getNodeType() != Node.ELEMENT_NODE) {
+            System.err.println("Error: Search node not of element type");
+        }
+
+        if (parentNode.hasChildNodes() == false) {
+            System.out.println("Warning: Search does not have any child nodes");
+            return null;
+        }
+
+        NodeList nodeList = parentNode.getChildNodes();
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node subnode = nodeList.item(i);
+
+            if (subnode.getNodeType() == Node.ELEMENT_NODE) {
+                return getText(subnode);
+            }
+        }
+        return nodeValue;
+    }
+
+    public Node getNode(String name, int id) {
+
+        Node desiredNode = null;
+        int nodeID = 0;
+
+        NodeList nodeList = doc.getElementsByTagName(name);
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                if (node.hasChildNodes() == true) {
+                    nodeID = getIDAttribute(node);
+                }
+                else {
+                    continue;
+                }
+
+                if (nodeID == id) {
+                    desiredNode = node;
+                    return desiredNode;
+                }
+            }
+        }
+
+        return desiredNode;
+    }
+
+    /**
+     * @param name the tag name for the element to find
+     * @param node the element node to start searching from
+     * @return the Node found
+     */
     public Node findSubNode(String name, Node node) {
 
         if (node.getNodeType() != Node.ELEMENT_NODE) {
@@ -102,6 +177,59 @@ public class XMLDOM {
             }
         }
         return node;
+    }
+
+    public int getIDAttribute(Node node) {
+
+        NodeList list = node.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            Node subnode = list.item(i);
+
+            if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
+                return Integer.parseInt(subnode.getNodeValue());
+
+//                if (subnode.getNodeName() == "id") {
+//                    return Integer.parseInt(subnode.getNodeValue());
+//                }
+            }
+        }
+        return 0;
+    }
+
+    public String getAttribute(String attributeName, Node node) {
+
+        StringBuffer result = new StringBuffer();
+
+        if (attributeName.equals("id")) {
+            NodeList list = node.getChildNodes();
+
+            for (int i = 0; i < list.getLength(); i++) {
+                Node subnode = list.item(i);
+
+                if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
+                    return subnode.getNodeValue();
+                }
+            }
+        }
+        else {
+            return "0";
+        }
+
+        if (node.hasChildNodes() == false) {
+            return "";
+        }
+
+        NodeList list = node.getChildNodes();
+
+        for (int i = 0; i < list.getLength(); i++) {
+            Node subnode = list.item(i);
+
+            if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
+                result.append(subnode.getNodeValue());
+            }
+        }
+        return result.toString();
     }
 
     public String getText(Node node) {

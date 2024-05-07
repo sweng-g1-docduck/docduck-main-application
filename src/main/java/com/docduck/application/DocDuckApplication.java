@@ -35,6 +35,12 @@ public class DocDuckApplication extends Application {
 
         xmlDom.printDOMTree();
 
+//        System.out.println(xmlDom.findNodeValue("docduckData"));
+//        System.out.println(xmlDom.getText(xmlDom.findSubNode("name", xmlDom.getParentNode("userData", 1))));
+
+        System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("user", 1)));
+        System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("user", 2)));
+
 //        FTPHandler FTPHandler = new FTPHandler();
 //        FTPHandler.downloadAllFiles();
         XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
