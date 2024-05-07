@@ -13,6 +13,7 @@
         <javafx.version>17.0.10</javafx.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <spring-security.version>6.2.1</spring-security.version>
   	</properties>
   	
   	<repositories>
@@ -68,6 +69,11 @@
 			<groupId>com.docduck.buttonlibrary</groupId>
         	<artifactId>buttonlibrary</artifactId>
         	<version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${spring-security.version}</version>
         </dependency>
     </dependencies>
     
