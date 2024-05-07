@@ -23,12 +23,6 @@ import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.gui.XMLBuilder;
 import com.docduck.application.xmlreader.XMLReader;
 
-/**
- * A program demonstrates how to upload files from local computer to a remote
- * FTP server using Apache Commons Net API.
- * 
- * @author www.codejava.net
- */
 public class FTPHandler {
 
     private static XMLBuilder xmlBuilder;
