@@ -4,8 +4,8 @@ import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.gui.XMLBuilder;
+
 import javafx.application.Application;
-import javafx.application.HostServices;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -19,7 +19,7 @@ public class DocDuckApplication extends Application {
     private static GUIBuilder guiBuilder;
     private static FTPHandler ftpHandler;
     private static EventManager eventManager;
-    
+
     @Override
     public void start(Stage stage) {
         System.out.println("Starting DocDuck Application");
@@ -42,12 +42,12 @@ public class DocDuckApplication extends Application {
         stage.show();
         guiBuilder.StartPage();
 
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder
-                .scaleNodes(root, stage.getWidth(), stage.getHeight());
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
+                stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
-        
+
         // ORDER OF PROGRAM
         // Load up JavaFX
         // Needs to check if there are any xml files to display a slide or slideshow
@@ -56,11 +56,11 @@ public class DocDuckApplication extends Application {
         // If buttons, add in their actions, do they go to slide 2? etc.
 
     }
-    
+
     @Override
     public void stop() {
         // Executed when the application shuts down
-    	ftpHandler.stopFileUpdates();
+        ftpHandler.stopFileUpdates();
     }
 
     public static void main(String[] args) {

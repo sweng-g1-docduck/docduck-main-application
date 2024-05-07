@@ -1,18 +1,17 @@
 package com.docduck.application.gui;
 
+import java.io.File;
+
+import com.docduck.application.files.FTPHandler;
+import com.docduck.application.xmlreader.XMLReader;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
+
 import javafx.application.HostServices;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-
-import java.io.File;
-
-import com.docduck.application.files.FTPHandler;
-import com.docduck.application.xmlreader.XMLReader;
-
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -39,21 +38,21 @@ public class EventManager {
         }
         return instance;
     }
-    
+
     public static EventManager getInstance() {
         return instance;
     }
-    
+
     public void updateInstances() {
-    	xmlBuilder = XMLBuilder.getInstance();
-    	guiBuilder = GUIBuilder.getInstance();
-    	ftpHandler = FTPHandler.getInstance();
+        xmlBuilder = XMLBuilder.getInstance();
+        guiBuilder = GUIBuilder.getInstance();
+        ftpHandler = FTPHandler.getInstance();
     }
 
     public EventHandler<ActionEvent> getActionEvent(String eventID) {
 
         switch (eventID) {
-        
+
         case "xmlPage":
             EventHandler<ActionEvent> xmlPage = new EventHandler<ActionEvent>() {
 
@@ -63,7 +62,7 @@ public class EventManager {
                 }
             };
             return xmlPage;
-            
+
         case "goBack":
             EventHandler<ActionEvent> goBack = new EventHandler<ActionEvent>() {
 
@@ -73,7 +72,7 @@ public class EventManager {
                 }
             };
             return goBack;
-            
+
         case "loadApp":
             EventHandler<ActionEvent> loadApp = new EventHandler<ActionEvent>() {
 
@@ -83,41 +82,44 @@ public class EventManager {
                 }
             };
             return loadApp;
-           
+
         case "loadAppOffline":
             EventHandler<ActionEvent> loadAppOffline = new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent e) {
-                	XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml", "src/main/resources/DocDuckStandardSchema.xsd", true);
-                	myReader.readXML();
-                	xmlBuilder.setData(myReader.getData());
-                	guiBuilder.setData(myReader.getData());
-                	guiBuilder.LoginPage();
+                    XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
+                            "src/main/resources/DocDuckStandardSchema.xsd", true);
+                    myReader.readXML();
+                    xmlBuilder.setData(myReader.getData());
+                    guiBuilder.setData(myReader.getData());
+                    guiBuilder.LoginPage();
                 }
             };
             return loadAppOffline;
-            
+
         case "chooseXML":
             EventHandler<ActionEvent> chooseXML = new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent e) {
-                	FileChooser fileChooser = new FileChooser();
-                	fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
-                	File selectedFile = fileChooser.showOpenDialog(stage);
-                	if (selectedFile != null) {
-                		String filePath = selectedFile.getAbsolutePath();
-                		XMLReader myReader = new XMLReader(filePath, "src/main/resources/DocDuckStandardSchema.xsd", true);
-                		myReader.readXML();
-                		int slideCount = myReader.getSlideCount();
-                		xmlBuilder.setData(myReader.getData());
-                		xmlBuilder.buildCustomXML(1, slideCount);
-                	}
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+                    File selectedFile = fileChooser.showOpenDialog(stage);
+
+                    if (selectedFile != null) {
+                        String filePath = selectedFile.getAbsolutePath();
+                        XMLReader myReader = new XMLReader(filePath, "src/main/resources/DocDuckStandardSchema.xsd",
+                                true);
+                        myReader.readXML();
+                        int slideCount = myReader.getSlideCount();
+                        xmlBuilder.setData(myReader.getData());
+                        xmlBuilder.buildCustomXML(1, slideCount);
+                    }
                 }
             };
             return chooseXML;
-        
+
         case "signup":
             EventHandler<ActionEvent> signup = new EventHandler<ActionEvent>() {
 
@@ -207,9 +209,9 @@ public class EventManager {
             return fault;
         }
     }
-    
+
     public EventHandler<ActionEvent> getHyperlinkEvent(String url) {
-    	EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
@@ -218,9 +220,9 @@ public class EventManager {
         };
         return e;
     }
-    
+
     public EventHandler<ActionEvent> getSlideEvent(int nextSlide, int slideCount) {
-    	EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
+        EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent e) {
