@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.pages.Page;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
+import com.docduck.application.gui.pages.StatusPage;
 
 public class GUIBuilder {
 
@@ -31,6 +33,8 @@ public class GUIBuilder {
     public double CURRENT_WINDOW_HEIGHT = 720;
     private Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
+    
+    private ArrayList<Page> pageList = new ArrayList<Page>();
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -269,5 +273,20 @@ public class GUIBuilder {
         }
         CURRENT_WINDOW_WIDTH = windowWidth;
         CURRENT_WINDOW_HEIGHT = windowHeight;
+    }
+    
+    // Builds all pages and adds to scene...?
+    // Perhaps add to a list of panes
+    public void buildPages() {
+        createDesiredPages();
+        
+        for( Page page : pageList ) {
+            Object aListOfPagePanes = page.buildPage();
+            //aListOfNodes.doSomethingToAddToPane
+        }
+    }
+    private void createDesiredPages() {
+        pageList.add(new StatusPage());
+        // add more pages
     }
 }
