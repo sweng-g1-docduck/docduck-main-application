@@ -1,7 +1,10 @@
 package com.docduck.application.gui;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.graphicslibrary.Ellipse;
 import com.docduck.graphicslibrary.Rectangle;
@@ -10,8 +13,7 @@ import com.docduck.textlibrary.TextBox;
 import com.docduck.textlibrary.TextBox.Origin;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.image.Image;
@@ -27,7 +29,7 @@ public class XMLBuilder {
     private static XMLBuilder instance = null;
     private static EventManager events;
     private static GUIBuilder guiBuilder;
-    
+
     private XMLBuilder(Pane root) {
         this.root = root;
     }
@@ -43,65 +45,66 @@ public class XMLBuilder {
     public static XMLBuilder getInstance() {
         return instance;
     }
-    
+
     public void updateInstances() {
-    	events = EventManager.getInstance();
-    	guiBuilder = GUIBuilder.getInstance();
+        events = EventManager.getInstance();
+        guiBuilder = GUIBuilder.getInstance();
     }
-    
+
     public void setData(Hashtable<String, Hashtable<String, Object>> xmlData) {
-    	this.xmlData = xmlData;
+        this.xmlData = xmlData;
     }
-    
+
     public void buildCustomXML(int slideNumber, int slideCount) {
-    	ButtonWrapper prev = new ButtonWrapper();
-      	ButtonWrapper next = new ButtonWrapper();
-      	prev.setText("Previous Slide");
-      	next.setText("Next Slide");
-      	prev.setBackgroundColour("#FFFFFF");
-      	next.setBackgroundColour("#FFFFFF");
-      	prev.setCornerRadius(3);
-      	next.setCornerRadius(3);
-      	prev.setButtonWidth(80);
-      	next.setButtonWidth(60);
-      	prev.setButtonHeight(20);
-      	next.setButtonHeight(20);
-      	prev.setFontName("Arial");
-      	next.setFontName("Arial");
-      	prev.setFontSize(10);
-      	next.setFontSize(10);
-      	prev.setFontColour(Color.web("#292929"));
-      	next.setFontColour(Color.web("#292929"));
-      	prev.setPositionX(5);
-      	next.setPositionX(1200);
-      	prev.setPositionY(657);
-      	next.setPositionY(657);
-      	prev.setBorderWidth(1);
-      	next.setBorderWidth(1);
+        ButtonWrapper prev = new ButtonWrapper();
+        ButtonWrapper next = new ButtonWrapper();
+        prev.setText("Previous Slide");
+        next.setText("Next Slide");
+        prev.setBackgroundColour("#FFFFFF");
+        next.setBackgroundColour("#FFFFFF");
+        prev.setCornerRadius(3);
+        next.setCornerRadius(3);
+        prev.setButtonWidth(80);
+        next.setButtonWidth(60);
+        prev.setButtonHeight(20);
+        next.setButtonHeight(20);
+        prev.setFontName("Arial");
+        next.setFontName("Arial");
+        prev.setFontSize(10);
+        next.setFontSize(10);
+        prev.setFontColour(Color.web("#292929"));
+        next.setFontColour(Color.web("#292929"));
+        prev.setPositionX(5);
+        next.setPositionX(1200);
+        prev.setPositionY(657);
+        next.setPositionY(657);
+        prev.setBorderWidth(1);
+        next.setBorderWidth(1);
         next.setClickcolour(Color.web("#ffffffff"));
-      	next.setHoverColour(Color.web("#9c9c9c"));
-      	prev.setClickcolour(Color.web("#ffffffff"));
-      	prev.setHoverColour(Color.web("#9c9c9c"));
-      	next.setOnAction(events.getSlideEvent(slideNumber+1, slideCount));
-      	prev.setOnAction(events.getSlideEvent(slideNumber-1, slideCount));
-      	
-      	if (slideNumber > 1) {
-      		prev.setVisible(true);
-      	}
-      	else {
-      		prev.setVisible(false);
-      	}
-      	if (slideNumber < slideCount) {
-      		next.setVisible(true);
-      	}
-      	else {
-      		next.setVisible(false);
-      	}
-      	root.setStyle("-fx-background-color: #FFFFFF");
-      	root.getChildren().clear();
-      	root.getChildren().addAll(buildSlide(slideNumber));
-      	root.getChildren().addAll(next,prev);
-      	guiBuilder.scaleNodes(root, guiBuilder.CURRENT_WINDOW_WIDTH, guiBuilder.CURRENT_WINDOW_HEIGHT);
+        next.setHoverColour(Color.web("#9c9c9c"));
+        prev.setClickcolour(Color.web("#ffffffff"));
+        prev.setHoverColour(Color.web("#9c9c9c"));
+        next.setOnAction(events.getSlideEvent(slideNumber + 1, slideCount));
+        prev.setOnAction(events.getSlideEvent(slideNumber - 1, slideCount));
+
+        if (slideNumber > 1) {
+            prev.setVisible(true);
+        }
+        else {
+            prev.setVisible(false);
+        }
+
+        if (slideNumber < slideCount) {
+            next.setVisible(true);
+        }
+        else {
+            next.setVisible(false);
+        }
+        root.setStyle("-fx-background-color: #FFFFFF");
+        root.getChildren().clear();
+        root.getChildren().addAll(buildSlide(slideNumber));
+        root.getChildren().addAll(next, prev);
+        guiBuilder.scaleNodes(root, guiBuilder.CURRENT_WINDOW_WIDTH, guiBuilder.CURRENT_WINDOW_HEIGHT);
     }
 
     public ArrayList<Node> buildSlide(int slideNumber) {
@@ -204,19 +207,19 @@ public class XMLBuilder {
 
                 Hashtable<String, Object> shapeData = xmlData
                         .get(shape + delimiter + slideNumber + delimiter + occurance);
-                
+
                 Double SHAPE_SCALE_RANGE = 100.0;
                 String shapeType = (String) shapeData.get("type");
                 String c = (String) shapeData.get("shapeColour");
-                String shapeColour = c.substring(0,c.length()-2);
+                String shapeColour = c.substring(0, c.length() - 2);
                 Double shapeRotation = (Double) shapeData.get("shapeRotation");
                 Integer x = (Integer) shapeData.get("xCoordinate");
                 Double xCoordinate = x.doubleValue();
                 Integer y = (Integer) shapeData.get("yCoordinate");
                 Double yCoordinate = y.doubleValue();
                 Double shapeScale = (Double) shapeData.get("shapeScale");
-                String o = c.substring(c.length()-2);
-                Long hex = Long.parseLong(o,16);
+                String o = c.substring(c.length() - 2);
+                Long hex = Long.parseLong(o, 16);
                 Double shapeOpacity = hex.doubleValue() / 255;
                 Double radius;
                 Double radius2;
@@ -224,54 +227,56 @@ public class XMLBuilder {
                 Double height;
                 String borderColour = (String) shapeData.get("borderColour");
                 Double borderWidth = (Double) shapeData.get("borderWidth");
-                
+
                 if (shapeData.get("radius") != null && shapeData.get("radius2") != null) {
-                	radius = (Double) shapeData.get("radius");
-                	radius2 = (Double) shapeData.get("radius2");
+                    radius = (Double) shapeData.get("radius");
+                    radius2 = (Double) shapeData.get("radius2");
                 }
-            	else if (shapeData.get("radius") != null && shapeData.get("radius2") == null) {
-            		radius = (Double) shapeData.get("radius");
-            		radius2 = 1.5*radius;
-            	}
-            	else if (shapeData.get("radius") == null && shapeData.get("radius2") != null) {
-            		radius2 = (Double) shapeData.get("radius2");
-            		radius = radius2/1.5;
-            	}
+                else if (shapeData.get("radius") != null && shapeData.get("radius2") == null) {
+                    radius = (Double) shapeData.get("radius");
+                    radius2 = 1.5 * radius;
+                }
+                else if (shapeData.get("radius") == null && shapeData.get("radius2") != null) {
+                    radius2 = (Double) shapeData.get("radius2");
+                    radius = radius2 / 1.5;
+                }
                 else {
-                	radius = 720 * shapeScale/SHAPE_SCALE_RANGE;
-                	radius2 = 1.5*radius;
+                    radius = 720 * shapeScale / SHAPE_SCALE_RANGE;
+                    radius2 = 1.5 * radius;
                 }
-                
+
                 if (shapeData.get("width") != null && shapeData.get("height") != null) {
-                	width = (Double) shapeData.get("width");
-                	height = (Double) shapeData.get("height");
+                    width = (Double) shapeData.get("width");
+                    height = (Double) shapeData.get("height");
                 }
-            	else if (shapeData.get("width") != null && shapeData.get("height") == null) {
-            		width = (Double) shapeData.get("width");
-            		height = width/1.5;
-            	}
-            	else if (shapeData.get("width") == null && shapeData.get("height") != null) {
-            		height = (Double) shapeData.get("height");
-            		width = height*1.5;
-            	}
+                else if (shapeData.get("width") != null && shapeData.get("height") == null) {
+                    width = (Double) shapeData.get("width");
+                    height = width / 1.5;
+                }
+                else if (shapeData.get("width") == null && shapeData.get("height") != null) {
+                    height = (Double) shapeData.get("height");
+                    width = height * 1.5;
+                }
                 else {
-                	height = 720 * shapeScale/SHAPE_SCALE_RANGE;
-                	width = 1.5*height;
+                    height = 720 * shapeScale / SHAPE_SCALE_RANGE;
+                    width = 1.5 * height;
                 }
 
                 switch (shapeType) {
                 case "circle":
-                    Ellipse circle = new Ellipse(radius, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    Ellipse circle = new Ellipse(radius, Color.web(shapeColour), shapeOpacity, xCoordinate,
+                            yCoordinate);
                     circle.rotate(shapeRotation);
                     circle.setStroke(Color.web(borderColour), borderWidth);
-                    
+
                     nodeList.add(circle);
                     break;
                 case "ellipse":
-                    Ellipse ellipse = new Ellipse(radius, radius2, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    Ellipse ellipse = new Ellipse(radius, radius2, Color.web(shapeColour), shapeOpacity, xCoordinate,
+                            yCoordinate);
                     ellipse.rotate(shapeRotation);
                     ellipse.setStroke(Color.web(borderColour), borderWidth);
-                    
+
                     nodeList.add(ellipse);
                     break;
                 case "lineSegment":
@@ -280,31 +285,36 @@ public class XMLBuilder {
 //                            OLD_CENTER_X);
                     break;
                 case "triangle":
-                	RegularShape triangle = new RegularShape(3, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    RegularShape triangle = new RegularShape(3, radius.intValue(), Color.web(shapeColour), shapeOpacity,
+                            xCoordinate, yCoordinate);
                     triangle.rotate(shapeRotation);
                     triangle.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(triangle);
                     break;
                 case "square":
-                	RegularShape square = new RegularShape(4, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    RegularShape square = new RegularShape(4, radius.intValue(), Color.web(shapeColour), shapeOpacity,
+                            xCoordinate, yCoordinate);
                     square.rotate(shapeRotation);
                     square.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(square);
                     break;
                 case "pentagon":
-                	RegularShape pentagon = new RegularShape(5, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    RegularShape pentagon = new RegularShape(5, radius.intValue(), Color.web(shapeColour), shapeOpacity,
+                            xCoordinate, yCoordinate);
                     pentagon.rotate(shapeRotation);
                     pentagon.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(pentagon);
                     break;
                 case "hexagon":
-                	RegularShape hexagon = new RegularShape(6, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    RegularShape hexagon = new RegularShape(6, radius.intValue(), Color.web(shapeColour), shapeOpacity,
+                            xCoordinate, yCoordinate);
                     hexagon.rotate(shapeRotation);
                     hexagon.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(hexagon);
                     break;
                 case "rectangle":
-                    Rectangle rectangle = new Rectangle(width, height, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
+                    Rectangle rectangle = new Rectangle(width, height, Color.web(shapeColour), shapeOpacity,
+                            xCoordinate, yCoordinate);
                     rectangle.rotate(shapeRotation);
                     rectangle.setStroke(Color.web(borderColour), borderWidth);
                     nodeList.add(rectangle);
@@ -333,12 +343,14 @@ public class XMLBuilder {
 
                 // Hard coded logo as Image Library not done yet
                 ImageView logo = null;
-				try {
-					logo = new ImageView(
-					        new Image(new FileInputStream("src/main/resources" + (String) imageData.get("imageURL"))));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
+
+                try {
+                    logo = new ImageView(
+                            new Image(new FileInputStream("src/main/resources" + (String) imageData.get("imageURL"))));
+                }
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
 //                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
                 logo.setLayoutX((int) imageData.get("xCoordinate"));
                 logo.setLayoutY((int) imageData.get("yCoordinate"));
@@ -384,10 +396,10 @@ public class XMLBuilder {
             if (xmlData.containsKey(video + delimiter + slideNumber + delimiter + occurance) == true) {
                 System.out.println("Video-" + slideNumber + "-" + occurance + ": "
                         + xmlData.get(video + delimiter + slideNumber + delimiter + occurance));
-                
+
                 Hashtable<String, Object> videoData = xmlData
                         .get(video + delimiter + slideNumber + delimiter + occurance);
-                
+
                 String videoURL = "/src/main/resources" + (String) videoData.get("videoURL");
                 Integer videoStartTime = (Integer) videoData.get("videoStartTime");
                 Integer videoStopTime = (Integer) videoData.get("videoStopTime");
@@ -398,11 +410,9 @@ public class XMLBuilder {
                 Double yCoordinate = (Double) videoData.get("yCoordinate");
                 Double borderWidth = (Double) videoData.get("BorderWidth");
                 String borderColour = (String) videoData.get("borderColour");
-                
+
                 BCMediaPlayer v = new BCMediaPlayer(videoURL);
-                
-                
-                
+
                 hasDataRemaining = true;
                 occurance++;
             }
@@ -460,7 +470,7 @@ public class XMLBuilder {
                 b.setFontSize((Integer) buttonData.get("fontSize"));
                 b.setLayoutX((Integer) buttonData.get("xCoordinate"));
                 b.setLayoutY((Integer) buttonData.get("yCoordinate"));
-                
+
                 nodeList.add(b);
 
                 hasDataRemaining = true;
@@ -515,6 +525,7 @@ public class XMLBuilder {
 
         while (hasDataRemaining == true) {
             hasDataRemaining = false;
+
             if (xmlData.containsKey(backgroundColour + delimiter + slideNumber + delimiter + occurance) == true) {
                 Hashtable<String, Object> backgroundColourData = xmlData
                         .get(backgroundColour + delimiter + slideNumber + delimiter + occurance);
@@ -578,7 +589,6 @@ public class XMLBuilder {
                     }
 
                     // Could add text origin?
-                    
 
                     nodeList.add(textfield.returnPasswordField());
                     nodeList.add(textfield);
