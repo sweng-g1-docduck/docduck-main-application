@@ -3,9 +3,10 @@
   <groupId>com.docduck.textlibrary</groupId>
   <artifactId>textlibrary</artifactId>
   <versioning>
+    <release>3.2</release>
     <versions>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>3.2</version>
     </versions>
-    <lastUpdated>20240408150936</lastUpdated>
+    <lastUpdated>20240509162904</lastUpdated>
   </versioning>
 </metadata>

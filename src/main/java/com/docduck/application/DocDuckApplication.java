@@ -35,12 +35,12 @@ public class DocDuckApplication extends Application {
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
         stage.setMinHeight(720);
         stage.setMinWidth(1280);
-        stage.setHeight(720);
-        stage.setWidth(1280);
+//        stage.setHeight(720);
+//        stage.setWidth(1280);
         stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
-        guiBuilder.StartPage();
+        guiBuilder.StatusPage();
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
                 stage.getWidth(), stage.getHeight());
