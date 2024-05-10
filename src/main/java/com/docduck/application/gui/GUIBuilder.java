@@ -10,6 +10,9 @@ import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBox.Origin;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
@@ -21,8 +24,14 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -41,6 +50,7 @@ public class GUIBuilder {
     public double CURRENT_WINDOW_HEIGHT = 720;
     private Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
+    private BorderPane borderPane;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -233,14 +243,15 @@ public class GUIBuilder {
         return hbox;
     }
 
-    private Pane MenuBar() {
+    private HBox MenuBar() {
+
+        HBox menuBar = new HBox();
+        menuBar.setPadding(new Insets(10,10,10,15));
+        menuBar.setBackground(new Background(new BackgroundFill(Color.GREY, new CornerRadii(10), new Insets(5))));
+        menuBar.setSpacing(10);
+        menuBar.setPrefSize(1280, 90);
+        menuBar.setAlignment(Pos.CENTER_LEFT);
         
-        Rectangle border = new Rectangle();
-        border.setWidth(1280);
-        border.setHeight(90);
-        border.setFill(Color.LIGHTGRAY);
-        
-        Pane pane = new Pane();
         ButtonWrapper statusButton = new ButtonWrapper();
         statusButton.setCornerRadius(5);
         statusButton.setButtonWidth(120);
@@ -271,24 +282,39 @@ public class GUIBuilder {
         testButton.setFontSize(12);
         testButton.removeBorder();
         
-        pane.getChildren().addAll(border,statusButton,testButton);
-        return pane;
+        menuBar.getChildren().addAll(statusButton,testButton);
+        return menuBar;
    
     }
     
-    private ScrollPane CreateMachines() {
+    private HBox MachineBar() {
+        HBox contents = new HBox();
+        contents.setPadding(new Insets(10,10,10,15));
+        contents.setBackground(new Background(new BackgroundFill(Color.GREY, new CornerRadii(10,10,0,0,false), new Insets(0))));
+        contents.setSpacing(10);
+        contents.setPrefSize(955, 90);
+        contents.setMaxSize(955, 90);
+        contents.setAlignment(Pos.CENTER_LEFT);
+        
+        return contents;
+        
+    }
+    
+    private BorderPane CreateMachines() {
+        BorderPane back = new BorderPane();
         ScrollPane s1 = new ScrollPane();
-        s1.setPrefSize(960, 630);
+        s1.setPrefSize(955, 630);
+        s1.setMaxSize(955, 630);
         
         
         
-        /**
-         * Scrollpane stuff
-         */
-        s1.setLayoutY(90);
-        
-        Pane pane = new Pane();
-        pane.setPrefSize(620, 680);
+
+        FlowPane pane = new FlowPane();
+        pane.setBackground(new Background(new BackgroundFill(Color.GREEN, new CornerRadii(0), new Insets(0))));
+        pane.setPrefWidth(940);
+        pane.setPadding(new Insets(10,10,10,10));
+        pane.setVgap(10);
+        pane.setHgap(10);
 
         
         Image img = new Image("/docducklogo.png");
@@ -297,8 +323,6 @@ public class GUIBuilder {
         view1.setPreserveRatio(true);
         
         ButtonWrapper button = new ButtonWrapper();
-        button.setPositionX(10);
-        button.setPositionY(10);
         button.setButtonHeight(200);
         button.setButtonWidth(300);
         button.setGraphic(view1);
@@ -310,14 +334,18 @@ public class GUIBuilder {
         button.setContentDisplay(ContentDisplay.TOP);
         button.setHoverColour(Color.CADETBLUE);
         button.setClickcolour(Color.AQUAMARINE);
+        button.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine One");
+            }
+        }));
         
         ImageView view2 = new ImageView(img);
         view2.setFitWidth(300);
         view2.setPreserveRatio(true);
         
         ButtonWrapper button2 = new ButtonWrapper();
-        button2.setPositionX(320);
-        button2.setPositionY(10);
         button2.setButtonHeight(200);
         button2.setButtonWidth(300);
         button2.setGraphic(view2);
@@ -329,14 +357,18 @@ public class GUIBuilder {
         button2.setContentDisplay(ContentDisplay.TOP);
         button2.setHoverColour(Color.CADETBLUE);
         button2.setClickcolour(Color.AQUAMARINE);
+        button2.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Two");
+            }
+        }));
         
         ImageView view3 = new ImageView(img);
         view3.setFitWidth(300);
         view3.setPreserveRatio(true);
         
         ButtonWrapper button3 = new ButtonWrapper();
-        button3.setPositionX(630);
-        button3.setPositionY(10);
         button3.setButtonHeight(200);
         button3.setButtonWidth(300);
         button3.setGraphic(view3);
@@ -348,14 +380,18 @@ public class GUIBuilder {
         button3.setContentDisplay(ContentDisplay.TOP);
         button3.setHoverColour(Color.CADETBLUE);
         button3.setClickcolour(Color.AQUAMARINE);
+        button3.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Three");
+            }
+        }));
         
         ImageView view4 = new ImageView(img);
         view4.setFitWidth(300);
         view4.setPreserveRatio(true);
         
         ButtonWrapper button4 = new ButtonWrapper();
-        button4.setPositionX(10);
-        button4.setPositionY(220);
         button4.setButtonHeight(200);
         button4.setButtonWidth(300);
         button4.setGraphic(view4);
@@ -367,14 +403,18 @@ public class GUIBuilder {
         button4.setContentDisplay(ContentDisplay.TOP);
         button4.setHoverColour(Color.CADETBLUE);
         button4.setClickcolour(Color.AQUAMARINE);
+        button4.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Four");
+            }
+        }));
         
         ImageView view5 = new ImageView(img);
         view5.setFitWidth(300);
         view5.setPreserveRatio(true);
         
         ButtonWrapper button5 = new ButtonWrapper();
-        button5.setPositionX(320);
-        button5.setPositionY(220);
         button5.setButtonHeight(200);
         button5.setButtonWidth(300);
         button5.setGraphic(view5);
@@ -386,14 +426,18 @@ public class GUIBuilder {
         button5.setContentDisplay(ContentDisplay.TOP);
         button5.setHoverColour(Color.CADETBLUE);
         button5.setClickcolour(Color.AQUAMARINE);
+        button5.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Five");
+            }
+        }));
         
         ImageView view6 = new ImageView(img);
         view6.setFitWidth(300);
         view6.setPreserveRatio(true);
         
         ButtonWrapper button6 = new ButtonWrapper();
-        button6.setPositionX(630);
-        button6.setPositionY(220);
         button6.setButtonHeight(200);
         button6.setButtonWidth(300);
         button6.setGraphic(view6);
@@ -405,14 +449,18 @@ public class GUIBuilder {
         button6.setContentDisplay(ContentDisplay.TOP);
         button6.setHoverColour(Color.CADETBLUE);
         button6.setClickcolour(Color.AQUAMARINE);
+        button6.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Six");
+            }
+        }));
         
         ImageView view7 = new ImageView(img);
         view7.setFitWidth(300);
         view7.setPreserveRatio(true);
         
         ButtonWrapper button7 = new ButtonWrapper();
-        button7.setPositionX(10);
-        button7.setPositionY(430);
         button7.setButtonHeight(200);
         button7.setButtonWidth(300);
         button7.setGraphic(view7);
@@ -424,14 +472,18 @@ public class GUIBuilder {
         button7.setContentDisplay(ContentDisplay.TOP);
         button7.setHoverColour(Color.CADETBLUE);
         button7.setClickcolour(Color.AQUAMARINE);
+        button7.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Seven");
+            }
+        }));
         
         ImageView view8 = new ImageView(img);
         view8.setFitWidth(300);
         view8.setPreserveRatio(true);
         
         ButtonWrapper button8 = new ButtonWrapper();
-        button8.setPositionX(320);
-        button8.setPositionY(430);
         button8.setButtonHeight(200);
         button8.setButtonWidth(300);
         button8.setGraphic(view8);
@@ -443,14 +495,18 @@ public class GUIBuilder {
         button8.setContentDisplay(ContentDisplay.TOP);
         button8.setHoverColour(Color.CADETBLUE);
         button8.setClickcolour(Color.AQUAMARINE);
+        button8.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Eight");
+            }
+        }));
         
         ImageView view9 = new ImageView(img);
         view9.setFitWidth(300);
         view9.setPreserveRatio(true);
         
         ButtonWrapper button9 = new ButtonWrapper();
-        button9.setPositionX(630);
-        button9.setPositionY(430);
         button9.setButtonHeight(200);
         button9.setButtonWidth(300);
         button9.setGraphic(view9);
@@ -462,62 +518,88 @@ public class GUIBuilder {
         button9.setContentDisplay(ContentDisplay.TOP);
         button9.setHoverColour(Color.CADETBLUE);
         button9.setClickcolour(Color.AQUAMARINE);
+        button9.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                CreateReport("Machine Nine");
+            }
+        }));
         
-        pane.getChildren().addAll(button, button2, button3, button4, button5, button6, button7, button8, button9);
+        ButtonWrapper button10 = new ButtonWrapper();
+        button10.setButtonHeight(200);
+        button10.setButtonWidth(300);
+        button10.setBackgroundColour(Color.BLUE);
+        button10.setCornerRadius(20);
+        button10.setText("Machine Nine");
+        button10.setFontColour(Color.WHEAT);
+        button10.setFontSize(20);
+        button10.setContentDisplay(ContentDisplay.TOP);
+        button10.setHoverColour(Color.CADETBLUE);
+        button10.setClickcolour(Color.AQUAMARINE);
+        
+        pane.getChildren().addAll(button, button2, button3, button4, button5, button6, button7, button8, button9, button10);
         s1.setContent(pane);
-        return s1;
+        
+        back.setTop(MachineBar());
+        back.setBottom(s1);
+        return back;
     }
     
-    private Pane CreateReport() {
-        Pane pane = new Pane();
-        Rectangle background = new Rectangle(960,90,320,630);
-        background.setArcHeight(20);
-        background.setArcWidth(20);
-        background.setFill(Color.LIGHTSLATEGRAY);
+    private void CreateReport(String machineName) {
+        
+        borderPane.setRight(null);
+        VBox reportBox = new VBox();
+        reportBox.setAlignment(Pos.TOP_CENTER);
+        reportBox.setPrefWidth(325);
+        reportBox.setPadding(new Insets(20,10,10,10));
+        reportBox.setSpacing(10);
+        reportBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(10), new Insets(5))));
+
         
         TextBox title = new TextBox();
-        title.setPositionX(970);
-        title.setPositionY(100);
+
         title.setBoxWidth(300);
         title.setBoxHeight(50);
-        title.setText("Machine X");
+        title.setText(machineName);
         title.setFontColour(Color.BLACK);
         title.setFontName("Calibri");
-//        title.setTextOrigin(Origin.CENTRE);
         title.setFontSize(200);
         title.setTextAlignment(TextAlignment.CENTER);
         title.removeBackground();
         title.removeBorder();
         
-        TextBoxField info = new TextBoxField(970,160,"Enter Information");
+        TextBoxField info = new TextBoxField();
         info.setBoxWidth(300);
         info.setBoxHeight(300);
+        info.setText(machineName);
         info.setAlignment(Pos.TOP_LEFT);
         info.setFontSize(15);
         info.setCornerRadius(20);
 
         
         TextArea area = new TextArea();
-        area.setLayoutX(970);
-        area.setLayoutY(160);
+
         area.setMaxWidth(300);
         area.setMaxHeight(300);
         area.setWrapText(true);
+        area.setPromptText("What's Broken?");
         
-        pane.getChildren().addAll(title.returnBackground(),title,area);
-        return pane;
+        reportBox.getChildren().addAll(title,area);
+        borderPane.setRight(reportBox);
     }
     
     public void StatusPage() {
-//        SplitPane split = new SplitPane();
-        Pane status = new Pane();
-        status.getChildren().addAll(xmlBuilder.buildSlide(2));
-//        split.getItems().addAll(Menu(), status);
-        root.getChildren().clear();
         
-        Rectangle r = new Rectangle(960, 10);
-        root.getChildren().addAll(MenuBar(),CreateMachines());
-        root.getChildren().addAll(status);
+        borderPane = new BorderPane();
+       
+        root.getChildren().clear();
+        borderPane.setTop(MenuBar());
+        
+        BorderPane p = CreateMachines();
+        BorderPane.setMargin(p, new Insets(5));
+        borderPane.setCenter(p);
+        
+        root.getChildren().add(borderPane);
         
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
