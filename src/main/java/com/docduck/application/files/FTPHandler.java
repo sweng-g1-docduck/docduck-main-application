@@ -32,11 +32,19 @@ public class FTPHandler {
     private ScheduledExecutorService executor;
     private DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
     private boolean debug = false;
-
+    private final static String SERVER_IP = "81.101.49.54";
+    private final static String USERNAME = "docduck";
+    private final static String PASSWORD = "sweng";
+    
     private FTPHandler() {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
-
+    
+    /**
+     * Creates instance of FTPHandler
+     * @return instance of FTPHandler
+     * @author rw1834
+     */
     public static FTPHandler createInstance() {
 
         if (instance == null) {
@@ -44,25 +52,38 @@ public class FTPHandler {
         }
         return instance;
     }
-
+    
+    /**
+     * Gets instance of FTPHandler
+     * @return instance of FTPHandler
+     * @author rw1834
+     */
     public static FTPHandler getInstance() {
         return instance;
     }
-
+    
+    /**
+     * Updates references to other builders
+     * @author rw1834
+     */
     public void updateInstances() {
         xmlBuilder = XMLBuilder.getInstance();
         guiBuilder = GUIBuilder.getInstance();
     }
-
+    
+    /**
+     * Downloads files from server and starts application onto login page.
+     * @author rw1834
+     */
     public void startApp() {
 
         try {
 
             ftp = new FTPClient();
 
-            ftp.connect("81.101.49.54");
+            ftp.connect(SERVER_IP);
 
-            if (!ftp.login("docduck", "sweng")) {
+            if (!ftp.login(USERNAME, PASSWORD)) {
                 ftp.logout();
             }
             int reply = ftp.getReplyCode();
@@ -115,7 +136,12 @@ public class FTPHandler {
             guiBuilder.OfflinePage();
         }
     }
-
+    
+    /**
+     * Starts file update scheduler.
+     * @param updateDelay - Time in seconds between updates
+     * @author rw1834
+     */
     private void scheduleFileUpdates(Double updateDelay) {
         Runnable updateFiles = new Runnable() {
 
@@ -128,14 +154,22 @@ public class FTPHandler {
         executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(updateFiles, updateDelay.longValue(), updateDelay.longValue(), TimeUnit.SECONDS);
     }
-
+    
+    /**
+     * Stops file update scheduler
+     * @author rw1834
+     */
     public void stopFileUpdates() {
 
         if (executor != null) {
             executor.shutdown();
         }
     }
-
+    
+    /**
+     * Check and update files to latest version to/from server.
+     * @author rw1834
+     */
     private void updateFiles() {
 
         if (ftp.isAvailable() && ftp.isConnected()) {
@@ -202,10 +236,10 @@ public class FTPHandler {
 
             try {
                 System.out.println("FTP has disconnected, attempting reconnect");
-                ftp.connect("81.101.49.54");
+                ftp.connect(SERVER_IP);
 
                 // login to server
-                if (!ftp.login("docduck", "sweng")) {
+                if (!ftp.login(USERNAME, PASSWORD)) {
                     ftp.logout();
                 }
                 int reply = ftp.getReplyCode();
@@ -222,6 +256,11 @@ public class FTPHandler {
         }
     }
 
+    /**
+     * Upload file to server
+     * @param localFilename - name of file within resources folder
+     * @author rw1834
+     */
     private void uploadFile(String localFilename) {
 
         if (ftp.isAvailable() && ftp.isConnected()) {
@@ -244,7 +283,12 @@ public class FTPHandler {
             }
         }
     }
-
+    
+    /**
+     * Downloads file from server to resources folder
+     * @param ftpFilename - file name within server
+     * @author rw1834
+     */
     private void downloadFile(String ftpFilename) {
 
         if (ftp.isAvailable() && ftp.isConnected()) {
