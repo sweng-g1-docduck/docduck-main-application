@@ -9,6 +9,11 @@ import com.docduck.textlibrary.TextBox;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBox.Origin;
 
+import javafx.animation.ScaleTransition;
+import javafx.animation.TranslateTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -31,6 +37,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -38,6 +45,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
+import javafx.util.Duration;
 
 public class GUIBuilder {
 
@@ -46,11 +54,12 @@ public class GUIBuilder {
     private static GUIBuilder instance = null;
     private static XMLBuilder xmlBuilder;
     private static EventManager events;
-    public double CURRENT_WINDOW_WIDTH = 1280;
-    public double CURRENT_WINDOW_HEIGHT = 720;
+    public double CURRENT_WINDOW_WIDTH = 1296;
+    public double CURRENT_WINDOW_HEIGHT = 759;
     private Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private BorderPane borderPane;
+    private ComboBox<String> comboBox;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -243,319 +252,284 @@ public class GUIBuilder {
         return hbox;
     }
 
-    private HBox MenuBar() {
+    private HBox MenuBar(String user) {
 
         HBox menuBar = new HBox();
-        menuBar.setPadding(new Insets(10,10,10,15));
-        menuBar.setBackground(new Background(new BackgroundFill(Color.GREY, new CornerRadii(10), new Insets(5))));
-        menuBar.setSpacing(10);
+        menuBar.setPadding(new Insets(15, 15, 15, 15));
+        menuBar.setBackground(
+                new Background(new BackgroundFill(Color.web("245494"), new CornerRadii(10), new Insets(5))));
+        menuBar.setSpacing(15);
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
-        
-        ButtonWrapper statusButton = new ButtonWrapper();
-        statusButton.setCornerRadius(5);
-        statusButton.setButtonWidth(120);
-        statusButton.setButtonHeight(30);
-        statusButton.setFontName("Arial");
-        statusButton.setText("Status Overview");
-        statusButton.setBackgroundColour("fbb12eff");
-        statusButton.setClickcolour(Color.WHITE);
-        statusButton.setHoverColour("#ff8c00ff");
-        statusButton.setPositionX(150);
-        statusButton.setPositionY(30);
-        statusButton.setFontColour("#ffffffff");
-        statusButton.setFontSize(12);
-        statusButton.removeBorder();
-        
-        ButtonWrapper testButton = new ButtonWrapper();
-        testButton.setCornerRadius(5);
-        testButton.setButtonWidth(80);
-        testButton.setButtonHeight(30);
-        testButton.setFontName("Arial");
-        testButton.setText("Test Page");
-        testButton.setBackgroundColour("fbb12eff");
-        testButton.setClickcolour(Color.WHITE);
-        testButton.setHoverColour("#ff8c00ff");
-        testButton.setPositionX(290);
-        testButton.setPositionY(30);
-        testButton.setFontColour("#ffffffff");
-        testButton.setFontSize(12);
-        testButton.removeBorder();
-        
-        menuBar.getChildren().addAll(statusButton,testButton);
+
+        ButtonWrapper overviewButton = new ButtonWrapper();
+        overviewButton.setCornerRadius(5);
+        overviewButton.setButtonWidth(200);
+        overviewButton.setButtonHeight(60);
+        overviewButton.setFontName("Arial");
+        overviewButton.setText("Machine Overview");
+        overviewButton.setBackgroundColour("fbb12eff");
+        overviewButton.setClickcolour(Color.WHITE);
+        overviewButton.setHoverColour("#ff8c00ff");
+        overviewButton.setPositionX(150);
+        overviewButton.setPositionY(30);
+        overviewButton.setFontColour("#ffffffff");
+        overviewButton.setFontSize(20);
+        overviewButton.removeBorder();
+        overviewButton.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+//                System.out.println(root.getHeight());
+//                System.out.println(root.getWidth());
+            }
+        }));
+
+        ButtonWrapper logOutButton = new ButtonWrapper();
+        logOutButton.setCornerRadius(5);
+        logOutButton.setButtonWidth(120);
+        logOutButton.setButtonHeight(60);
+        logOutButton.setFontName("Arial");
+        logOutButton.setText("Log Out");
+        logOutButton.setBackgroundColour("fbb12eff");
+        logOutButton.setClickcolour(Color.WHITE);
+        logOutButton.setHoverColour("#ff8c00ff");
+        logOutButton.setPositionX(150);
+        logOutButton.setPositionY(30);
+        logOutButton.setFontColour("#ffffffff");
+        logOutButton.setFontSize(20);
+        logOutButton.removeBorder();
+
+        menuBar.getChildren().addAll(overviewButton);
+
+        if (user.equals("ENGINEER") || user.equals("ADMIN")) {
+
+            ButtonWrapper reportButton = new ButtonWrapper();
+            reportButton.setCornerRadius(5);
+            reportButton.setButtonWidth(240);
+            reportButton.setButtonHeight(60);
+            reportButton.setFontName("Arial");
+            reportButton.setText("Maintainance Reports");
+            reportButton.setBackgroundColour("fbb12eff");
+            reportButton.setClickcolour(Color.WHITE);
+            reportButton.setHoverColour("#ff8c00ff");
+            reportButton.setPositionX(290);
+            reportButton.setPositionY(30);
+            reportButton.setFontColour("#ffffffff");
+            reportButton.setFontSize(20);
+            reportButton.removeBorder();
+
+            ButtonWrapper partButton = new ButtonWrapper();
+            partButton.setCornerRadius(5);
+            partButton.setButtonWidth(160);
+            partButton.setButtonHeight(60);
+            partButton.setFontName("Arial");
+            partButton.setText("Part Search");
+            partButton.setBackgroundColour("fbb12eff");
+            partButton.setClickcolour(Color.WHITE);
+            partButton.setHoverColour("#ff8c00ff");
+            partButton.setPositionX(290);
+            partButton.setPositionY(30);
+            partButton.setFontColour("#ffffffff");
+            partButton.setFontSize(20);
+            partButton.removeBorder();
+            menuBar.getChildren().addAll(reportButton, partButton);
+        }
+
+        if (user.equals("ADMIN")) {
+
+            ButtonWrapper settingsButton = new ButtonWrapper();
+            settingsButton.setCornerRadius(5);
+            settingsButton.setButtonWidth(120);
+            settingsButton.setButtonHeight(60);
+            settingsButton.setFontName("Arial");
+            settingsButton.setText("Settings");
+            settingsButton.setBackgroundColour("fbb12eff");
+            settingsButton.setClickcolour(Color.WHITE);
+            settingsButton.setHoverColour("#ff8c00ff");
+            settingsButton.setPositionX(290);
+            settingsButton.setPositionY(30);
+            settingsButton.setFontColour("#ffffffff");
+            settingsButton.setFontSize(20);
+            settingsButton.removeBorder();
+            menuBar.getChildren().add(settingsButton);
+        }
+        Pane spacer = new Pane();
+        spacer.setPrefWidth(1000);
+
+        menuBar.getChildren().addAll(spacer, logOutButton);
+
         return menuBar;
-   
+
     }
-    
+
     private HBox MachineBar() {
         HBox contents = new HBox();
-        contents.setPadding(new Insets(10,10,10,15));
-        contents.setBackground(new Background(new BackgroundFill(Color.GREY, new CornerRadii(10,10,0,0,false), new Insets(0))));
+        contents.setPadding(new Insets(10, 10, 10, 15));
+        contents.setBackground(new Background(
+                new BackgroundFill(Color.web("245494"), new CornerRadii(10, 10, 0, 0, false), new Insets(0))));
         contents.setSpacing(10);
-        contents.setPrefSize(955, 90);
-        contents.setMaxSize(955, 90);
+        contents.setPrefSize(950, 90);
+        contents.setMaxSize(950, 90);
         contents.setAlignment(Pos.CENTER_LEFT);
         
-        return contents;
+//        ObservableList<String> options = 
+//                FXCollections.observableArrayList(
+//                    "Room 1",
+//                    "Room 2",
+//                    "Room 3"
+//                );
+//            comboBox = new ComboBox<String>(options);
+//            comboBox.setValue("Room 1");
+//            contents.getChildren().add(comboBox);
         
+        
+        
+        contents.getChildren().add(comboBox);
+
+            
+        return contents;
+
     }
     
+    private void createRoomBox() {
+        comboBox = new ComboBox<String>();
+        comboBox.getItems().addAll("Room 1", "Room 2", "Room 3");
+        comboBox.setValue("Room 1");
+        comboBox.valueProperty().addListener(new ChangeListener<String>() {
+            @Override 
+            public void changed(ObservableValue ov, String t, String t1) {                
+                BorderPane p = CreateMachines();
+                BorderPane.setMargin(p, new Insets(5));
+                borderPane.setCenter(p);
+            }    
+        });
+    }
+
     private BorderPane CreateMachines() {
+        
+        
         BorderPane back = new BorderPane();
         ScrollPane s1 = new ScrollPane();
-        s1.setPrefSize(955, 630);
-        s1.setMaxSize(955, 630);
-        
-        
-        
+        s1.setPrefSize(950, 530);
+        s1.setMaxSize(950, 530);
+        back.setTop(MachineBar());
 
         FlowPane pane = new FlowPane();
         pane.setBackground(new Background(new BackgroundFill(Color.GREEN, new CornerRadii(0), new Insets(0))));
-        pane.setPrefWidth(940);
-        pane.setPadding(new Insets(10,10,10,10));
-        pane.setVgap(10);
-        pane.setHgap(10);
+        pane.setPrefWidth(935);
+        pane.setPrefHeight(527);
+        pane.setPadding(new Insets(15, 15, 15, 15));
+        pane.setVgap(15);
+        pane.setHgap(15);
+
+        ArrayList<ArrayList<String>> data = new ArrayList<>();
+        
+
+        Image img = new Image("/docducklogo.png");
+
+        ArrayList<String> machines = new ArrayList<String>();
+        machines.add("Machine One");
+        machines.add("Room 1");  
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Two");
+        machines.add("Room 2");
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Three");
+        machines.add("Room 1");  
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Four");
+        machines.add("Room 2");
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Five");
+        machines.add("Room 1");  
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Six");
+        machines.add("Room 2");
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Seven");
+        machines.add("Room 1");  
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Eight");
+        machines.add("Room 2");
+        data.add(machines);
+        
+        machines = new ArrayList<String>();
+        machines.add("Machine Nine");
+        machines.add("Room 1");  
+        data.add(machines);
+        data.toString();
+
+        for (ArrayList<String> machineData : data) {
+
+            if (machineData.get(1).equals(comboBox.getValue())) {
+
+                ImageView view1 = new ImageView(img);
+                view1.setFitWidth(290);
+                view1.setPreserveRatio(true);
+
+                ButtonWrapper button = new ButtonWrapper();
+                button.setButtonHeight(200);
+                button.setButtonWidth(290);
+                button.setGraphic(view1);
+                button.setBackgroundColour(Color.BLUE);
+                button.setCornerRadius(20);
+                button.setFontColour(Color.WHEAT);
+                button.setFontSize(20);
+                button.setContentDisplay(ContentDisplay.TOP);
+                button.setHoverColour(Color.CADETBLUE);
+                button.setClickcolour(Color.AQUAMARINE);
+
+                button.setText(machineData.get(0));
+                button.setOnAction((new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        CreateReport(machineData.get(0));
+                    }
+                }));
+                pane.getChildren().add(button);
+
+            }
+        }
+
+        s1.setContent(pane);
 
         
-        Image img = new Image("/docducklogo.png");
-        ImageView view1 = new ImageView(img);
-        view1.setFitWidth(300);
-        view1.setPreserveRatio(true);
-        
-        ButtonWrapper button = new ButtonWrapper();
-        button.setButtonHeight(200);
-        button.setButtonWidth(300);
-        button.setGraphic(view1);
-        button.setBackgroundColour(Color.BLUE);
-        button.setCornerRadius(20);
-        button.setText("Machine One");
-        button.setFontColour(Color.WHEAT);
-        button.setFontSize(20);
-        button.setContentDisplay(ContentDisplay.TOP);
-        button.setHoverColour(Color.CADETBLUE);
-        button.setClickcolour(Color.AQUAMARINE);
-        button.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine One");
-            }
-        }));
-        
-        ImageView view2 = new ImageView(img);
-        view2.setFitWidth(300);
-        view2.setPreserveRatio(true);
-        
-        ButtonWrapper button2 = new ButtonWrapper();
-        button2.setButtonHeight(200);
-        button2.setButtonWidth(300);
-        button2.setGraphic(view2);
-        button2.setBackgroundColour(Color.BLUE);
-        button2.setCornerRadius(20);
-        button2.setText("Machine Two");
-        button2.setFontColour(Color.WHEAT);
-        button2.setFontSize(20);
-        button2.setContentDisplay(ContentDisplay.TOP);
-        button2.setHoverColour(Color.CADETBLUE);
-        button2.setClickcolour(Color.AQUAMARINE);
-        button2.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Two");
-            }
-        }));
-        
-        ImageView view3 = new ImageView(img);
-        view3.setFitWidth(300);
-        view3.setPreserveRatio(true);
-        
-        ButtonWrapper button3 = new ButtonWrapper();
-        button3.setButtonHeight(200);
-        button3.setButtonWidth(300);
-        button3.setGraphic(view3);
-        button3.setBackgroundColour(Color.BLUE);
-        button3.setCornerRadius(20);
-        button3.setText("Machine Three");
-        button3.setFontColour(Color.WHEAT);
-        button3.setFontSize(20);
-        button3.setContentDisplay(ContentDisplay.TOP);
-        button3.setHoverColour(Color.CADETBLUE);
-        button3.setClickcolour(Color.AQUAMARINE);
-        button3.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Three");
-            }
-        }));
-        
-        ImageView view4 = new ImageView(img);
-        view4.setFitWidth(300);
-        view4.setPreserveRatio(true);
-        
-        ButtonWrapper button4 = new ButtonWrapper();
-        button4.setButtonHeight(200);
-        button4.setButtonWidth(300);
-        button4.setGraphic(view4);
-        button4.setBackgroundColour(Color.BLUE);
-        button4.setCornerRadius(20);
-        button4.setText("Machine Four");
-        button4.setFontColour(Color.WHEAT);
-        button4.setFontSize(20);
-        button4.setContentDisplay(ContentDisplay.TOP);
-        button4.setHoverColour(Color.CADETBLUE);
-        button4.setClickcolour(Color.AQUAMARINE);
-        button4.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Four");
-            }
-        }));
-        
-        ImageView view5 = new ImageView(img);
-        view5.setFitWidth(300);
-        view5.setPreserveRatio(true);
-        
-        ButtonWrapper button5 = new ButtonWrapper();
-        button5.setButtonHeight(200);
-        button5.setButtonWidth(300);
-        button5.setGraphic(view5);
-        button5.setBackgroundColour(Color.BLUE);
-        button5.setCornerRadius(20);
-        button5.setText("Machine Five");
-        button5.setFontColour(Color.WHEAT);
-        button5.setFontSize(20);
-        button5.setContentDisplay(ContentDisplay.TOP);
-        button5.setHoverColour(Color.CADETBLUE);
-        button5.setClickcolour(Color.AQUAMARINE);
-        button5.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Five");
-            }
-        }));
-        
-        ImageView view6 = new ImageView(img);
-        view6.setFitWidth(300);
-        view6.setPreserveRatio(true);
-        
-        ButtonWrapper button6 = new ButtonWrapper();
-        button6.setButtonHeight(200);
-        button6.setButtonWidth(300);
-        button6.setGraphic(view6);
-        button6.setBackgroundColour(Color.BLUE);
-        button6.setCornerRadius(20);
-        button6.setText("Machine Six");
-        button6.setFontColour(Color.WHEAT);
-        button6.setFontSize(20);
-        button6.setContentDisplay(ContentDisplay.TOP);
-        button6.setHoverColour(Color.CADETBLUE);
-        button6.setClickcolour(Color.AQUAMARINE);
-        button6.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Six");
-            }
-        }));
-        
-        ImageView view7 = new ImageView(img);
-        view7.setFitWidth(300);
-        view7.setPreserveRatio(true);
-        
-        ButtonWrapper button7 = new ButtonWrapper();
-        button7.setButtonHeight(200);
-        button7.setButtonWidth(300);
-        button7.setGraphic(view7);
-        button7.setBackgroundColour(Color.BLUE);
-        button7.setCornerRadius(20);
-        button7.setText("Machine Seven");
-        button7.setFontColour(Color.WHEAT);
-        button7.setFontSize(20);
-        button7.setContentDisplay(ContentDisplay.TOP);
-        button7.setHoverColour(Color.CADETBLUE);
-        button7.setClickcolour(Color.AQUAMARINE);
-        button7.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Seven");
-            }
-        }));
-        
-        ImageView view8 = new ImageView(img);
-        view8.setFitWidth(300);
-        view8.setPreserveRatio(true);
-        
-        ButtonWrapper button8 = new ButtonWrapper();
-        button8.setButtonHeight(200);
-        button8.setButtonWidth(300);
-        button8.setGraphic(view8);
-        button8.setBackgroundColour(Color.BLUE);
-        button8.setCornerRadius(20);
-        button8.setText("Machine Eight");
-        button8.setFontColour(Color.WHEAT);
-        button8.setFontSize(20);
-        button8.setContentDisplay(ContentDisplay.TOP);
-        button8.setHoverColour(Color.CADETBLUE);
-        button8.setClickcolour(Color.AQUAMARINE);
-        button8.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Eight");
-            }
-        }));
-        
-        ImageView view9 = new ImageView(img);
-        view9.setFitWidth(300);
-        view9.setPreserveRatio(true);
-        
-        ButtonWrapper button9 = new ButtonWrapper();
-        button9.setButtonHeight(200);
-        button9.setButtonWidth(300);
-        button9.setGraphic(view9);
-        button9.setBackgroundColour(Color.BLUE);
-        button9.setCornerRadius(20);
-        button9.setText("Machine Nine");
-        button9.setFontColour(Color.WHEAT);
-        button9.setFontSize(20);
-        button9.setContentDisplay(ContentDisplay.TOP);
-        button9.setHoverColour(Color.CADETBLUE);
-        button9.setClickcolour(Color.AQUAMARINE);
-        button9.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                CreateReport("Machine Nine");
-            }
-        }));
-        
-        ButtonWrapper button10 = new ButtonWrapper();
-        button10.setButtonHeight(200);
-        button10.setButtonWidth(300);
-        button10.setBackgroundColour(Color.BLUE);
-        button10.setCornerRadius(20);
-        button10.setText("Machine Nine");
-        button10.setFontColour(Color.WHEAT);
-        button10.setFontSize(20);
-        button10.setContentDisplay(ContentDisplay.TOP);
-        button10.setHoverColour(Color.CADETBLUE);
-        button10.setClickcolour(Color.AQUAMARINE);
-        
-        pane.getChildren().addAll(button, button2, button3, button4, button5, button6, button7, button8, button9, button10);
-        s1.setContent(pane);
-        
-        back.setTop(MachineBar());
         back.setBottom(s1);
         return back;
     }
-    
+
     private void CreateReport(String machineName) {
-        
-        borderPane.setRight(null);
+
+//        TranslateTransition fadeOut = new TranslateTransition(); 
+//        fadeOut.setDuration(Duration.millis(500)); 
+//        fadeOut.setNode(borderPane.getRight()); 
+//        fadeOut.setByX(350); 
+//        fadeOut.setCycleCount(1); 
+//        fadeOut.setAutoReverse(false); 
+//        fadeOut.play();  
+
         VBox reportBox = new VBox();
         reportBox.setAlignment(Pos.TOP_CENTER);
-        reportBox.setPrefWidth(325);
-        reportBox.setPadding(new Insets(20,10,10,10));
+        reportBox.setPrefWidth(320);
+        reportBox.setPadding(new Insets(20, 10, 10, 10));
         reportBox.setSpacing(10);
-        reportBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(10), new Insets(5))));
+        reportBox
+                .setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(10), new Insets(5))));
 
-        
         TextBox title = new TextBox();
 
         title.setBoxWidth(300);
@@ -567,49 +541,123 @@ public class GUIBuilder {
         title.setTextAlignment(TextAlignment.CENTER);
         title.removeBackground();
         title.removeBorder();
-        
-        TextBoxField info = new TextBoxField();
-        info.setBoxWidth(300);
-        info.setBoxHeight(300);
-        info.setText(machineName);
-        info.setAlignment(Pos.TOP_LEFT);
-        info.setFontSize(15);
-        info.setCornerRadius(20);
 
-        
         TextArea area = new TextArea();
-
         area.setMaxWidth(300);
         area.setMaxHeight(300);
         area.setWrapText(true);
-        area.setPromptText("What's Broken?");
+        area.setPromptText("Decribe the machine fault");
         
-        reportBox.getChildren().addAll(title,area);
+        ButtonWrapper mediaBtn = new ButtonWrapper();
+        mediaBtn.setCornerRadius(5);
+        mediaBtn.setButtonWidth(200);
+        mediaBtn.setButtonHeight(40);
+        mediaBtn.setFontName("Arial");
+        mediaBtn.setText("Attach Media");
+        mediaBtn.setBackgroundColour("fbb12eff");
+        mediaBtn.setClickcolour(Color.WHITE);
+        mediaBtn.setHoverColour("#ff8c00ff");
+        mediaBtn.setPositionX(150);
+        mediaBtn.setPositionY(30);
+        mediaBtn.setFontColour("#ffffffff");
+        mediaBtn.setFontSize(20);
+        mediaBtn.removeBorder();
+        
+        ButtonWrapper submitBtn = new ButtonWrapper();
+        submitBtn.setCornerRadius(5);
+        submitBtn.setButtonWidth(200);
+        submitBtn.setButtonHeight(40);
+        submitBtn.setFontName("Arial");
+        submitBtn.setText("Submit Report");
+        submitBtn.setBackgroundColour("fbb12eff");
+        submitBtn.setClickcolour(Color.WHITE);
+        submitBtn.setHoverColour("#ff8c00ff");
+        submitBtn.setPositionX(150);
+        submitBtn.setPositionY(30);
+        submitBtn.setFontColour("#ffffffff");
+        submitBtn.setFontSize(20);
+        submitBtn.removeBorder();
+        submitBtn.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (area.getText().equals("")) {
+                    area.setPromptText("A description of the fault is required");
+                }
+                else {
+                    // Submit report to XML
+                    borderPane.setRight(null);
+                }
+            }
+        }));
+        
+        ButtonWrapper cancelBtn = new ButtonWrapper();
+        cancelBtn.setCornerRadius(5);
+        cancelBtn.setButtonWidth(200);
+        cancelBtn.setButtonHeight(40);
+        cancelBtn.setFontName("Arial");
+        cancelBtn.setText("Cancel Report");
+        cancelBtn.setBackgroundColour("fbb12eff");
+        cancelBtn.setClickcolour(Color.WHITE);
+        cancelBtn.setHoverColour("#ff8c00ff");
+        cancelBtn.setPositionX(150);
+        cancelBtn.setPositionY(30);
+        cancelBtn.setFontColour("#ffffffff");
+        cancelBtn.setFontSize(20);
+        cancelBtn.removeBorder();
+        cancelBtn.setOnAction((new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                borderPane.setRight(null);
+            }
+        }));
+
+        reportBox.getChildren().addAll(title, area, mediaBtn, submitBtn, cancelBtn);
         borderPane.setRight(reportBox);
+
+//        TranslateTransition translateTransition = new TranslateTransition();
+//        translateTransition.setDuration(Duration.millis(500));
+//        translateTransition.setNode(reportBox);
+//        translateTransition.setFromX(350);
+//        translateTransition.setByX(-350);
+//        translateTransition.setCycleCount(1);
+//        translateTransition.setAutoReverse(false);
+//        fadeOut.setOnFinished(e -> {borderPane.setRight(reportBox); translateTransition.play();}); 
     }
-    
+
     public void StatusPage() {
-        
+
         borderPane = new BorderPane();
-       
-        root.getChildren().clear();
-        borderPane.setTop(MenuBar());
+
+        createRoomBox();
         
+        root.getChildren().clear();
+        borderPane.setTop(MenuBar("ADMIN"));
+
         BorderPane p = CreateMachines();
         BorderPane.setMargin(p, new Insets(5));
         borderPane.setCenter(p);
-        
-        root.getChildren().add(borderPane);
-        
+        Pane meas = new Pane();
+        Rectangle r = new Rectangle();
+        r.setWidth(960);
+        r.setLayoutY(90);
+        r.setHeight(30);
+        r.setFill(Color.DARKRED);
+        meas.getChildren().add(r);
+
+        root.getChildren().addAll(borderPane);
+        root.setBackground(new Background(new BackgroundFill(Color.web("4083db"), new CornerRadii(0), new Insets(0))));
+//        root.getChildren().add(meas);
+
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
     public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
-        double WIDTH = 1280;
-        double HEIGHT = 720;
+        double WIDTH = 1296;
+        double HEIGHT = 759;
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
         ObservableList<Node> nodes = null;
+
 
         if (container instanceof Pane) {
             Pane pane = (Pane) container;
