@@ -3,30 +3,24 @@ package com.docduck.application.gui;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
-import com.docduck.textlibrary.TextBoxField;
-import com.docduck.textlibrary.TextBox.Origin;
-
-import javafx.animation.ScaleTransition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -37,15 +31,12 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
-import javafx.util.Duration;
 
 public class GUIBuilder {
 
@@ -60,6 +51,9 @@ public class GUIBuilder {
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private BorderPane borderPane;
     private ComboBox<String> comboBox;
+    ArrayList<Machine> machines;
+    private User user;
+    
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -252,7 +246,7 @@ public class GUIBuilder {
         return hbox;
     }
 
-    private HBox MenuBar(String user) {
+    private HBox drawMenuBar() {
 
         HBox menuBar = new HBox();
         menuBar.setPadding(new Insets(15, 15, 15, 15));
@@ -301,7 +295,7 @@ public class GUIBuilder {
 
         menuBar.getChildren().addAll(overviewButton);
 
-        if (user.equals("ENGINEER") || user.equals("ADMIN")) {
+        if (user.getRole().equals("ENGINEER") || user.getRole().equals("ADMIN")) {
 
             ButtonWrapper reportButton = new ButtonWrapper();
             reportButton.setCornerRadius(5);
@@ -335,7 +329,7 @@ public class GUIBuilder {
             menuBar.getChildren().addAll(reportButton, partButton);
         }
 
-        if (user.equals("ADMIN")) {
+        if (user.getRole().equals("ADMIN")) {
 
             ButtonWrapper settingsButton = new ButtonWrapper();
             settingsButton.setCornerRadius(5);
@@ -362,7 +356,7 @@ public class GUIBuilder {
 
     }
 
-    private HBox MachineBar() {
+    private HBox drawMachineBar() {
         HBox contents = new HBox();
         contents.setPadding(new Insets(10, 10, 10, 15));
         contents.setBackground(new Background(
@@ -371,7 +365,7 @@ public class GUIBuilder {
         contents.setPrefSize(950, 90);
         contents.setMaxSize(950, 90);
         contents.setAlignment(Pos.CENTER_LEFT);
-        
+
 //        ObservableList<String> options = 
 //                FXCollections.observableArrayList(
 //                    "Room 1",
@@ -381,101 +375,47 @@ public class GUIBuilder {
 //            comboBox = new ComboBox<String>(options);
 //            comboBox.setValue("Room 1");
 //            contents.getChildren().add(comboBox);
-        
-        
-        
+
         contents.getChildren().add(comboBox);
 
-            
         return contents;
 
     }
-    
-    private void createRoomBox() {
+
+    private void drawRoomSelect() {
         comboBox = new ComboBox<String>();
         comboBox.getItems().addAll("Room 1", "Room 2", "Room 3");
         comboBox.setValue("Room 1");
         comboBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override 
-            public void changed(ObservableValue ov, String t, String t1) {                
-                BorderPane p = CreateMachines();
-                BorderPane.setMargin(p, new Insets(5));
-                borderPane.setCenter(p);
-            }    
+            @Override
+            public void changed(ObservableValue ov, String t, String t1) {
+                drawMachineButtons();
+
+            }
         });
     }
 
-    private BorderPane CreateMachines() {
-        
-        
+    private void drawMachineButtons() {
+
         BorderPane back = new BorderPane();
         ScrollPane s1 = new ScrollPane();
         s1.setPrefSize(950, 530);
         s1.setMaxSize(950, 530);
-        back.setTop(MachineBar());
+        back.setTop(drawMachineBar());
 
         FlowPane pane = new FlowPane();
-        pane.setBackground(new Background(new BackgroundFill(Color.GREEN, new CornerRadii(0), new Insets(0))));
+        pane.setBackground(new Background(new BackgroundFill(Color.LIGHTSKYBLUE, new CornerRadii(0), new Insets(0))));
         pane.setPrefWidth(935);
-        pane.setPrefHeight(527);
+        pane.setPrefHeight(528);
         pane.setPadding(new Insets(15, 15, 15, 15));
         pane.setVgap(15);
         pane.setHgap(15);
 
-        ArrayList<ArrayList<String>> data = new ArrayList<>();
-        
-
         Image img = new Image("/docducklogo.png");
 
-        ArrayList<String> machines = new ArrayList<String>();
-        machines.add("Machine One");
-        machines.add("Room 1");  
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Two");
-        machines.add("Room 2");
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Three");
-        machines.add("Room 1");  
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Four");
-        machines.add("Room 2");
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Five");
-        machines.add("Room 1");  
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Six");
-        machines.add("Room 2");
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Seven");
-        machines.add("Room 1");  
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Eight");
-        machines.add("Room 2");
-        data.add(machines);
-        
-        machines = new ArrayList<String>();
-        machines.add("Machine Nine");
-        machines.add("Room 1");  
-        data.add(machines);
-        data.toString();
+        for (Machine machine : machines) {
 
-        for (ArrayList<String> machineData : data) {
-
-            if (machineData.get(1).equals(comboBox.getValue())) {
+            if (machine.getRoom().equals(comboBox.getValue())) {
 
                 ImageView view1 = new ImageView(img);
                 view1.setFitWidth(290);
@@ -485,19 +425,42 @@ public class GUIBuilder {
                 button.setButtonHeight(200);
                 button.setButtonWidth(290);
                 button.setGraphic(view1);
-                button.setBackgroundColour(Color.BLUE);
+
                 button.setCornerRadius(20);
-                button.setFontColour(Color.WHEAT);
+                button.setFontColour(Color.WHITE);
                 button.setFontSize(20);
                 button.setContentDisplay(ContentDisplay.TOP);
-                button.setHoverColour(Color.CADETBLUE);
-                button.setClickcolour(Color.AQUAMARINE);
+                switch (machine.getStatus()) {
+                case "ONLINE":
+                    button.setBackgroundColour(Color.LIMEGREEN);
+                    button.setHoverColour(Color.GREEN);
+                    button.setClickcolour(Color.DARKGREEN);
+                    break;
+                case "MAINTENANCE":
+                    button.setBackgroundColour(Color.ORANGE);
+                    button.setHoverColour(Color.DARKORANGE);
+                    button.setClickcolour(Color.ORANGERED);
+                    if (user.getRole().equals("OPERATOR")) {
+                        button.setDisable(true);
+                    }
+                    break;
+                case "OFFLINE":
+                    button.setBackgroundColour(Color.RED);
+                    button.setHoverColour(Color.DARKRED);
+                    button.setClickcolour(Color.INDIANRED);
+                    if (user.getRole().equals("OPERATOR")) {
+                        button.setDisable(true);
+                    }
+                    break;
+                }
 
-                button.setText(machineData.get(0));
+                button.setText(machine.getName());
                 button.setOnAction((new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        CreateReport(machineData.get(0));
+                        if (machine.getStatus().equals("ONLINE")) {
+                            drawReport(machine);
+                        }
                     }
                 }));
                 pane.getChildren().add(button);
@@ -507,12 +470,12 @@ public class GUIBuilder {
 
         s1.setContent(pane);
 
-        
         back.setBottom(s1);
-        return back;
+        BorderPane.setMargin(back, new Insets(5));
+        borderPane.setCenter(back);
     }
 
-    private void CreateReport(String machineName) {
+    private void drawReport(Machine machine) {
 
 //        TranslateTransition fadeOut = new TranslateTransition(); 
 //        fadeOut.setDuration(Duration.millis(500)); 
@@ -534,7 +497,7 @@ public class GUIBuilder {
 
         title.setBoxWidth(300);
         title.setBoxHeight(50);
-        title.setText(machineName);
+        title.setText(machine.getName());
         title.setFontColour(Color.BLACK);
         title.setFontName("Calibri");
         title.setFontSize(200);
@@ -547,7 +510,7 @@ public class GUIBuilder {
         area.setMaxHeight(300);
         area.setWrapText(true);
         area.setPromptText("Decribe the machine fault");
-        
+
         ButtonWrapper mediaBtn = new ButtonWrapper();
         mediaBtn.setCornerRadius(5);
         mediaBtn.setButtonWidth(200);
@@ -562,7 +525,8 @@ public class GUIBuilder {
         mediaBtn.setFontColour("#ffffffff");
         mediaBtn.setFontSize(20);
         mediaBtn.removeBorder();
-        
+        mediaBtn.setOnAction(events.getActionEvent("chooseMedia"));
+
         ButtonWrapper submitBtn = new ButtonWrapper();
         submitBtn.setCornerRadius(5);
         submitBtn.setButtonWidth(200);
@@ -585,11 +549,17 @@ public class GUIBuilder {
                 }
                 else {
                     // Submit report to XML
+                    machine.setStatus("OFFLINE");
                     borderPane.setRight(null);
+                    drawMachineButtons();
+                    for (Machine machine : machines) {
+                       System.out.println(machine.toString());
+                    }
+                    
                 }
             }
         }));
-        
+
         ButtonWrapper cancelBtn = new ButtonWrapper();
         cancelBtn.setCornerRadius(5);
         cancelBtn.setButtonWidth(200);
@@ -624,40 +594,43 @@ public class GUIBuilder {
 //        fadeOut.setOnFinished(e -> {borderPane.setRight(reportBox); translateTransition.play();}); 
     }
 
-    public void StatusPage() {
+    public void drawStatusPage() {
 
         borderPane = new BorderPane();
 
-        createRoomBox();
-        
-        root.getChildren().clear();
-        borderPane.setTop(MenuBar("ADMIN"));
+        populateMachineData();
+        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
+        drawRoomSelect();
 
-        BorderPane p = CreateMachines();
-        BorderPane.setMargin(p, new Insets(5));
-        borderPane.setCenter(p);
-        Pane meas = new Pane();
-        Rectangle r = new Rectangle();
-        r.setWidth(960);
-        r.setLayoutY(90);
-        r.setHeight(30);
-        r.setFill(Color.DARKRED);
-        meas.getChildren().add(r);
+        root.getChildren().clear();
+        borderPane.setTop(drawMenuBar());
+        drawMachineButtons();
 
         root.getChildren().addAll(borderPane);
         root.setBackground(new Background(new BackgroundFill(Color.web("4083db"), new CornerRadii(0), new Insets(0))));
-//        root.getChildren().add(meas);
 
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
+    private void populateMachineData() {
+        machines = new ArrayList<Machine>();
+        machines.add(new Machine("Machine One", "Room 1", "ONLINE"));
+        machines.add(new Machine("Machine Two", "Room 2", "ONLINE"));
+        machines.add(new Machine("Machine Three", "Room 1", "MAINTENANCE"));
+        machines.add(new Machine("Machine Four", "Room 2", "ONLINE"));
+        machines.add(new Machine("Machine Five", "Room 1", "OFFLINE"));
+        machines.add(new Machine("Machine Six", "Room 2", "ONLINE"));
+        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE"));
+        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE"));
+        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE"));
+    }
+    
     public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
         double WIDTH = 1296;
         double HEIGHT = 759;
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
         ObservableList<Node> nodes = null;
-
 
         if (container instanceof Pane) {
             Pane pane = (Pane) container;

@@ -31,7 +31,7 @@ public class FTPHandler {
     private FTPClient ftp;
     private ScheduledExecutorService executor;
     private DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-    private boolean debug = false;
+    private boolean debug = true;
     private final static String SERVER_IP = "81.101.49.54";
     private final static String USERNAME = "docduck";
     private final static String PASSWORD = "sweng";
@@ -69,6 +69,30 @@ public class FTPHandler {
     public void updateInstances() {
         xmlBuilder = XMLBuilder.getInstance();
         guiBuilder = GUIBuilder.getInstance();
+    }
+    
+    public void connect() {
+        try {
+            if (ftp == null) {
+                ftp = new FTPClient();
+
+                ftp.connect(SERVER_IP);
+
+                if (!ftp.login(USERNAME, PASSWORD)) {
+                    ftp.logout();
+                }
+                int reply = ftp.getReplyCode();
+
+                if (!FTPReply.isPositiveCompletion(reply)) {
+                    ftp.disconnect();
+                }
+
+                ftp.enterLocalPassiveMode();
+            }
+        }
+        catch (Exception ex) {
+            
+        }
     }
     
     /**
@@ -277,6 +301,34 @@ public class FTPHandler {
                 if (debug) {
                     System.out.println("Uploaded " + localFilename + " to server with time " + localTime);
                 }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * Upload file to server
+     * @param filename - name of file.
+     * @param filePath - path of file.
+     * @author rw1834
+     */
+    public void uploadFileFromPath(String filePath, String filename) {
+        if (ftp.isAvailable() && ftp.isConnected()) {
+            try {
+                File localFile = new File(filePath);
+                InputStream inputStream = new FileInputStream(filePath);
+                ftp.storeFile(filename, inputStream);
+                inputStream.close();
+                Date localTime = new Date(localFile.lastModified());
+                String timeString = df.format(localTime);
+                ftp.setModificationTime(filename, timeString);
+
+                if (debug) {
+                    System.out.println("Uploaded " + filename + " to server with time " + localTime);
+                }
+                downloadFile(filename);
             }
             catch (Exception ex) {
                 ex.printStackTrace();

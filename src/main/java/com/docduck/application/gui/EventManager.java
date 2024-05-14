@@ -119,6 +119,26 @@ public class EventManager {
                 }
             };
             return chooseXML;
+            
+        case "chooseMedia":
+            EventHandler<ActionEvent> chooseMedia = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Media File", "*.png"));
+                    File selectedFile = fileChooser.showOpenDialog(stage);
+
+                    if (selectedFile != null) {
+                        String filePath = selectedFile.getAbsolutePath();
+                        String filename = selectedFile.getName();
+                        System.out.println(filePath);
+                        ftpHandler.connect();
+                        ftpHandler.uploadFileFromPath(filePath, filename);
+                    }
+                }
+            };
+            return chooseMedia;
 
         case "signup":
             EventHandler<ActionEvent> signup = new EventHandler<ActionEvent>() {
@@ -142,7 +162,7 @@ public class EventManager {
                     if (username.getText().equals("admin") && password.getText().equals("password")) {
                         password.setBorderWidth(0);
                         System.out.println("Logged in!");
-                        guiBuilder.StatusPage();
+                        guiBuilder.drawStatusPage();
                     }
                     else {
                         password.setBorderWidth(2);
