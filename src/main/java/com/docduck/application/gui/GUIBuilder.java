@@ -33,7 +33,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
@@ -53,7 +52,6 @@ public class GUIBuilder {
     private ComboBox<String> comboBox;
     ArrayList<Machine> machines;
     private User user;
-    
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -362,27 +360,14 @@ public class GUIBuilder {
         contents.setBackground(new Background(
                 new BackgroundFill(Color.web("245494"), new CornerRadii(10, 10, 0, 0, false), new Insets(0))));
         contents.setSpacing(10);
-        contents.setPrefSize(950, 90);
-        contents.setMaxSize(950, 90);
+        contents.setPrefSize(950, 45);
+        contents.setMaxSize(950, 45);
         contents.setAlignment(Pos.CENTER_LEFT);
-
-//        ObservableList<String> options = 
-//                FXCollections.observableArrayList(
-//                    "Room 1",
-//                    "Room 2",
-//                    "Room 3"
-//                );
-//            comboBox = new ComboBox<String>(options);
-//            comboBox.setValue("Room 1");
-//            contents.getChildren().add(comboBox);
-
-        contents.getChildren().add(comboBox);
-
         return contents;
 
     }
 
-    private void drawRoomSelect() {
+    private void setupRoomSelect() {
         comboBox = new ComboBox<String>();
         comboBox.getItems().addAll("Room 1", "Room 2", "Room 3");
         comboBox.setValue("Room 1");
@@ -395,13 +380,26 @@ public class GUIBuilder {
         });
     }
 
+    private HBox drawRoomSelect() {
+        HBox contents = new HBox();
+        contents.setPadding(new Insets(10, 10, 10, 15));
+        contents.setBackground(new Background(
+                new BackgroundFill(Color.web("245494"), new CornerRadii(0, 0, 0, 0, false), new Insets(0))));
+        contents.setSpacing(10);
+        contents.setPrefSize(950, 45);
+        contents.setMaxSize(950, 45);
+        contents.setAlignment(Pos.CENTER_LEFT);
+        contents.getChildren().add(comboBox);
+        BorderPane.setAlignment(contents, Pos.CENTER_LEFT);
+        return contents;
+    }
+
     private void drawMachineButtons() {
 
         BorderPane back = new BorderPane();
         ScrollPane s1 = new ScrollPane();
         s1.setPrefSize(950, 530);
         s1.setMaxSize(950, 530);
-        back.setTop(drawMachineBar());
 
         FlowPane pane = new FlowPane();
         pane.setBackground(new Background(new BackgroundFill(Color.LIGHTSKYBLUE, new CornerRadii(0), new Insets(0))));
@@ -469,7 +467,8 @@ public class GUIBuilder {
         }
 
         s1.setContent(pane);
-
+        back.setTop(drawMachineBar());
+        back.setCenter(drawRoomSelect());
         back.setBottom(s1);
         BorderPane.setMargin(back, new Insets(5));
         borderPane.setCenter(back);
@@ -553,9 +552,9 @@ public class GUIBuilder {
                     borderPane.setRight(null);
                     drawMachineButtons();
                     for (Machine machine : machines) {
-                       System.out.println(machine.toString());
+                        System.out.println(machine.toString());
                     }
-                    
+
                 }
             }
         }));
@@ -599,7 +598,8 @@ public class GUIBuilder {
         borderPane = new BorderPane();
 
         populateMachineData();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
+        user = new User("Bob", "bob@york.ac.uk", "OPERATOR");
+        setupRoomSelect();
         drawRoomSelect();
 
         root.getChildren().clear();
@@ -624,7 +624,7 @@ public class GUIBuilder {
         machines.add(new Machine("Machine Eight", "Room 2", "ONLINE"));
         machines.add(new Machine("Machine Nine", "Room 1", "ONLINE"));
     }
-    
+
     public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
         double WIDTH = 1296;
         double HEIGHT = 759;
