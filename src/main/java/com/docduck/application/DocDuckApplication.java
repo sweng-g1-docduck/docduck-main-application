@@ -1,6 +1,8 @@
 package com.docduck.application;
 
 import com.docduck.application.gui.GUIBuilder;
+import com.docduck.application.utils.InvalidID;
+import com.docduck.application.xmldom.DataHandler;
 import com.docduck.application.xmldom.XMLDOM;
 import com.docduck.application.xmlreader.XMLReader;
 
@@ -38,8 +40,35 @@ public class DocDuckApplication extends Application {
 //        System.out.println(xmlDom.findNodeValue("docduckData"));
 //        System.out.println(xmlDom.getText(xmlDom.findSubNode("name", xmlDom.getParentNode("userData", 1))));
 
-        System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("user", 1)));
-        System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("user", 2)));
+        try {
+            System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("machine", 1)));
+            System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("component", 1)));
+            System.out.println(xmlDom.getChildNodeValue("title", xmlDom.getNode("report", 1)));
+            System.out.println(xmlDom.getChildNodeValue("description", xmlDom.getNode("report", 1)));
+            System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("user", 2)));
+            System.out.println(xmlDom.getChildNodeValue("role", xmlDom.getNode("user", 2)));
+        }
+        catch (InvalidID e) {
+
+            if (e.isIDInvalid() == true) {
+                System.out.println("The provided ID is not valid");
+            }
+        }
+
+        DataHandler data = new DataHandler("src/main/resources/DocDuckDataExample.xml",
+                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true);
+
+        try {
+            data.setupDOM();
+        }
+        catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        data.getMachineData(1);
+
+        data.printNodeListValues((data.getComponentPartData(1, 1, 1)));
 
 //        FTPHandler FTPHandler = new FTPHandler();
 //        FTPHandler.downloadAllFiles();
@@ -60,7 +89,7 @@ public class DocDuckApplication extends Application {
         stage.setWidth(1280);
         stage.setTitle("DocDuck");
         stage.setScene(scene);
-        stage.show();
+//        stage.show();
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> builder
                 .scaleNodes(stage.getWidth(), stage.getHeight());

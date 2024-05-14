@@ -684,14 +684,37 @@
     </xs:complexType>
   </xs:element>
   
+  
+   <xs:simpleType name="machineStatus">
+    <xs:annotation>
+      <xs:documentation> The status for a machine. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="ONLINE|MAINTAINANCE|OFFLINE" />
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="roleType">
+    <xs:annotation>
+      <xs:documentation> The types of user roles. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="OPERATOR|ENGINEER|ADMIN" />
+    </xs:restriction>
+  </xs:simpleType>
+  
   <xs:complexType name="partInfo">
     <xs:sequence>
       <xs:element name="part" minOccurs="0" maxOccurs="unbounded">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="stockNumber" type="xs:int"/>
             <xs:element name="serialNumber" type="xs:string"/>
             <xs:element name="quantity" type="xs:int"/>
+            <xs:element name="location" type="xs:string"/>
+            <xs:element name="datasheetRef" type="xs:string"/>
+            <xs:element name="purchaseLocationRef" type="xs:string"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
         </xs:complexType>
@@ -705,7 +728,12 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="stockNumber" type="xs:int"/>
+            <xs:element name="serialNumber" type="xs:string"/>
             <xs:element name="quantity" type="xs:int"/>
+            <xs:element name="location" type="xs:string"/>
+            <xs:element name="datasheetRef" type="xs:string"/>
+            <xs:element name="purchaseLocationRef" type="xs:string"/>
             <xs:element name="parts" type="partInfo"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
@@ -720,7 +748,14 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="stockNumber" type="xs:int"/>
+            <xs:element name="serialNumber" type="xs:string"/>
+            <xs:element name="location" type="xs:string"/>
+            <xs:element name="datasheetRef" type="xs:string"/>
+            <xs:element name="purchaseLocationRef" type="xs:string"/>
             <xs:element name="components" type="componentInfo"/>
+            <xs:element name="parts" type="partInfo"/>
+            <xs:element name="status" type="machineStatus"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
         </xs:complexType>
@@ -737,7 +772,24 @@
             <xs:element name="username" type="xs:string"/>
             <xs:element name="password" type="xs:string"/>
             <xs:element name="email" type="xs:string"/>
-            <xs:element name="role" type="xs:string"/>
+            <xs:element name="role" type="roleType"/>
+          </xs:sequence>
+          <xs:attribute type="xs:int" name="id" use="optional"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:complexType name="machineReport">
+    <xs:sequence>
+      <xs:element name="report" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="media" type="xs:string"/>
+            <xs:element name="machineID" type="xs:string"/>
+            <xs:element name="userID" type="xs:int"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
         </xs:complexType>
@@ -750,6 +802,7 @@
       <xs:sequence>
         <xs:element name="machineData" type="machineData" minOccurs="0" maxOccurs="1"/>
         <xs:element name="userData" type="userData" minOccurs="0" maxOccurs="1"/>
+        <xs:element name="machineReport" type="machineReport" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>

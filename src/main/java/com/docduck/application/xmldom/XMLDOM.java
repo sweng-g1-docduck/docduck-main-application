@@ -15,6 +15,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.docduck.application.utils.InvalidID;
+
 public class XMLDOM {
 
     private String xmlFilename;
@@ -113,13 +115,16 @@ public class XMLDOM {
             Node subnode = nodeList.item(i);
 
             if (subnode.getNodeType() == Node.ELEMENT_NODE) {
-                return getText(subnode);
+
+                if (subnode.getNodeName() == nodeName) {
+                    return getText(subnode);
+                }
             }
         }
         return nodeValue;
     }
 
-    public Node getNode(String name, int id) {
+    public Node getNode(String name, int id) throws InvalidID {
 
         Node desiredNode = null;
         int nodeID = 0;
@@ -131,21 +136,42 @@ public class XMLDOM {
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
 
-                if (node.hasChildNodes() == true) {
-                    nodeID = getIDAttribute(node);
+                if (node.hasAttributes() == true) {
+                    NamedNodeMap nodeMap = node.getAttributes();
+                    Node attributeNode = nodeMap.getNamedItem("id");
+                    String attributeValue = attributeNode.getNodeValue();
+
+                    if (checkValidInteger(attributeValue) == true) {
+
+                        if (Integer.parseInt(attributeValue) == id) {
+                            desiredNode = node;
+                            return desiredNode;
+                        }
+                    }
                 }
                 else {
                     continue;
                 }
-
-                if (nodeID == id) {
-                    desiredNode = node;
-                    return desiredNode;
-                }
             }
         }
 
+        if (desiredNode == null) {
+            throw new InvalidID(true);
+        }
+
         return desiredNode;
+    }
+
+    public String getAttribute(Node node, String attributeName) {
+
+        String attributeValue = null;
+
+        if (node.hasAttributes() == true) {
+            NamedNodeMap nodeMap = node.getAttributes();
+            Node attributeNode = nodeMap.getNamedItem(attributeName);
+            attributeValue = attributeNode.getNodeValue();
+        }
+        return attributeValue;
     }
 
     /**
@@ -179,57 +205,70 @@ public class XMLDOM {
         return node;
     }
 
-    public int getIDAttribute(Node node) {
-
-        NodeList list = node.getChildNodes();
-
-        for (int i = 0; i < list.getLength(); i++) {
-            Node subnode = list.item(i);
-
-            if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
-                return Integer.parseInt(subnode.getNodeValue());
-
-//                if (subnode.getNodeName() == "id") {
-//                    return Integer.parseInt(subnode.getNodeValue());
+//    public String getAttribute(String attributeName, Node node) {
+//
+//        StringBuffer result = new StringBuffer();
+//
+//        if (attributeName.equals("id")) {
+//            NodeList list = node.getChildNodes();
+//
+//            for (int i = 0; i < list.getLength(); i++) {
+//                Node subnode = list.item(i);
+//
+//                if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
+//                    return subnode.getNodeValue();
 //                }
+//                else if (subnode.hasChildNodes()) {
+//                    NodeList sublist = subnode.getChildNodes();
+//
+//                    for (int j = 0; j < list.getLength(); j++) {
+//                        Node subSubnode = sublist.item(j);
+//
+//                        if (subSubnode.getNodeType() == Node.ATTRIBUTE_NODE) {
+//                            return subSubnode.getNodeValue();
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        else {
+//            return "0";
+//        }
+//
+//        if (node.hasChildNodes() == false) {
+//            return "";
+//        }
+//
+//        NodeList list = node.getChildNodes();
+//
+//        for (int i = 0; i < list.getLength(); i++) {
+//            Node subnode = list.item(i);
+//
+//            if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
+//                result.append(subnode.getNodeValue());
+//            }
+//        }
+//        return result.toString();
+//    }
+
+    public String getNodeListNodeValue(NodeList nodeList, String nodeName) {
+
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node desiredNode = nodeList.item(i);
+
+            if (desiredNode.getNodeName().equals(nodeName)) {
+                return getText(desiredNode);
             }
         }
-        return 0;
+        return null;
     }
 
-    public String getAttribute(String attributeName, Node node) {
+    public void printNodeListValues(NodeList nodeList) {
 
-        StringBuffer result = new StringBuffer();
-
-        if (attributeName.equals("id")) {
-            NodeList list = node.getChildNodes();
-
-            for (int i = 0; i < list.getLength(); i++) {
-                Node subnode = list.item(i);
-
-                if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
-                    return subnode.getNodeValue();
-                }
-            }
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            System.out.println(nodeList.item(i).getNodeName());
+            System.out.println(getText(nodeList.item(i)));
         }
-        else {
-            return "0";
-        }
-
-        if (node.hasChildNodes() == false) {
-            return "";
-        }
-
-        NodeList list = node.getChildNodes();
-
-        for (int i = 0; i < list.getLength(); i++) {
-            Node subnode = list.item(i);
-
-            if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
-                result.append(subnode.getNodeValue());
-            }
-        }
-        return result.toString();
     }
 
     public String getText(Node node) {
@@ -257,6 +296,20 @@ public class XMLDOM {
             }
         }
         return result.toString();
+    }
+
+    protected boolean checkValidInteger(String stringToCheck) {
+
+        boolean isValidInteger = false;
+
+        try {
+            Integer.parseInt(stringToCheck);
+            isValidInteger = true;
+        }
+        catch (NumberFormatException e) {
+            System.out.println("Not a valid integer");
+        }
+        return isValidInteger;
     }
 
     /**
