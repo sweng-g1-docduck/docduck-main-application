@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.pages.Page;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
 import javafx.beans.value.ChangeListener;
@@ -36,6 +37,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
+import com.docduck.application.gui.pages.StatusPage;
 
 public class GUIBuilder {
 
@@ -50,8 +52,9 @@ public class GUIBuilder {
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private BorderPane borderPane;
     private ComboBox<String> comboBox;
-    ArrayList<Machine> machines;
+    private ArrayList<Machine> machines;
     private User user;
+    private ArrayList<Page> pageList = new ArrayList<Page>();
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -661,5 +664,20 @@ public class GUIBuilder {
         }
         CURRENT_WINDOW_WIDTH = windowWidth;
         CURRENT_WINDOW_HEIGHT = windowHeight;
+    }
+    
+    // Builds all pages and adds to scene...?
+    // Perhaps add to a list of panes
+    public void buildPages() {
+        createDesiredPages();
+        
+        for( Page page : pageList ) {
+            Object aListOfPagePanes = page.buildPage();
+            //aListOfNodes.doSomethingToAddToPane
+        }
+    }
+    private void createDesiredPages() {
+        pageList.add(new StatusPage());
+        // add more pages
     }
 }
