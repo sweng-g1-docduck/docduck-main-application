@@ -48,7 +48,8 @@ public class DocDuckApplication extends Application {
         stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
-        guiBuilder.drawStatusPage();
+        guiBuilder.buildPages();
+        guiBuilder.displayPage("STATUS");
 //        ftpHandler.startApp();
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
