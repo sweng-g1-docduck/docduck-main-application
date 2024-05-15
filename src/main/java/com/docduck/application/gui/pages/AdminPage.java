@@ -37,8 +37,6 @@ public class AdminPage extends Page {
         setLeft(leftSection);
         setCenter(rightSection);
 
-        setPrefWidth(Screen.getPrimary().getBounds().getWidth());
-        setPrefHeight(Screen.getPrimary().getBounds().getHeight());
 
         super.buildPage();
     }
@@ -46,7 +44,7 @@ public class AdminPage extends Page {
     private VBox createLeftSection() {
         VBox leftSection = new VBox(20);
         leftSection.setBackground(new Background(new BackgroundFill(Color.web("#1f5398"), new CornerRadii(5), new Insets(5,5,5,5))));
-        leftSection.setPrefWidth(200); // Increased width
+        //leftSection.setPrefWidth(200); // Increased width
 
         leftSection.getChildren().addAll(
                 createManagerBox("Machine Manager", "Edit Machine", "Add Machine", "Remove Machine"),
@@ -125,8 +123,8 @@ public class AdminPage extends Page {
         VBox rightSection = new VBox(20);
         Background rightBackground = new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5,5,5,5)));
         rightSection.setBackground(rightBackground);
-        rightSection.setPrefWidth(400); // Fixed width
-        rightSection.setMaxHeight(600); // Fixed height
+        //rightSection.setPrefWidth(400); // Fixed width
+        //rightSection.setMaxHeight(600); // Fixed height
 
         List<User> userList = generateUserList();
         for (User user : userList) {
@@ -136,7 +134,6 @@ public class AdminPage extends Page {
         // Create the inner VBox for buttons with insets
         VBox innerVBox = new VBox(10);
         innerVBox.setPadding(new Insets(10));
-        innerVBox.setMaxWidth(Double.MAX_VALUE);
         innerVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5,5,5,5)))); // Change background color
 
         // Add buttons to the inner VBox
@@ -146,6 +143,8 @@ public class AdminPage extends Page {
 
         ScrollPane rightScrollPane = new ScrollPane(innerVBox);
         rightScrollPane.setFitToWidth(true);
+        //rightScrollPane.setPrefViewportWidth(380); // Adjusted width
+        rightScrollPane.setMaxHeight(600); // Fixed height
         rightScrollPane.setPadding(new Insets(10));
 
         // Set the inset color to match the outer VBox background color
@@ -153,10 +152,11 @@ public class AdminPage extends Page {
         rightScrollPane.setBackground(rightInsetBackground);
 
         VBox rightVBox = new VBox(rightScrollPane);
-        rightVBox.setMaxWidth(Double.MAX_VALUE);
+        rightVBox.setMaxWidth(1000); // Fixed width
 
         return rightVBox;
     }
+
 
     private ButtonWrapper createUserButton(User user) {
         ButtonWrapper userButton = new ButtonWrapper();

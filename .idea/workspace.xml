@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1db53b8f-f6d1-4040-9291-436c6e3d12d3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/DocDuckApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/DocDuckApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/GUIBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/GUIBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/AdminPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/AdminPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/Page.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/Page.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +98,7 @@
       <workItem from="1714429527289" duration="1353000" />
       <workItem from="1714478662220" duration="304000" />
       <workItem from="1714478977822" duration="287000" />
-      <workItem from="1715798482004" duration="15548000" />
+      <workItem from="1715798482004" duration="16182000" />
     </task>
     <servers />
   </component>

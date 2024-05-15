@@ -51,7 +51,7 @@ public class Page extends BorderPane {
         HBox menuBar = new HBox();
         menuBar.setPadding(new Insets(15, 15, 15, 15));
         menuBar.setBackground(
-                new Background(new BackgroundFill(Color.web("245494"), new CornerRadii(10), new Insets(5))));
+                new Background(new BackgroundFill(Color.web("F5F5F5"), new CornerRadii(10), new Insets(5))));
         menuBar.setSpacing(15);
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
