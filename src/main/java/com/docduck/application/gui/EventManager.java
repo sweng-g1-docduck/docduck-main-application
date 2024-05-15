@@ -162,7 +162,6 @@ public class EventManager {
                     if (username.getText().equals("admin") && password.getText().equals("password")) {
                         password.setBorderWidth(0);
                         System.out.println("Logged in!");
-                        guiBuilder.buildStatusPage();
                     }
                     else {
                         password.setBorderWidth(2);

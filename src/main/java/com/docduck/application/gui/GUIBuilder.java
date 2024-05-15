@@ -3,39 +3,23 @@ package com.docduck.application.gui;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import com.docduck.application.data.Machine;
-import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.Page;
 import com.docduck.buttonlibrary.ButtonWrapper;
-import com.docduck.textlibrary.TextBox;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Scale;
 import com.docduck.application.gui.pages.StatusPage;
 
@@ -51,7 +35,7 @@ public class GUIBuilder {
     private Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private ArrayList<Page> pageList = new ArrayList<Page>();
-    private BorderPane statusPage;
+    private StatusPage statusPage;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -215,17 +199,6 @@ public class GUIBuilder {
     
     }
 
-    public void buildStatusPage() {
-
-        root.getChildren().clear();
-        StatusPage statusPage = new StatusPage();
-
-        root.getChildren().addAll(statusPage.buildPage());
-        root.setBackground(new Background(new BackgroundFill(Color.web("4083db"), new CornerRadii(0), new Insets(0))));
-
-        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
-    }
-
     public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
         double WIDTH = 1296;
         double HEIGHT = 759;
@@ -263,18 +236,12 @@ public class GUIBuilder {
         CURRENT_WINDOW_WIDTH = windowWidth;
         CURRENT_WINDOW_HEIGHT = windowHeight;
     }
-
-    // Builds all pages and adds to scene...?
-    // Perhaps add to a list of panes
-//    public void buildPages() {
-//        createDesiredPages();
-//
-//        for (Page page : pageList) {
-//            Object aListOfPagePanes = page.buildPage();
-//            // aListOfNodes.doSomethingToAddToPane
-//        }
-//    }
     
+    /**
+     * Displays the desired page
+     *  
+     * @param pageName Name of the page to be displayed in ALL CAPS
+     */
     public void displayPage(String pageName) {
         root.getChildren().clear();
         switch (pageName) {
@@ -285,7 +252,10 @@ public class GUIBuilder {
         }
     }
 
+    /**
+     * Builds all of the pages
+     */
     public void buildPages() {
-        statusPage = new StatusPage().buildPage();
+        statusPage = new StatusPage();
     }
 }
