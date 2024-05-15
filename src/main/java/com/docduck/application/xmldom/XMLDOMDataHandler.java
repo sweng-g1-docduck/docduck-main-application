@@ -5,15 +5,15 @@ import org.w3c.dom.NodeList;
 
 import com.docduck.application.utils.InvalidID;
 
-public class DataHandler extends XMLDOM {
+public class XMLDOMDataHandler extends XMLDOM {
 
     XMLDOM dom = null;
 
-    public DataHandler(String xmlFilename, String schemaFilename, boolean validate) {
+    public XMLDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate) {
         super(xmlFilename, schemaFilename, validate);
     }
 
-    public DataHandler(XMLDOM dom) {
+    public XMLDOMDataHandler(XMLDOM dom) {
         super(null, null, false);
         this.dom = dom;
     }
@@ -110,8 +110,60 @@ public class DataHandler extends XMLDOM {
     }
 
     public NodeList getComponentPartData(int machineID, int componentID, int partID) {
-
         return getComponentPartData(getMachineComponentData(getMachineData(machineID), componentID), partID);
+    }
+
+    public NodeList getMachineComponentData(int machineID, int componentID) {
+        return getMachineComponentData(getMachineData(machineID), componentID);
+    }
+
+    public NodeList getComponentData(int componentID) {
+
+        NodeList componentNodeList = null;
+        Node componentNode = null;
+
+        try {
+            componentNode = getNode("component", componentID);
+        }
+        catch (InvalidID e) {
+
+            if (e.isIDInvalid() == true) {
+                System.out.println("The provided ID is not valid");
+            }
+        }
+
+        if (componentNode.hasChildNodes() == false) {
+            return null;
+        }
+
+        componentNodeList = componentNode.getChildNodes();
+
+        return componentNodeList;
+
+    }
+
+    public NodeList getPartData(int partID) {
+
+        NodeList partNodeList = null;
+        Node partNode = null;
+
+        try {
+            partNode = getNode("part", partID);
+        }
+        catch (InvalidID e) {
+
+            if (e.isIDInvalid() == true) {
+                System.out.println("The provided ID is not valid");
+            }
+        }
+
+        if (partNode.hasChildNodes() == false) {
+            return null;
+        }
+
+        partNodeList = partNode.getChildNodes();
+
+        return partNodeList;
 
     }
 

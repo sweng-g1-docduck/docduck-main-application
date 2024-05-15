@@ -32,7 +32,7 @@ public class XMLDOM {
     private final String basicIndent = " ";
 
     // The document that stores the whole xml file
-    private Document doc;
+    protected Document doc;
 
     public enum DocDuckData {
         USER,
@@ -204,52 +204,6 @@ public class XMLDOM {
         }
         return node;
     }
-
-//    public String getAttribute(String attributeName, Node node) {
-//
-//        StringBuffer result = new StringBuffer();
-//
-//        if (attributeName.equals("id")) {
-//            NodeList list = node.getChildNodes();
-//
-//            for (int i = 0; i < list.getLength(); i++) {
-//                Node subnode = list.item(i);
-//
-//                if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
-//                    return subnode.getNodeValue();
-//                }
-//                else if (subnode.hasChildNodes()) {
-//                    NodeList sublist = subnode.getChildNodes();
-//
-//                    for (int j = 0; j < list.getLength(); j++) {
-//                        Node subSubnode = sublist.item(j);
-//
-//                        if (subSubnode.getNodeType() == Node.ATTRIBUTE_NODE) {
-//                            return subSubnode.getNodeValue();
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        else {
-//            return "0";
-//        }
-//
-//        if (node.hasChildNodes() == false) {
-//            return "";
-//        }
-//
-//        NodeList list = node.getChildNodes();
-//
-//        for (int i = 0; i < list.getLength(); i++) {
-//            Node subnode = list.item(i);
-//
-//            if (subnode.getNodeType() == Node.ATTRIBUTE_NODE) {
-//                result.append(subnode.getNodeValue());
-//            }
-//        }
-//        return result.toString();
-//    }
 
     public String getNodeListNodeValue(NodeList nodeList, String nodeName) {
 
