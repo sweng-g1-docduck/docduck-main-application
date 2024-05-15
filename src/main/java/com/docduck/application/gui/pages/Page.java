@@ -32,6 +32,7 @@ public class Page extends BorderPane {
     public Page() {
         super();
         this.events = EventManager.getInstance();
+        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     // return list of nodes

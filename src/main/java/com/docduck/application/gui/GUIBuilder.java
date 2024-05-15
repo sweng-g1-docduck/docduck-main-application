@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.Page;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.collections.ObservableList;
@@ -36,6 +37,8 @@ public class GUIBuilder {
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private ArrayList<Page> pageList = new ArrayList<Page>();
     private StatusPage statusPage;
+
+    private AdminPage adminPage;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -245,10 +248,14 @@ public class GUIBuilder {
     public void displayPage(String pageName) {
         root.getChildren().clear();
         switch (pageName) {
-        case "STATUS":
-            root.getChildren().add(statusPage);
-            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
-            break;
+            case "STATUS":
+                root.getChildren().add(statusPage);
+                scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+                break;
+            case "ADMIN":
+                root.getChildren().add(adminPage);
+                scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+                break;
         }
     }
 
@@ -257,5 +264,6 @@ public class GUIBuilder {
      */
     public void buildPages() {
         statusPage = new StatusPage();
+        adminPage = new AdminPage();
     }
 }

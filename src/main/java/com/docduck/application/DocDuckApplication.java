@@ -45,7 +45,7 @@ public class DocDuckApplication extends Application {
         stage.setScene(scene);
         stage.show();
         guiBuilder.buildPages();
-        guiBuilder.displayPage("STATUS");
+        guiBuilder.displayPage("ADMIN");
 //        guiBuilder.StartPage();
 //        ftpHandler.startApp();
         System.out.println(stage.getWidth());
