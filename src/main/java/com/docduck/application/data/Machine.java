@@ -11,7 +11,7 @@ public class Machine {
     private String dataSheet;
     private String purchaseLocation;
     private Report currentReport;
-    private ArrayList<Report> oldReports;
+    private ArrayList<Report> oldReports = new ArrayList<Report>();
 
     public Machine(String name, String room, String status, String serialNumber, String dataSheet, String purchaseLocation) {
         this.name = name;
@@ -35,6 +35,10 @@ public class Machine {
 
     public String getStatus() {
         return this.status;
+    }
+
+    public ArrayList<Report> getOldReports() {
+        return oldReports;
     }
 
     public void setStatus(String status) {

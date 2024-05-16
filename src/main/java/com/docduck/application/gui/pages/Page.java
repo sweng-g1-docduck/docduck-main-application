@@ -1,7 +1,9 @@
 package com.docduck.application.gui.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.application.gui.EventManager;
 import com.docduck.buttonlibrary.ButtonWrapper;
@@ -28,9 +30,12 @@ public class Page extends BorderPane {
 
     protected EventManager events;
     protected User user;
+    protected ArrayList<Machine> machines;
 
-    public Page() {
+    public Page(ArrayList<Machine> machines, User user) {
         super();
+        this.machines=machines;
+        this.user = user;
         this.events = EventManager.getInstance();
     }
 
@@ -69,11 +74,8 @@ public class Page extends BorderPane {
         overviewBtn.setFontColour("#ffffffff");
         overviewBtn.setFontSize(20);
         overviewBtn.removeBorder();
-        overviewBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            }
-        }));
+        overviewBtn.setOnAction(events.getActionEvent("statusPage"));
+
 
         ButtonWrapper logOutBtn = new ButtonWrapper();
         logOutBtn.setCornerRadius(5);
@@ -108,6 +110,7 @@ public class Page extends BorderPane {
             reportBtn.setFontColour("#ffffffff");
             reportBtn.setFontSize(20);
             reportBtn.removeBorder();
+            reportBtn.setOnAction(events.getActionEvent("reportPage"));
 
             ButtonWrapper partBtn = new ButtonWrapper();
             partBtn.setCornerRadius(5);

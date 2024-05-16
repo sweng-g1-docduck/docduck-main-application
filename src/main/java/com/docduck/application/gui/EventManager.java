@@ -176,17 +176,17 @@ public class EventManager {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    xmlBuilder.buildSlide(2);
+                    guiBuilder.displayPage("STATUS");
                 }
             };
             return statusPage;
 
-        case "testPage":
+        case "reportPage":
             EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    xmlBuilder.buildSlide(3);
+                    guiBuilder.displayPage("REPORT");
                 }
             };
             return testPage;

@@ -35,10 +35,10 @@ import javafx.scene.text.TextAlignment;
 public class StatusPage extends Page {
 
     private ComboBox<String> roomSelectBox;
-    private ArrayList<Machine> machines;
 
-    public StatusPage() {
-        super();
+    public StatusPage(ArrayList<Machine> machines, User user) {
+        super(machines, user);
+
         buildPage();
     }
 
@@ -57,13 +57,13 @@ public class StatusPage extends Page {
         contents.setPrefSize(950, 45);
         contents.setMaxSize(950, 45);
         contents.setAlignment(Pos.CENTER_LEFT);
-        
+
         TextBox title = new TextBox();
         title.setText("Machine Overview");
         title.setFontSize(20);
         title.setFontColour(Color.WHITE);
         title.setBoxWidth(200);
-        
+
         contents.getChildren().add(title);
         return contents;
 
@@ -72,8 +72,9 @@ public class StatusPage extends Page {
     /**
      * Initialises the room selection dropdown box
      * 
-     *  REQUIRES INTGRATION
-     *  @author jrb617
+     * REQUIRES INTGRATION
+     * 
+     * @author jrb617
      */
     private void setupRoomSelect() {
         roomSelectBox = new ComboBox<String>();
@@ -112,9 +113,10 @@ public class StatusPage extends Page {
      * Draws the scrollable machine grid
      * 
      * REQUIRES INTGRATION
+     * 
      * @author jrb617
      */
-    private void drawMachineButtons() {
+    public void drawMachineButtons() {
 
         BorderPane machineBackground = new BorderPane();
         ScrollPane machineScroll = new ScrollPane();
@@ -122,7 +124,8 @@ public class StatusPage extends Page {
         machineScroll.setMaxSize(950, 530);
 
         FlowPane machineGrid = new FlowPane();
-        machineGrid.setBackground(new Background(new BackgroundFill(Color.LIGHTSKYBLUE, new CornerRadii(0), new Insets(0))));
+        machineGrid.setBackground(
+                new Background(new BackgroundFill(Color.LIGHTSKYBLUE, new CornerRadii(0), new Insets(0))));
         machineGrid.setPrefWidth(935);
         machineGrid.setPrefHeight(528);
         machineGrid.setPadding(new Insets(15, 15, 15, 15));
@@ -198,6 +201,7 @@ public class StatusPage extends Page {
      * Draws the machine report page
      * 
      * REQUIRES INTGRATION
+     * 
      * @param machine
      * @author jrb617
      */
@@ -329,6 +333,7 @@ public class StatusPage extends Page {
      * Draws the Machine Information Side Panel
      * 
      * REQUIRES INTGRATION
+     * 
      * @param machine Name of machine selected
      * @author jrb617
      */
@@ -338,8 +343,7 @@ public class StatusPage extends Page {
         infoBox.setMaxHeight(630);
         infoBox.setPadding(new Insets(20, 10, 10, 10));
         infoBox.setSpacing(10);
-        infoBox
-                .setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(10), new Insets(5))));
+        infoBox.setBackground(new Background(new BackgroundFill(Color.LIGHTGREY, new CornerRadii(10), new Insets(5))));
 
         TextBox machineName = new TextBox();
 
@@ -353,17 +357,16 @@ public class StatusPage extends Page {
         machineName.removeBackground();
         machineName.removeBorder();
 
-        
         BorderPane dataPane = new BorderPane();
         dataPane.setPrefWidth(310);
-        
+
         dataPane.setPadding(new Insets(20, 10, 10, 10));
         dataPane.setBackground(new Background(new BackgroundFill(Color.GREY, new CornerRadii(10), new Insets(5))));
-        
+
         VBox dataBox = new VBox();
         dataBox.setAlignment(Pos.TOP_LEFT);
         dataBox.setSpacing(10);
-        
+
         TextBox textBox = new TextBox();
         textBox.setBoxWidth(280);
         textBox.setLineSpacing(4);
@@ -383,8 +386,8 @@ public class StatusPage extends Page {
         VBox btnBox = new VBox();
         btnBox.setAlignment(Pos.TOP_CENTER);
         btnBox.setSpacing(10);
-        btnBox.setPadding(new Insets(0,0,10,0));
-        
+        btnBox.setPadding(new Insets(0, 0, 10, 0));
+
         ButtonWrapper reportBtn = new ButtonWrapper();
         reportBtn.setCornerRadius(5);
         reportBtn.setButtonWidth(200);
@@ -432,42 +435,21 @@ public class StatusPage extends Page {
         dataPane.setBottom(btnBox);
         dataPane.setMaxHeight(540);
         dataPane.setMinHeight(540);
-        infoBox.getChildren().addAll(machineName,dataPane);
+        infoBox.getChildren().addAll(machineName, dataPane);
         setRight(infoBox);
     }
 
     /**
-     * Creates and adds all nodes to the root BorderPane
-     * REQUIRES INTGRATION
+     * Creates and adds all nodes to the root BorderPane REQUIRES INTGRATION
      * 
      * @author jrb617
      */
     @Override
     public void buildPage() {
-        populateMachineData();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
         setupRoomSelect();
         drawRoomSelect();
         setTop(drawMenuBar());
         drawMachineButtons();
-    }
-
-    /**
-     * Temporary Method to populate MAchine class, to be removed during integration
-     * 
-     * @author jrb617
-     */
-    private void populateMachineData() {
-        machines = new ArrayList<Machine>();
-        machines.add(new Machine("Machine One", "Room 1", "ONLINE", "1","1",""));
-        machines.add(new Machine("Machine Two", "Room 2", "ONLINE", "2", "2",""));
-        machines.add(new Machine("Machine Three", "Room 1", "MAINTENANCE", "3", "2",""));
-        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2",""));
-        machines.add(new Machine("Machine Five", "Room 1", "OFFLINE", "5", "2",""));
-        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2",""));
-        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2",""));
-        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2",""));
-        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2",""));
     }
 
 }

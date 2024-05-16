@@ -6,6 +6,11 @@ public class Report {
     private String description;
     private String pathToFile;
     
+    public Report(User user, String description){
+        this.user = user;
+        this.description = description;
+    }
+    
     public String getPathToFile() {
         return pathToFile;
     }
@@ -15,17 +20,14 @@ public class Report {
     }
 
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
-    public Report(User user, String description){
-        this.user = user;
-        this.description = description;
-    }
+
     
     
 }
