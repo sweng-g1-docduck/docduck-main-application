@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -103,7 +104,8 @@ public class AdminPage extends Page {
         Stage addStage = new Stage();
         addStage.initModality(Modality.APPLICATION_MODAL);
         addStage.setTitle("Add " + managerType);
-        addStage.setMinWidth(250);
+        addStage.setMinWidth(500);
+        addStage.setMinHeight(700);
 
         Label label = new Label("This is the " + managerType);
         Button closeButton = new Button("Close");
@@ -120,56 +122,73 @@ public class AdminPage extends Page {
     }
 
     private VBox createRightSection() {
-        VBox rightSection = new VBox();
-        Background rightBackground = new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5)));
-        rightSection.setBackground(rightBackground);
-        //rightSection.setPrefWidth(400); // Fixed width
-        //rightSection.setMaxHeight(600); // Fixed height
+        // Create VBox for the header and search bar
+        VBox headerBox = new VBox(10);
+        headerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5)))); // Set background color
+        headerBox.setPadding(new Insets(10));
+        headerBox.setAlignment(Pos.TOP_LEFT);
 
+        // Create header label
+        Label headerLabel = new Label("Users");
+        headerLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;"); // Increased font size
+
+        // Create search bar
+        TextField searchBar = new TextField();
+        searchBar.setPromptText("Search Users");
+        searchBar.setMaxWidth(200); // Set maximum width for the search bar
+
+        // Add header label and search bar to headerBox
+        headerBox.getChildren().addAll(headerLabel, searchBar);
+
+        // Create VBox for the user list
+        VBox userListVBox = new VBox(10);
+        userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5)))); // Change background color
+        userListVBox.setPadding(new Insets(10));
+
+
+        // Add users to the user list VBox
         List<User> userList = generateUserList();
         for (User user : userList) {
-            rightSection.getChildren().add(createUserButton(user));
+            userListVBox.getChildren().add(createUserButton(user));
         }
 
-        // Create the inner VBox for buttons with insets
-        VBox innerVBox = new VBox(5);
-        innerVBox.setPadding(new Insets(5));
-        innerVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5,5,5,5)))); // Change background color
+        // Create ScrollPane for the user list
+        ScrollPane userListScrollPane = new ScrollPane(userListVBox);
+        //userListScrollPane.setFitToWidth(true);
+        userListScrollPane.setMaxWidth(1000); // Fixed width
+        userListScrollPane.setMaxHeight(500); // Fixed height
+        userListScrollPane.setPadding(new Insets(20));
+        userListScrollPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5))));
 
-        // Add buttons to the inner VBox
-        for (User user : userList) {
-            innerVBox.getChildren().add(createUserButton(user));
-        }
+        // Set the scrollbar policy to fit the content inside the scroll pane
+        userListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
-        ScrollPane rightScrollPane = new ScrollPane(innerVBox);
-        rightScrollPane.setFitToWidth(true);
-        //rightScrollPane.setPrefViewportWidth(380); // Adjusted width
-        rightScrollPane.setMaxHeight(600); // Fixed height
-        rightScrollPane.setPadding(new Insets(10));
+        // Create VBox to contain headerBox and userListScrollPane
+        VBox rightSection = new VBox(10);
+        rightSection.getChildren().addAll(headerBox, userListScrollPane);
 
-        // Set the inset color to match the outer VBox background color
-        Background rightInsetBackground = new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5,5,5,5)));
-        rightScrollPane.setBackground(rightInsetBackground);
-
-        VBox rightVBox = new VBox(rightScrollPane);
-        rightVBox.setMaxWidth(980); // Fixed width
-
-        return rightVBox;
+        return rightSection;
     }
+
+
+
+
+
+
 
 
     private ButtonWrapper createUserButton(User user) {
         ButtonWrapper userButton = new ButtonWrapper();
         userButton.setCornerRadius(5);
-        userButton.setButtonWidth(800);
-        userButton.setButtonHeight(90);
+        userButton.setButtonWidth(400);
+        userButton.setButtonHeight(70);
         userButton.setFont(Font.font("System", 80));
         userButton.setText(user.getName() + " - " + user.getEmail() + " (" + user.getRole() + ")");
         userButton.setBackgroundColour("#fbb12eff");
         userButton.setClickcolour(Color.WHITE);
         userButton.setHoverColour("#ff8c00ff");
         userButton.setFontColour(Color.WHITE);
-        userButton.setFontSize(20);
+        userButton.setFontSize(18);
         userButton.removeBorder();
         return userButton;
     }
