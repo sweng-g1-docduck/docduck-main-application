@@ -3,6 +3,7 @@ package com.docduck.application.gui.pages;
 import java.util.ArrayList;
 
 import com.docduck.application.data.Machine;
+import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
@@ -279,6 +280,8 @@ public class StatusPage extends Page {
                     // Submit report to XML
                     machine.setStatus("OFFLINE");
                     setRight(null);
+                    Report report = new Report(user, descriptionBox.getText());
+                    machine.addReport(report);
                     drawMachineButtons();
 
                 }
@@ -456,15 +459,15 @@ public class StatusPage extends Page {
      */
     private void populateMachineData() {
         machines = new ArrayList<Machine>();
-        machines.add(new Machine("Machine One", "Room 1", "ONLINE", "1","1"));
-        machines.add(new Machine("Machine Two", "Room 2", "ONLINE", "2", "2"));
-        machines.add(new Machine("Machine Three", "Room 1", "MAINTENANCE", "3", "2"));
-        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2"));
-        machines.add(new Machine("Machine Five", "Room 1", "OFFLINE", "5", "2"));
-        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2"));
-        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2"));
-        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2"));
-        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2"));
+        machines.add(new Machine("Machine One", "Room 1", "ONLINE", "1","1",""));
+        machines.add(new Machine("Machine Two", "Room 2", "ONLINE", "2", "2",""));
+        machines.add(new Machine("Machine Three", "Room 1", "MAINTENANCE", "3", "2",""));
+        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2",""));
+        machines.add(new Machine("Machine Five", "Room 1", "OFFLINE", "5", "2",""));
+        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2",""));
+        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2",""));
+        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2",""));
+        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2",""));
     }
 
 }
