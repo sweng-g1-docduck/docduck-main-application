@@ -42,26 +42,26 @@ public class AdminPage extends Page {
     }
 
     private VBox createLeftSection() {
-        VBox leftSection = new VBox(20);
-        leftSection.setBackground(new Background(new BackgroundFill(Color.web("#1f5398"), new CornerRadii(5), new Insets(5,5,5,5))));
+        VBox leftSection = new VBox(25);
+        leftSection.setBackground(new Background(new BackgroundFill(Color.web("#1f5398"), new CornerRadii(5), new Insets(0))));
         //leftSection.setPrefWidth(200); // Increased width
 
         leftSection.getChildren().addAll(
-                createManagerBox("Machine Manager", "Edit Machine", "Add Machine", "Remove Machine"),
                 createManagerBox("User Manager", "Edit User", "Add User", "Remove User"),
+                createManagerBox("Machine Manager", "Edit Machine", "Add Machine", "Remove Machine"),
                 createManagerBox("Components Manager", "Edit Component", "Add Component", "Remove Component"),
                 createManagerBox("Parts Manager", "Edit Part", "Add Part", "Remove Part")
         );
 
-        leftSection.setPadding(new Insets(10));
+        leftSection.setPadding(new Insets(5));
         return leftSection;
     }
 
     private VBox createManagerBox(String header, String... buttons) {
-        VBox managerBox = new VBox(10);
+        VBox managerBox = new VBox(5);
         managerBox.setAlignment(Pos.CENTER);
         managerBox.setPadding(new Insets(10));
-        managerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5,5,5,5))));
+        managerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
         managerBox.getChildren().add(createManagerHeader(header));
         for (String buttonText : buttons) {
             managerBox.getChildren().add(createButton(buttonText, header));
@@ -78,15 +78,15 @@ public class AdminPage extends Page {
     private ButtonWrapper createButton(String text, String managerType) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
-        button.setButtonWidth(180);
-        button.setButtonHeight(22);
+        button.setButtonWidth(250);
+        button.setButtonHeight(24);
         button.setFontName("Arial");
         button.setText(text);
         button.setBackgroundColour("#fbb12eff");
         button.setClickcolour(Color.WHITE);
         button.setHoverColour("#ff8c00ff");
         button.setFontColour(Color.WHITE);
-        button.setFontSize(11);
+        button.setFontSize(12);
         button.removeBorder();
 
         button.setOnAction(new EventHandler<ActionEvent>() {
@@ -120,8 +120,8 @@ public class AdminPage extends Page {
     }
 
     private VBox createRightSection() {
-        VBox rightSection = new VBox(20);
-        Background rightBackground = new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5,5,5,5)));
+        VBox rightSection = new VBox();
+        Background rightBackground = new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5)));
         rightSection.setBackground(rightBackground);
         //rightSection.setPrefWidth(400); // Fixed width
         //rightSection.setMaxHeight(600); // Fixed height
@@ -132,8 +132,8 @@ public class AdminPage extends Page {
         }
 
         // Create the inner VBox for buttons with insets
-        VBox innerVBox = new VBox(10);
-        innerVBox.setPadding(new Insets(10));
+        VBox innerVBox = new VBox(5);
+        innerVBox.setPadding(new Insets(5));
         innerVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5,5,5,5)))); // Change background color
 
         // Add buttons to the inner VBox
@@ -152,7 +152,7 @@ public class AdminPage extends Page {
         rightScrollPane.setBackground(rightInsetBackground);
 
         VBox rightVBox = new VBox(rightScrollPane);
-        rightVBox.setMaxWidth(1000); // Fixed width
+        rightVBox.setMaxWidth(980); // Fixed width
 
         return rightVBox;
     }
