@@ -6,16 +6,17 @@ import java.util.Hashtable;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.Page;
 import com.docduck.buttonlibrary.ButtonWrapper;
-
 import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,12 +30,12 @@ public class GUIBuilder {
     private static GUIBuilder instance = null;
     private static XMLBuilder xmlBuilder;
     private static EventManager events;
-    public double CURRENT_WINDOW_WIDTH = 1280;
-    public double CURRENT_WINDOW_HEIGHT = 720;
+    public double CURRENT_WINDOW_WIDTH = 1296;
+    public double CURRENT_WINDOW_HEIGHT = 759;
     private Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
-    
     private ArrayList<Page> pageList = new ArrayList<Page>();
+    private StatusPage statusPage;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -195,51 +196,12 @@ public class GUIBuilder {
     }
 
     public void LoginPage() {
-        root.getChildren().clear();
-        ArrayList<Node> nodes = xmlBuilder.buildSlide(1);
-        root.getChildren().addAll(nodes);
-        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
-    }
-
-    public HBox Menu() {
-        // create a HBox
-        HBox hbox = new HBox(10);
-
-        // setAlignment
-        hbox.setAlignment(Pos.CENTER);
-        hbox.setStyle("-fx-background-color: #FFFFFF");
-        hbox.prefWidth(1280);
-        hbox.minWidth(1280);
-        hbox.maxWidth(1280);
-
-        // create a label
-        Label label = new Label("This is a Menu example");
-
-        // add label to hbox
-        hbox.getChildren().add(label);
-
-        // add buttons to HBox
-        for (int i = 0; i < 5; i++) {
-            ButtonWrapper b = new ButtonWrapper();
-            b.setText("Button " + (i + 1));
-            hbox.getChildren().add(b);
-        }
-        return hbox;
-    }
-
-    public void StatusPage() {
-        SplitPane split = new SplitPane();
-        Pane status = new Pane();
-        status.getChildren().addAll(xmlBuilder.buildSlide(2));
-        split.getItems().addAll(Menu(), status);
-        root.getChildren().clear();
-        root.getChildren().addAll(split);
-        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+    
     }
 
     public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
-        double WIDTH = 1280;
-        double HEIGHT = 720;
+        double WIDTH = 1296;
+        double HEIGHT = 759;
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
         ObservableList<Node> nodes = null;
@@ -275,18 +237,25 @@ public class GUIBuilder {
         CURRENT_WINDOW_HEIGHT = windowHeight;
     }
     
-    // Builds all pages and adds to scene...?
-    // Perhaps add to a list of panes
-    public void buildPages() {
-        createDesiredPages();
-        
-        for( Page page : pageList ) {
-            Object aListOfPagePanes = page.buildPage();
-            //aListOfNodes.doSomethingToAddToPane
+    /**
+     * Displays the desired page
+     *  
+     * @param pageName Name of the page to be displayed in ALL CAPS
+     */
+    public void displayPage(String pageName) {
+        root.getChildren().clear();
+        switch (pageName) {
+        case "STATUS":
+            root.getChildren().add(statusPage);
+            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+            break;
         }
     }
-    private void createDesiredPages() {
-        pageList.add(new StatusPage());
-        // add more pages
+
+    /**
+     * Builds all of the pages
+     */
+    public void buildPages() {
+        statusPage = new StatusPage();
     }
 }

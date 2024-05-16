@@ -33,14 +33,23 @@ public class DocDuckApplication extends Application {
         xmlBuilder.updateInstances();
         ftpHandler.updateInstances();
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
-        stage.setMinHeight(720);
-        stage.setMinWidth(1280);
-        stage.setHeight(720);
-        stage.setWidth(1280);
+
+        stage.setMinHeight(759);
+        stage.setMinWidth(1296);
+        stage.setHeight(759);
+        stage.setWidth(1296);
+
+        System.out.println();
+        
         stage.setTitle("DocDuck");
         stage.setScene(scene);
         stage.show();
-        guiBuilder.StartPage();
+        guiBuilder.buildPages();
+        guiBuilder.displayPage("STATUS");
+//        guiBuilder.StartPage();
+//        ftpHandler.startApp();
+        System.out.println(stage.getWidth());
+        System.out.println(stage.getHeight());
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
                 stage.getWidth(), stage.getHeight());
