@@ -4,8 +4,8 @@ import org.w3c.dom.NodeList;
 
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.utils.InvalidID;
-import com.docduck.application.xmldom.XMLDOMDataHandler;
 import com.docduck.application.xmldom.XMLDOM;
+import com.docduck.application.xmldom.XMLDOMDataHandler;
 import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
@@ -108,7 +108,7 @@ public class DocDuckApplication extends Application {
 
         data.printNodeListValues((data.getComponentPartData(1, 1, 1)));
 
-        System.out.println(data.getNodeListNodeValue(machineOneData, "serialNumber"));
+        System.out.println(data.getNodeListNodeValue(machineOneData, "name"));
 
         data.printNodeListValues(data.getPartData(2));
 

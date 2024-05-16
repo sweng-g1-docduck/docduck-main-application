@@ -167,4 +167,11 @@ public class XMLDOMDataHandler extends XMLDOM {
 
     }
 
+    public void getMachineByRoom(String roomName) {
+        // machine location == roomName
+        // return list of machine Names or IDs
+        // Another method the same to return a list of NodeLists
+    }
+
+    // getNameFromID
 }
