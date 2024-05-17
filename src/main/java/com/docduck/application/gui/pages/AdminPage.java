@@ -28,6 +28,8 @@ public class AdminPage extends Page {
     private String currentRole = "All Users";
     private ButtonWrapper lastPressedUserTypeButton;
     private ButtonWrapper lastPressedManagerButton;
+    private ButtonWrapper lastPressedUserButton;
+
 
     public AdminPage() {
         super();
@@ -69,10 +71,16 @@ public class AdminPage extends Page {
         managerBox.setPadding(new Insets(10));
         managerBox.getChildren().add(createManagerHeader(header));
         for (String buttonText : buttons) {
-            managerBox.getChildren().add(createButton(buttonText, header, ButtonType.MANAGER));
+            ButtonWrapper button = createButton(buttonText, header, ButtonType.MANAGER, null);
+            if (buttonText.equals("Edit User")) {
+                setLastPressedButton(button, lastPressedManagerButton);
+                lastPressedManagerButton = button;
+            }
+            managerBox.getChildren().add(button);
         }
         return managerBox;
     }
+
 
     private Label createManagerHeader(String headerText) {
         Label managerHeader = new Label(headerText);
@@ -80,7 +88,7 @@ public class AdminPage extends Page {
         return managerHeader;
     }
 
-    private ButtonWrapper createButton(String text, String managerType, ButtonType type) {
+    private ButtonWrapper createButton(String text, String managerType, ButtonType type, User user) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
@@ -95,7 +103,11 @@ public class AdminPage extends Page {
         button.removeBorder();
 
         button.setOnAction(event -> {
-            openAddWindow(managerType, text);
+            if (text.equals("Edit User")) {
+                openWindow(managerType, text, user);
+            } else {
+                openWindow(managerType, text, null);
+            }
             if (type == ButtonType.MANAGER) {
                 setLastPressedButton(button, lastPressedManagerButton);
                 lastPressedManagerButton = button;
@@ -108,9 +120,9 @@ public class AdminPage extends Page {
         return button;
     }
 
-    private void openAddWindow(String managerType, String actionType) {
+    private void openWindow(String managerType, String actionType, User user) {
         Stage newStage = new Stage();
-        VBox formLayout = createManagerForm(managerType, actionType);
+        VBox formLayout = createManagerForm(managerType, actionType, user);
 
         Scene scene = new Scene(formLayout, 500, 400); // Extend window size
         newStage.setTitle(managerType + " - " + actionType);
@@ -118,7 +130,7 @@ public class AdminPage extends Page {
         newStage.show();
     }
 
-    private VBox createManagerForm(String managerType, String actionType) {
+    private VBox createManagerForm(String managerType, String actionType, User user) {
         VBox formLayout = new VBox(20);
         formLayout.setPadding(new Insets(20));
         formLayout.setAlignment(Pos.TOP_CENTER);
@@ -137,24 +149,25 @@ public class AdminPage extends Page {
         int row = 0;
         switch (managerType) {
             case "User Manager":
-                gridPane.add(createFormField("Username"), 0, row++);
-                gridPane.add(createFormField("Email"), 0, row++);
+                TextField usernameField = createFormField("Username", user != null ? user.getName() : "");
+                gridPane.add(usernameField, 0, row++);
+                gridPane.add(createFormField("Email", user != null ? user.getEmail() : ""), 0, row++);
                 gridPane.add(createComboBox("Role", "Admin", "Operator", "Engineer"), 0, row++);
                 break;
             case "Machine Manager":
-                gridPane.add(createFormField("Machine Name"), 0, row++);
-                gridPane.add(createFormField("Machine Type"), 0, row++);
+                gridPane.add(createFormField("Machine Name", ""), 0, row++);
+                gridPane.add(createFormField("Machine Type", ""), 0, row++);
                 gridPane.add(createComboBox("Status", "Active", "Inactive"), 0, row++);
                 break;
             case "Components Manager":
-                gridPane.add(createFormField("Component Name"), 0, row++);
-                gridPane.add(createFormField("Component Type"), 0, row++);
-                gridPane.add(createFormField("Quantity"), 0, row++);
+                gridPane.add(createFormField("Component Name", ""), 0, row++);
+                gridPane.add(createFormField("Component Type", ""), 0, row++);
+                gridPane.add(createFormField("Quantity", ""), 0, row++);
                 break;
             case "Parts Manager":
-                gridPane.add(createFormField("Part Name"), 0, row++);
-                gridPane.add(createFormField("Part Number"), 0, row++);
-                gridPane.add(createFormField("Supplier"), 0, row++);
+                gridPane.add(createFormField("Part Name", ""), 0, row++);
+                gridPane.add(createFormField("Part Number", ""), 0, row++);
+                gridPane.add(createFormField("Supplier", ""), 0, row++);
                 break;
             default:
                 break;
@@ -166,19 +179,15 @@ public class AdminPage extends Page {
         return formLayout;
     }
 
-    private HBox createFormField(String label) {
-        HBox fieldBox = new HBox(10);
-        Label fieldLabel = new Label(label + ":");
+
+    private TextField createFormField(String label, String value) {
         TextField textField = new TextField();
+        textField.setPromptText(label);
+        textField.setText(value);
         textField.setPrefWidth(200);
-
-        fieldLabel.setPrefWidth(100); // Ensure labels and text fields are aligned
-        fieldLabel.setFont(new Font("Arial", 14));
-        textField.setFont(new Font("Arial", 14));
-
-        fieldBox.getChildren().addAll(fieldLabel, textField);
-        return fieldBox;
+        return textField;
     }
+
 
     private ComboBox<String> createComboBox(String label, String... items) {
         Label fieldLabel = new Label(label + ":");
@@ -230,7 +239,7 @@ public class AdminPage extends Page {
     private VBox createRightSection() {
         // Header section
         HBox headerBox = new HBox(10);
-        headerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5),new Insets(5))));
+        headerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
         headerBox.setPadding(new Insets(10));
         headerBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -238,6 +247,8 @@ public class AdminPage extends Page {
         headerLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;");
 
         ButtonWrapper allUsersButton = createUserTypeButton("All Users");
+        allUsersButton.setBorderColour(Color.BLACK); // Highlight the All Users button
+
         ButtonWrapper adminsButton = createUserTypeButton("Admins");
         ButtonWrapper engineersButton = createUserTypeButton("Engineers");
         ButtonWrapper operatorsButton = createUserTypeButton("Operators");
@@ -249,6 +260,7 @@ public class AdminPage extends Page {
         searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterUsersByName(newValue));
 
         headerBox.getChildren().addAll(headerLabel, allUsersButton, adminsButton, engineersButton, operatorsButton, searchBar);
+
 
         // User list section
         userListVBox = new VBox(10);
@@ -272,6 +284,12 @@ public class AdminPage extends Page {
         stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(0))));
         stackPane.setMaxWidth(990);
 
+        // Attach event handler to each user button
+        for (User user : allUsersList) {
+            ButtonWrapper userButton = createUserButton(user);
+            userButton.setOnAction(event -> openEditWindow(user));
+        }
+
         // VBox for the entire right section
         VBox rightSection = new VBox(5);
         rightSection.getChildren().addAll(headerBox, stackPane);
@@ -280,8 +298,10 @@ public class AdminPage extends Page {
         return rightSection;
     }
 
-
-
+    // Method to open the edit window with user's information filled out
+    private void openEditWindow(User user) {
+        openWindow("User Manager", "Edit User", user);
+    }
 
 
     private void filterUsersByName(String name) {
@@ -317,15 +337,25 @@ public class AdminPage extends Page {
         double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
         userButton.setButtonHeight(height);
         userButton.setFont(Font.font("System", 80));
-        userButton.setText(user.getName() + " - " + user.getEmail() + " (" + user.getRole() + ")");
+        userButton.setText(user.getName() + " - " + user.getUsername() + " - " + user.getEmail() + " (" + user.getRole() + ")");
         userButton.setBackgroundColour("#fbb12eff");
         userButton.setClickcolour(Color.WHITE);
         userButton.setHoverColour("#ff8c00ff");
         userButton.setFontColour(Color.WHITE);
         userButton.setFontSize(18);
         userButton.removeBorder();
+
+        // Adjust event handling to open the edit window with user's information
+        userButton.setOnAction(event -> {
+            openEditWindow(user);
+            setLastPressedButton(userButton, lastPressedUserButton);
+            lastPressedUserButton = userButton;
+        });
+
         return userButton;
     }
+
+
 
 
     private ButtonWrapper createUserTypeButton(String userType) {
