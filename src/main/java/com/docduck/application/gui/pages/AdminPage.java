@@ -1,5 +1,6 @@
 package com.docduck.application.gui.pages;
 
+import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.beans.value.ChangeListener;
@@ -19,17 +20,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+
 public class AdminPage extends Page {
 
+    private VBox rightSection;
     private VBox userListVBox;
+    private VBox machineListVBox;
     private List<User> allUsersList;
-    private List<User> filteredList;
+    private List<User> filteredUserList;
+    private List<Machine> machines;
+    private List<Machine> filteredMachineList;
     private String currentName = "";
     private String currentRole = "All Users";
+    private String currentMachineStatus = "All Machines";
     private ButtonWrapper lastPressedUserTypeButton;
     private ButtonWrapper lastPressedManagerButton;
     private ButtonWrapper lastPressedUserButton;
-
+    private ButtonWrapper lastPressedMachineButton;
+    private boolean editingUsers = true;
+    private boolean editingMachines = false;
+    private Label headerLabel;
 
     public AdminPage() {
         super();
@@ -76,11 +96,14 @@ public class AdminPage extends Page {
                 setLastPressedButton(button, lastPressedManagerButton);
                 lastPressedManagerButton = button;
             }
+            if (buttonText.equals("Edit Machine")) {
+                setLastPressedButton(button, lastPressedMachineButton);
+                lastPressedMachineButton = button;
+            }
             managerBox.getChildren().add(button);
         }
         return managerBox;
     }
-
 
     private Label createManagerHeader(String headerText) {
         Label managerHeader = new Label(headerText);
@@ -104,13 +127,24 @@ public class AdminPage extends Page {
 
         button.setOnAction(event -> {
             if (text.equals("Edit User")) {
-                openWindow(managerType, text, user);
-            } else {
-                openWindow(managerType, text, null);
+                editingUsers = true;
+                editingMachines = false;
+                updateHeader("Users");
+            } else if (text.equals("Edit Machine")) {
+                editingMachines = true;
+                editingUsers = false;
+                updateHeader("Machines");
             }
+            createRightSection(); // Clear and refresh right section
+            openWindow(managerType, text, user);
             if (type == ButtonType.MANAGER) {
-                setLastPressedButton(button, lastPressedManagerButton);
-                lastPressedManagerButton = button;
+                if (editingUsers) {
+                    setLastPressedButton(button, lastPressedManagerButton);
+                    lastPressedManagerButton = button;
+                } else {
+                    setLastPressedButton(button, lastPressedMachineButton);
+                    lastPressedMachineButton = button;
+                }
             } else {
                 setLastPressedButton(button, lastPressedUserTypeButton);
                 lastPressedUserTypeButton = button;
@@ -119,6 +153,7 @@ public class AdminPage extends Page {
 
         return button;
     }
+
 
     private void openWindow(String managerType, String actionType, User user) {
         Stage newStage = new Stage();
@@ -141,6 +176,18 @@ public class AdminPage extends Page {
 
         formLayout.getChildren().add(headerLabel);
 
+        if (editingUsers) {
+            formLayout.getChildren().add(createUserManagerForm(managerType, actionType, user));
+        } else {
+            formLayout.getChildren().add(createMachineManagerForm(managerType, actionType, user));
+        }
+
+        return formLayout;
+    }
+
+    private VBox createUserManagerForm(String managerType, String actionType, User user) {
+        VBox formLayout = new VBox(10);
+
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
         gridPane.setHgap(10);
@@ -154,31 +201,41 @@ public class AdminPage extends Page {
                 gridPane.add(createFormField("Email", user != null ? user.getEmail() : ""), 0, row++);
                 gridPane.add(createComboBox("Role", "Admin", "Operator", "Engineer"), 0, row++);
                 break;
+            default:
+                break;
+        }
+
+        formLayout.getChildren().addAll(gridPane, createFormButtons());
+
+        return formLayout;
+    }
+
+    private VBox createMachineManagerForm(String managerType, String actionType, User user) {
+        VBox formLayout = new VBox(10);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+        gridPane.setAlignment(Pos.CENTER);
+
+        int row = 0;
+        switch (managerType) {
             case "Machine Manager":
-                gridPane.add(createFormField("Machine Name", ""), 0, row++);
-                gridPane.add(createFormField("Machine Type", ""), 0, row++);
-                gridPane.add(createComboBox("Status", "Active", "Inactive"), 0, row++);
-                break;
-            case "Components Manager":
-                gridPane.add(createFormField("Component Name", ""), 0, row++);
-                gridPane.add(createFormField("Component Type", ""), 0, row++);
-                gridPane.add(createFormField("Quantity", ""), 0, row++);
-                break;
-            case "Parts Manager":
-                gridPane.add(createFormField("Part Name", ""), 0, row++);
-                gridPane.add(createFormField("Part Number", ""), 0, row++);
-                gridPane.add(createFormField("Supplier", ""), 0, row++);
+                TextField machineNameField = createFormField("Machine Name", "");
+                gridPane.add(machineNameField, 0, row++);
+                gridPane.add(createFormField("Location", ""), 0, row++);
+                gridPane.add(createComboBox("Status", "Online", "Offline", "Maintenance"), 0, row++);
+                gridPane.add(createFormField("Attribute 1", ""), 0, row++);
+                gridPane.add(createFormField("Attribute 2", ""), 0, row++);
                 break;
             default:
                 break;
         }
 
-        formLayout.getChildren().add(gridPane);
-        formLayout.getChildren().add(createFormButtons());
+        formLayout.getChildren().addAll(gridPane, createFormButtons());
 
         return formLayout;
     }
-
 
     private TextField createFormField(String label, String value) {
         TextField textField = new TextField();
@@ -187,7 +244,6 @@ public class AdminPage extends Page {
         textField.setPrefWidth(200);
         return textField;
     }
-
 
     private ComboBox<String> createComboBox(String label, String... items) {
         Label fieldLabel = new Label(label + ":");
@@ -237,13 +293,18 @@ public class AdminPage extends Page {
     }
 
     private VBox createRightSection() {
+        // Remove the existing right section if it exists
+        if (rightSection != null) {
+            getChildren().remove(rightSection);
+        }
+
         // Header section
         HBox headerBox = new HBox(10);
         headerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
         headerBox.setPadding(new Insets(10));
         headerBox.setAlignment(Pos.CENTER_LEFT);
 
-        Label headerLabel = new Label("Users");
+        headerLabel = new Label("Users");
         headerLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;");
 
         ButtonWrapper allUsersButton = createUserTypeButton("All Users");
@@ -262,70 +323,134 @@ public class AdminPage extends Page {
         headerBox.getChildren().addAll(headerLabel, allUsersButton, adminsButton, engineersButton, operatorsButton, searchBar);
 
 
-        // User list section
-        userListVBox = new VBox(10);
-        userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
-        userListVBox.setPadding(new Insets(5));
+        // User or Machine list section
+        if (editingUsers) {
+            userListVBox = new VBox(10);
+            userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
+            userListVBox.setPadding(new Insets(5));
 
-        allUsersList = generateUserList();
-        filteredList = new ArrayList<>(allUsersList);
+            allUsersList = generateUserList();
+            filteredUserList = new ArrayList<>(allUsersList);
 
-        updateDisplayedUserList(filteredList);
+            updateDisplayedUserList(filteredUserList);
 
-        ScrollPane userListScrollPane = new ScrollPane(userListVBox);
-        userListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        userListScrollPane.setFitToWidth(true);
+            ScrollPane userListScrollPane = new ScrollPane(userListVBox);
+            userListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            userListScrollPane.setFitToWidth(true);
 
-        // Set a maximum height for the scroll pane (adjust as needed)
-        userListScrollPane.setMaxHeight(540);
+            // Set a maximum height for the scroll pane (adjust as needed)
+            userListScrollPane.setMaxHeight(540);
 
-        // StackPane for rounded edges
-        StackPane stackPane = new StackPane(userListScrollPane);
-        stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(0))));
-        stackPane.setMaxWidth(990);
+            // StackPane for rounded edges
+            StackPane stackPane = new StackPane(userListScrollPane);
+            stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(0))));
+            stackPane.setMaxWidth(990);
 
-        // Attach event handler to each user button
-        for (User user : allUsersList) {
-            ButtonWrapper userButton = createUserButton(user);
-            userButton.setOnAction(event -> openEditWindow(user));
+            // Attach event handler to each user button
+            for (User user : allUsersList) {
+                ButtonWrapper userButton = createUserButton(user);
+                userButton.setOnAction(event -> openEditWindow(user));
+            }
+
+            // VBox for the entire right section
+            rightSection = new VBox(5);
+            rightSection.getChildren().addAll(headerBox, stackPane);
+            VBox.setVgrow(stackPane, Priority.ALWAYS);
+
+            // Add the new right section to the layout
+            setCenter(rightSection);
+
+            return rightSection;
+        } else if (editingMachines) {
+            machineListVBox = new VBox(10);
+            machineListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
+            machineListVBox.setPadding(new Insets(5));
+
+            machines = generateMachineList();
+            filteredMachineList = new ArrayList<>(machines);
+
+            updateDisplayedMachineList(filteredMachineList);
+
+            ScrollPane machineListScrollPane = new ScrollPane(machineListVBox);
+            machineListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+            machineListScrollPane.setFitToWidth(true);
+
+            // Set a maximum height for the scroll pane (adjust as needed)
+            machineListScrollPane.setMaxHeight(540);
+
+            // StackPane for rounded edges
+            StackPane stackPane = new StackPane(machineListScrollPane);
+            stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(0))));
+            stackPane.setMaxWidth(990);
+
+            // Attach event handler to each machine button
+            for (Machine machine : machines) {
+                ButtonWrapper machineButton = createMachineButton(machine);
+                machineButton.setOnAction(event -> openEditWindow(machine));
+            }
+
+            // VBox for the entire right section
+            rightSection = new VBox(5);
+            rightSection.getChildren().addAll(headerBox, stackPane);
+            VBox.setVgrow(stackPane, Priority.ALWAYS);
+
+            // Add the new right section to the layout
+            setCenter(rightSection);
+
+            return rightSection;
         }
 
-        // VBox for the entire right section
-        VBox rightSection = new VBox(5);
-        rightSection.getChildren().addAll(headerBox, stackPane);
-        VBox.setVgrow(stackPane, Priority.ALWAYS);
-
-        return rightSection;
+        return null; // Handle other cases as needed
     }
+
 
     // Method to open the edit window with user's information filled out
     private void openEditWindow(User user) {
         openWindow("User Manager", "Edit User", user);
     }
 
+    // Method to open the edit window with machine's information filled out
+    private void openEditWindow(Machine machine) {
+        openWindow("Machine Manager", "Edit Machine", null);
+    }
 
     private void filterUsersByName(String name) {
         currentName = name;
-        applyFilters();
+        applyUserFilters();
     }
 
-    private void filterUsersByRole(String role) {
-        currentRole = role;
-        applyFilters();
+    private void filterMachinesByStatus(String status) {
+        currentMachineStatus = status;
+        applyMachineFilters();
     }
 
-    private void applyFilters() {
-        filteredList = allUsersList.stream()
+    private void applyUserFilters() {
+        filteredUserList = allUsersList.stream()
                 .filter(user -> user.getName().toLowerCase().contains(currentName.toLowerCase()))
                 .filter(user -> user.getRole().equalsIgnoreCase(currentRole) || currentRole.equalsIgnoreCase("All Users"))
                 .collect(Collectors.toList());
-        updateDisplayedUserList(filteredList);
+        updateDisplayedUserList(filteredUserList);
+    }
+
+    private void applyMachineFilters() {
+        filteredMachineList = machines.stream()
+                .filter(machine -> machine.getStatus().equalsIgnoreCase(currentMachineStatus) || currentMachineStatus.equalsIgnoreCase("All Machines"))
+                .collect(Collectors.toList());
+        updateDisplayedMachineList(filteredMachineList);
     }
 
     private void updateDisplayedUserList(List<User> users) {
         userListVBox.getChildren().clear();
         for (User user : users) {
             userListVBox.getChildren().add(createUserButton(user));
+        }
+    }
+
+    private void updateDisplayedMachineList(List<Machine> machines) {
+        machineListVBox.getChildren().clear();
+        for (Machine machine : machines) {
+            machineListVBox.getChildren().add(createMachineButton(machine));
+            System.out.println(1);
         }
     }
 
@@ -355,8 +480,31 @@ public class AdminPage extends Page {
         return userButton;
     }
 
+    private ButtonWrapper createMachineButton(Machine machine) {
+        ButtonWrapper machineButton = new ButtonWrapper();
+        machineButton.setCornerRadius(5);
+        machineButton.setButtonWidth(900);
+        // Calculate the height dynamically based on the number of machines
+        double height = Math.max(50, Math.min(70, 500 / machines.size()));
+        machineButton.setButtonHeight(height);
+        machineButton.setFont(Font.font("System", 80));
+        machineButton.setText(machine.getName() + " - " + machine.getRoom() + " - " + machine.getStatus());
+        machineButton.setBackgroundColour("#fbb12eff");
+        machineButton.setClickcolour(Color.WHITE);
+        machineButton.setHoverColour("#ff8c00ff");
+        machineButton.setFontColour(Color.WHITE);
+        machineButton.setFontSize(18);
+        machineButton.removeBorder();
 
+        // Adjust event handling to open the edit window with machine's information
+        machineButton.setOnAction(event -> {
+            openEditWindow(machine);
+            setLastPressedButton(machineButton, lastPressedMachineButton);
+            lastPressedMachineButton = machineButton;
+        });
 
+        return machineButton;
+    }
 
     private ButtonWrapper createUserTypeButton(String userType) {
         ButtonWrapper button = new ButtonWrapper();
@@ -379,36 +527,74 @@ public class AdminPage extends Page {
 
         String finalRole = role;
         button.setOnAction(event -> {
-            filterUsersByRole(finalRole);
-            setLastPressedButton(button, lastPressedUserTypeButton);
-            lastPressedUserTypeButton = button;
+            if (editingUsers) {
+                filterUsersByRole(finalRole);
+                setLastPressedButton(button, lastPressedUserTypeButton);
+                lastPressedUserTypeButton = button;
+            } else {
+                filterMachinesByStatus(finalRole);
+                setLastPressedButton(button, lastPressedUserTypeButton);
+                lastPressedUserTypeButton = button;
+            }
         });
         return button;
     }
 
     private List<User> generateUserList() {
         List<User> userList = new ArrayList<>();
-        userList.add(new User("John Doe", "john@example.com", "Admin"));
-        userList.add(new User("Jane Smith", "jane@example.com", "Operator"));
-        userList.add(new User("Bob Johnson", "bob@example.com", "Engineer"));
-        userList.add(new User("Emily Brown", "emily@example.com", "Admin"));
-        userList.add(new User("Michael Clark", "michael@example.com", "Operator"));
-        userList.add(new User("Alice Green", "alice@example.com", "Engineer"));
-        userList.add(new User("Kelvin Zacharias", "KZ@example.com", "Engineer"));
+        userList.add(new User("John Doe", "john@docduck.com", "Admin"));
+        userList.add(new User("Jane Smith", "jane@docduck.com", "Operator"));
+        userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer"));
+        userList.add(new User("Emily Brown", "emily@docduck.com", "Admin"));
+        userList.add(new User("Michael Clark", "michael@docduck.com", "Operator"));
+        userList.add(new User("Alice Green", "alice@docduck.com", "Engineer"));
+        userList.add(new User("Kelvin Zacharias", "KZ@docduck.com", "Engineer"));
 
         for (int i = 0; i < 20; i++) {
             String[] names = {"Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack"};
             String[] roles = {"Admin", "Operator", "Engineer"};
             String name = names[(int) (Math.random() * names.length)];
             String role = roles[(int) (Math.random() * roles.length)];
-            userList.add(new User(name + " " + (i + 1), name.toLowerCase() + (i + 1) + "@example.com", role));
+            userList.add(new User(name + " " + (i + 1), name.toLowerCase() + (i + 1) + "@docduck.com", role));
         }
 
         return userList;
     }
 
+    private List<Machine> generateMachineList() {
+        List<Machine> machineList = new ArrayList<>();
+        machineList.add(new Machine("Machine One", "Room 1", "ONLINE", "1", "1"));
+        machineList.add(new Machine("Machine Two", "Room 2", "ONLINE", "2", "2"));
+        machineList.add(new Machine("Machine Three", "Room 1", "MAINTENANCE", "3", "2"));
+        machineList.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2"));
+        machineList.add(new Machine("Machine Five", "Room 1", "OFFLINE", "5", "2"));
+        machineList.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2"));
+        machineList.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2"));
+        machineList.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2"));
+        machineList.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2"));
+
+        for (int i = 0; i < 20; i++) {
+            String[] names = {"Machine", "Generator", "Compressor", "Pump", "Boiler", "Engine"};
+            String[] statuses = {"ONLINE", "OFFLINE", "MAINTENANCE"};
+            String name = names[(int) (Math.random() * names.length)];
+            String status = statuses[(int) (Math.random() * statuses.length)];
+            machineList.add(new Machine(name + " " + (i + 1), "Room " + ((i % 3) + 1), status, String.valueOf(i + 10), "2"));
+        }
+
+        return machineList;
+    }
+
+    private void updateHeader(String text) {
+        headerLabel.setText(text);
+    }
+
+    private void filterUsersByRole(String role) {
+        currentRole = role;
+        applyUserFilters();
+    }
+
     private enum ButtonType {
-        USER_TYPE,
+        USER,
         MANAGER
     }
 }
