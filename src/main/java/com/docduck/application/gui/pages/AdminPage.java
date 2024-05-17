@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -24,7 +23,7 @@ public class AdminPage extends Page {
 
     private VBox userListVBox;
     private List<User> allUsersList;
-    private List<User> filteredList; // Added for storing filtered users based on search
+    private List<User> filteredList;
     private String currentName = "";
     private String currentRole = "All Users";
     private ButtonWrapper lastPressedUserTypeButton;
@@ -50,7 +49,8 @@ public class AdminPage extends Page {
 
     private VBox createLeftSection() {
         VBox leftSection = new VBox(25);
-        leftSection.setBackground(new Background(new BackgroundFill(Color.web("#1f5398"), new CornerRadii(5), new Insets(0))));
+        leftSection.setBackground(new Background(new BackgroundFill(Color.web("#1f5398"), new CornerRadii(5), new Insets(5))));
+        leftSection.setPadding(new Insets(5));
 
         leftSection.getChildren().addAll(
                 createManagerBox("User Manager", "Edit User", "Add User", "Remove User"),
@@ -59,15 +59,14 @@ public class AdminPage extends Page {
                 createManagerBox("Parts Manager", "Edit Part", "Add Part", "Remove Part")
         );
 
-        leftSection.setPadding(new Insets(5));
         return leftSection;
     }
 
     private VBox createManagerBox(String header, String... buttons) {
         VBox managerBox = new VBox(10);
         managerBox.setAlignment(Pos.CENTER);
-        managerBox.setPadding(new Insets(10));
         managerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
+        managerBox.setPadding(new Insets(10));
         managerBox.getChildren().add(createManagerHeader(header));
         for (String buttonText : buttons) {
             managerBox.getChildren().add(createButton(buttonText, header, ButtonType.MANAGER));
@@ -77,7 +76,7 @@ public class AdminPage extends Page {
 
     private Label createManagerHeader(String headerText) {
         Label managerHeader = new Label(headerText);
-        managerHeader.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        managerHeader.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
         return managerHeader;
     }
 
@@ -85,27 +84,24 @@ public class AdminPage extends Page {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
-        button.setButtonHeight(30);
+        button.setButtonHeight(18);
         button.setFontName("Arial");
         button.setText(text);
         button.setBackgroundColour("#fbb12eff");
         button.setClickcolour(Color.WHITE);
         button.setHoverColour("#ff8c00ff");
         button.setFontColour(Color.WHITE);
-        button.setFontSize(12);
+        button.setFontSize(10);
         button.removeBorder();
 
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                openAddWindow(managerType, text);
-                if (type == ButtonType.MANAGER) {
-                    setLastPressedButton(button, lastPressedManagerButton);
-                    lastPressedManagerButton = button;
-                } else {
-                    setLastPressedButton(button, lastPressedUserTypeButton);
-                    lastPressedUserTypeButton = button;
-                }
+        button.setOnAction(event -> {
+            openAddWindow(managerType, text);
+            if (type == ButtonType.MANAGER) {
+                setLastPressedButton(button, lastPressedManagerButton);
+                lastPressedManagerButton = button;
+            } else {
+                setLastPressedButton(button, lastPressedUserTypeButton);
+                lastPressedUserTypeButton = button;
             }
         });
 
@@ -116,7 +112,7 @@ public class AdminPage extends Page {
         Stage newStage = new Stage();
         VBox formLayout = createManagerForm(managerType, actionType);
 
-        Scene scene = new Scene(formLayout, 400, 300);
+        Scene scene = new Scene(formLayout, 500, 400); // Extend window size
         newStage.setTitle(managerType + " - " + actionType);
         newStage.setScene(scene);
         newStage.show();
@@ -143,12 +139,12 @@ public class AdminPage extends Page {
             case "User Manager":
                 gridPane.add(createFormField("Username"), 0, row++);
                 gridPane.add(createFormField("Email"), 0, row++);
-                gridPane.add(createFormField("Role"), 0, row++);
+                gridPane.add(createComboBox("Role", "Admin", "Operator", "Engineer"), 0, row++);
                 break;
             case "Machine Manager":
                 gridPane.add(createFormField("Machine Name"), 0, row++);
                 gridPane.add(createFormField("Machine Type"), 0, row++);
-                gridPane.add(createFormField("Status"), 0, row++);
+                gridPane.add(createComboBox("Status", "Active", "Inactive"), 0, row++);
                 break;
             case "Components Manager":
                 gridPane.add(createFormField("Component Name"), 0, row++);
@@ -182,6 +178,18 @@ public class AdminPage extends Page {
 
         fieldBox.getChildren().addAll(fieldLabel, textField);
         return fieldBox;
+    }
+
+    private ComboBox<String> createComboBox(String label, String... items) {
+        Label fieldLabel = new Label(label + ":");
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll(items);
+        comboBox.getSelectionModel().selectFirst();
+
+        fieldLabel.setPrefWidth(100); // Ensure labels and combo boxes are aligned
+        fieldLabel.setFont(new Font("Arial", 14));
+
+        return comboBox;
     }
 
     private HBox createFormButtons() {
@@ -220,8 +228,9 @@ public class AdminPage extends Page {
     }
 
     private VBox createRightSection() {
+        // Header section
         HBox headerBox = new HBox(10);
-        headerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
+        headerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5),new Insets(5))));
         headerBox.setPadding(new Insets(10));
         headerBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -237,34 +246,43 @@ public class AdminPage extends Page {
         searchBar.setPromptText("Search Users");
         searchBar.setMaxWidth(400);
 
-        // Add listener to search bar text property
-        searchBar.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                filterUsersByName(newValue);
-            }
-        });
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterUsersByName(newValue));
 
         headerBox.getChildren().addAll(headerLabel, allUsersButton, adminsButton, engineersButton, operatorsButton, searchBar);
 
+        // User list section
         userListVBox = new VBox(10);
-        userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5))));
-        userListVBox.setPadding(new Insets(10));
+        userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
+        userListVBox.setPadding(new Insets(5));
 
         allUsersList = generateUserList();
-        filteredList = new ArrayList<>(allUsersList); // Initialize filtered list with all users
+        filteredList = new ArrayList<>(allUsersList);
 
-        updateDisplayedUserList(filteredList); // Display all users initially
+        updateDisplayedUserList(filteredList);
 
         ScrollPane userListScrollPane = new ScrollPane(userListVBox);
-        userListScrollPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5))));
-        userListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        userListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        userListScrollPane.setFitToWidth(true);
 
+        // Set a maximum height for the scroll pane (adjust as needed)
+        userListScrollPane.setMaxHeight(540);
+
+        // StackPane for rounded edges
+        StackPane stackPane = new StackPane(userListScrollPane);
+        stackPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(0))));
+        stackPane.setMaxWidth(990);
+
+        // VBox for the entire right section
         VBox rightSection = new VBox(5);
-        rightSection.getChildren().addAll(headerBox, userListScrollPane);
+        rightSection.getChildren().addAll(headerBox, stackPane);
+        VBox.setVgrow(stackPane, Priority.ALWAYS);
 
         return rightSection;
     }
+
+
+
+
 
     private void filterUsersByName(String name) {
         currentName = name;
@@ -281,7 +299,7 @@ public class AdminPage extends Page {
                 .filter(user -> user.getName().toLowerCase().contains(currentName.toLowerCase()))
                 .filter(user -> user.getRole().equalsIgnoreCase(currentRole) || currentRole.equalsIgnoreCase("All Users"))
                 .collect(Collectors.toList());
-        updateDisplayedUserList(filteredList); // Update displayed list with filtered users
+        updateDisplayedUserList(filteredList);
     }
 
     private void updateDisplayedUserList(List<User> users) {
@@ -295,7 +313,9 @@ public class AdminPage extends Page {
         ButtonWrapper userButton = new ButtonWrapper();
         userButton.setCornerRadius(5);
         userButton.setButtonWidth(900);
-        userButton.setButtonHeight(70);
+        // Calculate the height dynamically based on the number of users
+        double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
+        userButton.setButtonHeight(height);
         userButton.setFont(Font.font("System", 80));
         userButton.setText(user.getName() + " - " + user.getEmail() + " (" + user.getRole() + ")");
         userButton.setBackgroundColour("#fbb12eff");
@@ -307,10 +327,11 @@ public class AdminPage extends Page {
         return userButton;
     }
 
+
     private ButtonWrapper createUserTypeButton(String userType) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
-        button.setButtonWidth(100); // Adjust the width as needed
+        button.setButtonWidth(100);
         button.setButtonHeight(24);
         button.setFontName("Arial");
         button.setText(userType);
@@ -323,17 +344,14 @@ public class AdminPage extends Page {
 
         String role = userType;
         if (!role.equals("All Users")) {
-            role = role.substring(0, role.length() - 1); // Remove the 's' at the end
+            role = role.substring(0, role.length() - 1);
         }
 
         String finalRole = role;
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                filterUsersByRole(finalRole);
-                setLastPressedButton(button, lastPressedUserTypeButton);
-                lastPressedUserTypeButton = button;
-            }
+        button.setOnAction(event -> {
+            filterUsersByRole(finalRole);
+            setLastPressedButton(button, lastPressedUserTypeButton);
+            lastPressedUserTypeButton = button;
         });
         return button;
     }
@@ -364,5 +382,3 @@ public class AdminPage extends Page {
         MANAGER
     }
 }
-
-
