@@ -2,6 +2,20 @@ package com.docduck.application.data;
 
 import java.util.ArrayList;
 
+
+/**
+ * A Class for storing all data related to a machine
+ * - The Machine's Name
+ * - The Room it is in
+ * - The status of the machine
+ * - The Serial number of the machine
+ * - The datasheet Url
+ * - The Purchase location Url 
+ * - The Current Report associated with the machine
+ * - All previous reports of the machine
+ * 
+ * @author jrb617
+ */
 public class Machine {
 
     private String name;

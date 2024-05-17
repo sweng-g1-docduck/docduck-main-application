@@ -259,6 +259,19 @@ public class GUIBuilder {
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
+    
+    public void displayPage(String pageName, Machine machine) {
+        root.getChildren().clear();
+        switch (pageName) {
+        
+        case "REPORT":
+            root.getChildren().add(reportPage);
+            reportPage.drawReportButtons();
+            reportPage.drawReportInfo(machine);
+            break;
+        }
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+    }
 
     /**
      * Builds all of the pages

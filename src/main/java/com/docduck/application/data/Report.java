@@ -1,5 +1,13 @@
 package com.docduck.application.data;
 
+/**
+ * A Class for storing all data for a report
+ * - The User which has submitted the report
+ * - The description of the fault
+ * - The path of the uploaded media 
+ * 
+ * @author jrb617
+ */
 public class Report {
 
     private User user;

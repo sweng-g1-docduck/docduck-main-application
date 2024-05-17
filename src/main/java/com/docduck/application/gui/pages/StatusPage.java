@@ -78,8 +78,8 @@ public class StatusPage extends Page {
      */
     private void setupRoomSelect() {
         roomSelectBox = new ComboBox<String>();
-        roomSelectBox.getItems().addAll("Room 1", "Room 2", "Room 3");
-        roomSelectBox.setValue("Room 1");
+        roomSelectBox.getItems().addAll("All", "Room 1", "Room 2", "Room 3");
+        roomSelectBox.setValue("All");
         roomSelectBox.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String t, String t1) {
@@ -136,7 +136,7 @@ public class StatusPage extends Page {
 
         for (Machine machine : machines) {
 
-            if (machine.getRoom().equals(roomSelectBox.getValue())) {
+            if (machine.getRoom().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ImageView view1 = new ImageView(img);
                 view1.setFitWidth(290);
@@ -176,14 +176,20 @@ public class StatusPage extends Page {
                 }
 
                 button.setText(machine.getName());
-                button.setOnAction((new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (machine.getStatus().equals("ONLINE")) {
+
+                if (machine.getStatus().equals("ONLINE")) {
+                    button.setOnAction((new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
                             drawMachineInfo(machine);
                         }
-                    }
-                }));
+                    }));
+                }
+
+                else if (machine.getStatus().equals("OFFLINE") || machine.getStatus().equals("MAINTENANCE")) {
+                    button.setOnAction(events.getActionEvent("reportPage", machine));
+                }
+
                 machineGrid.getChildren().add(button);
 
             }

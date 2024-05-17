@@ -2,6 +2,7 @@ package com.docduck.application.gui;
 
 import java.io.File;
 
+import com.docduck.application.data.Machine;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.xmlreader.XMLReader;
 import com.docduck.textlibrary.TextBoxField;
@@ -202,6 +203,32 @@ public class EventManager {
         }
     }
 
+    public EventHandler<ActionEvent> getActionEvent(String eventID, Machine machine) {
+
+        switch (eventID) {
+
+        case "reportPage":
+            EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    guiBuilder.displayPage("REPORT", machine);
+                }
+            };
+            return testPage;
+
+        default:
+            EventHandler<ActionEvent> fault = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    System.out.println("ERROR: Event not attached, check eventID");
+                }
+            };
+            return fault;
+        }
+    }
+    
     public EventHandler<KeyEvent> getKeyEvent(String eventID) {
 
         switch (eventID) {

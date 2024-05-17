@@ -37,7 +37,7 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Draws the top section of the machine selection bar
+     * Draws the top section of the reports bar
      * 
      * @return HBOX for the top of the bar
      * @author jrb617
@@ -64,7 +64,7 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Draws the scrollable machine grid
+     * Draws the scrollable report grid
      * 
      * REQUIRES INTGRATION
      * 
@@ -147,7 +147,13 @@ public class ReportPage extends Page {
         setCenter(machineBackground);
     }
 
-    private void drawReportInfo(Machine machine) {
+    /**
+     * Displays all the information from the report related to the machine
+     * 
+     * @param machine The machine which has had a report created
+     * @author jrb617
+     */
+    public void drawReportInfo(Machine machine) {
         VBox infoBox = new VBox();
         infoBox.setPrefWidth(320);
         infoBox.setMaxHeight(630);
@@ -164,7 +170,7 @@ public class ReportPage extends Page {
         machineName.setFontSize(200);
         machineName.setTextAlignment(TextAlignment.CENTER);
 
-        ////////////////////////////
+        ///////////////////////////////
 
         // General information
 
@@ -220,15 +226,16 @@ public class ReportPage extends Page {
 
         infoBox.getChildren().addAll(machineName, new Label(), genTitle, genInfoBox, new Label(), userTitle,
                 userInfoBox, new Label(), descTitle, desc);
-        //////////////////////////////////
-
+        
+        ///////////////////////////////
+        
         // Solution
 
         TextArea solution = new TextArea();
         solution.setMaxWidth(300);
         solution.setPrefHeight(100);
         solution.setWrapText(true);
-        solution.setPromptText("Describe the solution to the problem: ");
+        solution.setPromptText("Performed repairs");
 
         ButtonWrapper completeBtn = new ButtonWrapper();
         completeBtn.setCornerRadius(5);
@@ -248,7 +255,7 @@ public class ReportPage extends Page {
             @Override
             public void handle(ActionEvent event) {
                 if (solution.getText().equals("")) {
-                    solution.setPromptText("A description of the pereprmed repairs is required: ");
+                    solution.setPromptText("A description of the performed repairs is required");
 
                 }
                 else {
@@ -266,7 +273,7 @@ public class ReportPage extends Page {
         closeBtn.setButtonWidth(300);
         closeBtn.setButtonHeight(40);
         closeBtn.setFontName("Arial");
-        closeBtn.setText("Cancel Report");
+        closeBtn.setText("Close");
         closeBtn.setBackgroundColour("fbb12eff");
         closeBtn.setClickcolour(Color.WHITE);
         closeBtn.setHoverColour("#ff8c00ff");
@@ -289,7 +296,7 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Creates and adds all nodes to the root BorderPane REQUIRES INTGRATION
+     * Creates and adds all nodes to the root BorderPane 
      * 
      * @author jrb617
      */
