@@ -1,5 +1,6 @@
 package com.docduck.application.gui.pages;
 
+
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.beans.value.ChangeListener;
@@ -8,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -24,6 +26,10 @@ public class AdminPage extends Page {
     private VBox userListVBox;
     private List<User> allUsersList;
     private List<User> filteredList; // Added for storing filtered users based on search
+    private String currentName = "";
+    private String currentRole = "All Users";
+    private ButtonWrapper lastPressedUserTypeButton;
+    private ButtonWrapper lastPressedManagerButton;
 
     public AdminPage() {
         super();
@@ -65,7 +71,7 @@ public class AdminPage extends Page {
         managerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
         managerBox.getChildren().add(createManagerHeader(header));
         for (String buttonText : buttons) {
-            managerBox.getChildren().add(createButton(buttonText, header));
+            managerBox.getChildren().add(createButton(buttonText, header, ButtonType.MANAGER));
         }
         return managerBox;
     }
@@ -76,7 +82,7 @@ public class AdminPage extends Page {
         return managerHeader;
     }
 
-    private ButtonWrapper createButton(String text, String managerType) {
+    private ButtonWrapper createButton(String text, String managerType, ButtonType type) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
@@ -94,6 +100,13 @@ public class AdminPage extends Page {
             @Override
             public void handle(ActionEvent event) {
                 openAddWindow(managerType);
+                if (type == ButtonType.MANAGER) {
+                    setLastPressedButton(button, lastPressedManagerButton);
+                    lastPressedManagerButton = button;
+                } else {
+                    setLastPressedButton(button, lastPressedUserTypeButton);
+                    lastPressedUserTypeButton = button;
+                }
             }
         });
 
@@ -102,6 +115,14 @@ public class AdminPage extends Page {
 
     private void openAddWindow(String managerType) {
         // Implementation of the openAddWindow method
+        System.out.println("Opening add window for: " + managerType);
+    }
+
+    private void setLastPressedButton(ButtonWrapper currentButton, ButtonWrapper lastPressedButton) {
+        if (lastPressedButton != null) {
+            lastPressedButton.removeBorder();
+        }
+        currentButton.setBorderColour(Color.BLACK);
     }
 
     private VBox createRightSection() {
@@ -154,18 +175,21 @@ public class AdminPage extends Page {
     }
 
     private void filterUsersByName(String name) {
-        List<User> filteredByName = allUsersList.stream()
-                .filter(user -> user.getName().toLowerCase().contains(name.toLowerCase()))
-                .collect(Collectors.toList());
-        filteredList = new ArrayList<>(filteredByName); // Update filtered list with users matching the name and role
-        updateDisplayedUserList(filteredList); // Update displayed list with filtered users
+        currentName = name;
+        applyFilters();
     }
 
     private void filterUsersByRole(String role) {
-        List<User> filteredByRole = filteredList.stream()
-                .filter(user -> user.getRole().equalsIgnoreCase(role) || role.equalsIgnoreCase("All Users"))
+        currentRole = role;
+        applyFilters();
+    }
+
+    private void applyFilters() {
+        List<User> filteredUsers = allUsersList.stream()
+                .filter(user -> user.getName().toLowerCase().contains(currentName.toLowerCase()))
+                .filter(user -> user.getRole().equalsIgnoreCase(currentRole) || currentRole.equalsIgnoreCase("All Users"))
                 .collect(Collectors.toList());
-        updateDisplayedUserList(filteredByRole); // Update displayed list with filtered users by role
+        updateDisplayedUserList(filteredUsers); // Update displayed list with filtered users
     }
 
     private void updateDisplayedUserList(List<User> users) {
@@ -205,10 +229,18 @@ public class AdminPage extends Page {
         button.setFontSize(12);
         button.removeBorder();
 
+        String role = userType;
+        if (!role.equals("All Users")) {
+            role = role.substring(0, role.length() - 1); // Remove the 's' at the end
+        }
+
+        String finalRole = role;
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                filterUsersByRole(userType);
+                filterUsersByRole(finalRole);
+                setLastPressedButton(button, lastPressedUserTypeButton);
+                lastPressedUserTypeButton = button;
             }
         });
         return button;
@@ -222,6 +254,7 @@ public class AdminPage extends Page {
         userList.add(new User("Emily Brown", "emily@example.com", "Admin"));
         userList.add(new User("Michael Clark", "michael@example.com", "Operator"));
         userList.add(new User("Alice Green", "alice@example.com", "Engineer"));
+        userList.add(new User("Kelvin Zacharias", "KZ@example.com", "Engineer"));
 
         for (int i = 0; i < 20; i++) {
             String[] names = {"Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack"};
@@ -232,5 +265,10 @@ public class AdminPage extends Page {
         }
 
         return userList;
+    }
+
+    private enum ButtonType {
+        USER_TYPE,
+        MANAGER
     }
 }
