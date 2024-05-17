@@ -185,12 +185,13 @@ public class AdminPage extends Page {
     }
 
     private void applyFilters() {
-        List<User> filteredUsers = allUsersList.stream()
+        filteredList = allUsersList.stream()
                 .filter(user -> user.getName().toLowerCase().contains(currentName.toLowerCase()))
                 .filter(user -> user.getRole().equalsIgnoreCase(currentRole) || currentRole.equalsIgnoreCase("All Users"))
                 .collect(Collectors.toList());
-        updateDisplayedUserList(filteredUsers); // Update displayed list with filtered users
+        updateDisplayedUserList(filteredList); // Update displayed list with filtered users
     }
+
 
     private void updateDisplayedUserList(List<User> users) {
         userListVBox.getChildren().clear();

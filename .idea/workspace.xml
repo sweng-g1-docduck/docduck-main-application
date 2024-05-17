@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1db53b8f-f6d1-4040-9291-436c6e3d12d3" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/AdminPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/AdminPage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +101,7 @@
       <workItem from="1715860200013" duration="3121000" />
       <workItem from="1715864666191" duration="5702000" />
       <workItem from="1715879983659" duration="3599000" />
-      <workItem from="1715892439605" duration="623000" />
+      <workItem from="1715892439605" duration="917000" />
     </task>
     <servers />
   </component>
