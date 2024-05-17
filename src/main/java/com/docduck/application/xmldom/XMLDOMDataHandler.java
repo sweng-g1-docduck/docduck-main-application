@@ -153,7 +153,7 @@ public class XMLDOMDataHandler extends XMLDOM {
         catch (InvalidID e) {
 
             if (e.isIDInvalid() == true) {
-                System.out.println("The provided ID is not valid");
+                System.err.println("Error: The provided ID is not valid");
             }
         }
 
@@ -167,10 +167,19 @@ public class XMLDOMDataHandler extends XMLDOM {
 
     }
 
-    public void getMachineByRoom(String roomName) {
+    public NodeList getMachinesByRoom(String roomName) {
+
+        NodeList locationNodeList = doc.getElementsByTagName("location");
+
+        for (int i = 0; i < locationNodeList.getLength(); i++) {
+
+        }
+
         // machine location == roomName
         // return list of machine Names or IDs
         // Another method the same to return a list of NodeLists
+
+        return null;
     }
 
     // getNameFromID

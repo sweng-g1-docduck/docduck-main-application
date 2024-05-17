@@ -1,11 +1,14 @@
 package com.docduck.application;
 
+import java.util.List;
+
 import org.w3c.dom.NodeList;
 
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.utils.InvalidID;
 import com.docduck.application.xmldom.XMLDOM;
 import com.docduck.application.xmldom.XMLDOMDataHandler;
+import com.docduck.application.xmldom.XMLJDOMDataHandler;
 import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
@@ -26,7 +29,8 @@ public class DocDuckApplication extends Application {
 
         System.out.println("Starting DocDuck Application");
 
-        xmlExample();
+//        xmlExample();
+        jdom2Example();
 
 //        FTPHandler FTPHandler = new FTPHandler();
 //        FTPHandler.downloadAllFiles();
@@ -54,6 +58,33 @@ public class DocDuckApplication extends Application {
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
+
+    }
+
+    private void jdom2Example() {
+//        XMLJDOM xmlJDom = new XMLJDOM("src/main/resources/DocDuckDataExample.xml",
+//                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true, true);
+//
+//        try {
+//            xmlJDom.setupJDOM();
+//        }
+//        catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//
+//        xmlJDom.printDoc();
+
+        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("src/main/resources/DocDuckDataExample.xml",
+                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true, true);
+
+        jdomData.setupJDOM();
+
+        List<String> l = jdomData.getMachineNamesAtLocation("Labs_4th_Floor");
+
+        for (String s : l) {
+            System.out.println(s);
+        }
 
     }
 
