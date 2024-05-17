@@ -1,6 +1,5 @@
 package com.docduck.application.gui.pages;
 
-
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.beans.value.ChangeListener;
@@ -10,12 +9,12 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +64,7 @@ public class AdminPage extends Page {
     }
 
     private VBox createManagerBox(String header, String... buttons) {
-        VBox managerBox = new VBox(5);
+        VBox managerBox = new VBox(10);
         managerBox.setAlignment(Pos.CENTER);
         managerBox.setPadding(new Insets(10));
         managerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
@@ -86,7 +85,7 @@ public class AdminPage extends Page {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
-        button.setButtonHeight(24);
+        button.setButtonHeight(30);
         button.setFontName("Arial");
         button.setText(text);
         button.setBackgroundColour("#fbb12eff");
@@ -99,7 +98,7 @@ public class AdminPage extends Page {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                openAddWindow(managerType);
+                openAddWindow(managerType, text);
                 if (type == ButtonType.MANAGER) {
                     setLastPressedButton(button, lastPressedManagerButton);
                     lastPressedManagerButton = button;
@@ -113,9 +112,104 @@ public class AdminPage extends Page {
         return button;
     }
 
-    private void openAddWindow(String managerType) {
-        // Implementation of the openAddWindow method
-        System.out.println("Opening add window for: " + managerType);
+    private void openAddWindow(String managerType, String actionType) {
+        Stage newStage = new Stage();
+        VBox formLayout = createManagerForm(managerType, actionType);
+
+        Scene scene = new Scene(formLayout, 400, 300);
+        newStage.setTitle(managerType + " - " + actionType);
+        newStage.setScene(scene);
+        newStage.show();
+    }
+
+    private VBox createManagerForm(String managerType, String actionType) {
+        VBox formLayout = new VBox(20);
+        formLayout.setPadding(new Insets(20));
+        formLayout.setAlignment(Pos.TOP_CENTER);
+
+        Label headerLabel = new Label(managerType + " Form - " + actionType);
+        headerLabel.setFont(new Font("Arial", 20));
+        headerLabel.setStyle("-fx-font-weight: bold;");
+
+        formLayout.getChildren().add(headerLabel);
+
+        GridPane gridPane = new GridPane();
+        gridPane.setVgap(10);
+        gridPane.setHgap(10);
+        gridPane.setAlignment(Pos.CENTER);
+
+        int row = 0;
+        switch (managerType) {
+            case "User Manager":
+                gridPane.add(createFormField("Username"), 0, row++);
+                gridPane.add(createFormField("Email"), 0, row++);
+                gridPane.add(createFormField("Role"), 0, row++);
+                break;
+            case "Machine Manager":
+                gridPane.add(createFormField("Machine Name"), 0, row++);
+                gridPane.add(createFormField("Machine Type"), 0, row++);
+                gridPane.add(createFormField("Status"), 0, row++);
+                break;
+            case "Components Manager":
+                gridPane.add(createFormField("Component Name"), 0, row++);
+                gridPane.add(createFormField("Component Type"), 0, row++);
+                gridPane.add(createFormField("Quantity"), 0, row++);
+                break;
+            case "Parts Manager":
+                gridPane.add(createFormField("Part Name"), 0, row++);
+                gridPane.add(createFormField("Part Number"), 0, row++);
+                gridPane.add(createFormField("Supplier"), 0, row++);
+                break;
+            default:
+                break;
+        }
+
+        formLayout.getChildren().add(gridPane);
+        formLayout.getChildren().add(createFormButtons());
+
+        return formLayout;
+    }
+
+    private HBox createFormField(String label) {
+        HBox fieldBox = new HBox(10);
+        Label fieldLabel = new Label(label + ":");
+        TextField textField = new TextField();
+        textField.setPrefWidth(200);
+
+        fieldLabel.setPrefWidth(100); // Ensure labels and text fields are aligned
+        fieldLabel.setFont(new Font("Arial", 14));
+        textField.setFont(new Font("Arial", 14));
+
+        fieldBox.getChildren().addAll(fieldLabel, textField);
+        return fieldBox;
+    }
+
+    private HBox createFormButtons() {
+        HBox buttonBox = new HBox(20);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        ButtonWrapper saveButton = new ButtonWrapper();
+        saveButton.setText("Save");
+        saveButton.setButtonWidth(100);
+        saveButton.setButtonHeight(30);
+        saveButton.setFontSize(14);
+        saveButton.setOnAction(event -> {
+            // Handle save action
+            System.out.println("Save button pressed");
+        });
+
+        ButtonWrapper cancelButton = new ButtonWrapper();
+        cancelButton.setText("Cancel");
+        cancelButton.setButtonWidth(100);
+        cancelButton.setButtonHeight(30);
+        cancelButton.setFontSize(14);
+        cancelButton.setOnAction(event -> {
+            // Handle cancel action
+            ((Stage) cancelButton.getScene().getWindow()).close();
+        });
+
+        buttonBox.getChildren().addAll(saveButton, cancelButton);
+        return buttonBox;
     }
 
     private void setLastPressedButton(ButtonWrapper currentButton, ButtonWrapper lastPressedButton) {
@@ -159,12 +253,10 @@ public class AdminPage extends Page {
 
         allUsersList = generateUserList();
         filteredList = new ArrayList<>(allUsersList); // Initialize filtered list with all users
-        updateDisplayedUserList(filteredList); // Update the displayed list with all users
+
+        updateDisplayedUserList(filteredList); // Display all users initially
 
         ScrollPane userListScrollPane = new ScrollPane(userListVBox);
-        userListScrollPane.setMaxWidth(1000);
-        userListScrollPane.setMaxHeight(500);
-        userListScrollPane.setPadding(new Insets(20));
         userListScrollPane.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(5))));
         userListScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 
@@ -191,7 +283,6 @@ public class AdminPage extends Page {
                 .collect(Collectors.toList());
         updateDisplayedUserList(filteredList); // Update displayed list with filtered users
     }
-
 
     private void updateDisplayedUserList(List<User> users) {
         userListVBox.getChildren().clear();
@@ -273,3 +364,5 @@ public class AdminPage extends Page {
         MANAGER
     }
 }
+
+
