@@ -195,4 +195,8 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         return getElement("report", reportID, true, null);
     }
 
+    public void addNewMachine() {
+
+    }
+
 }
