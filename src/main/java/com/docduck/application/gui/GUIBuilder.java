@@ -288,7 +288,9 @@ public class GUIBuilder {
         user = new User("Bob", "bob@york.ac.uk", "ADMIN");
         
         Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1","1","");
-        machine1.addReport(new Report(user,"Broken"));
+        Report report = new Report(user,"Broken");
+        report.setPathToFile("/docducklogo.png");
+        machine1.addReport(report);
         machines.add(machine1);
         Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2","");
         machine2.addReport(new Report(user,"It not work now"));
