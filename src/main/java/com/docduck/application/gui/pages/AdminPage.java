@@ -3,10 +3,6 @@ package com.docduck.application.gui.pages;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -20,16 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 public class AdminPage extends Page {
 
@@ -47,7 +33,7 @@ public class AdminPage extends Page {
     private ButtonWrapper lastPressedManagerButton;
     private ButtonWrapper lastPressedUserButton;
     private ButtonWrapper lastPressedMachineButton;
-    private boolean editingUsers = true;
+    private boolean editingUsers = false;
     private boolean editingMachines = false;
     private Label headerLabel;
 
@@ -92,14 +78,7 @@ public class AdminPage extends Page {
         managerBox.getChildren().add(createManagerHeader(header));
         for (String buttonText : buttons) {
             ButtonWrapper button = createButton(buttonText, header, ButtonType.MANAGER, null);
-            if (buttonText.equals("Edit User")) {
-                setLastPressedButton(button, lastPressedManagerButton);
-                lastPressedManagerButton = button;
-            }
-            if (buttonText.equals("Edit Machine")) {
-                setLastPressedButton(button, lastPressedMachineButton);
-                lastPressedMachineButton = button;
-            }
+
             managerBox.getChildren().add(button);
         }
         return managerBox;
@@ -126,22 +105,34 @@ public class AdminPage extends Page {
         button.removeBorder();
 
         button.setOnAction(event -> {
-            if (text.equals("Edit User")) {
-                editingUsers = true;
-                editingMachines = false;
-                updateHeader("Users");
-            } else if (text.equals("Edit Machine")) {
-                editingMachines = true;
-                editingUsers = false;
-                updateHeader("Machines");
+            switch (text) {
+                case "Edit User":
+                    editingUsers = true;
+                    editingMachines = false;
+                    updateHeader("Users");
+                    createRightSection(); // Clear and refresh right section
+                    break;
+                case "Edit Machine":
+                    editingMachines = true;
+                    editingUsers = false;
+                    updateHeader("Machines");
+                    createRightSection(); // Clear and refresh right section
+                    break;
+                case "Remove User":
+                case "Remove Machine":
+                    // Select to delete feature soon
+                    break;
+                case "Add User":
+                case "Add Machine":
+                    openWindow(managerType, text, user);
+                    break;
             }
-            createRightSection(); // Clear and refresh right section
-            openWindow(managerType, text, user);
+
             if (type == ButtonType.MANAGER) {
                 if (editingUsers) {
                     setLastPressedButton(button, lastPressedManagerButton);
                     lastPressedManagerButton = button;
-                } else {
+                } else if (editingMachines) {
                     setLastPressedButton(button, lastPressedMachineButton);
                     lastPressedMachineButton = button;
                 }
@@ -153,6 +144,8 @@ public class AdminPage extends Page {
 
         return button;
     }
+
+
 
 
     private void openWindow(String managerType, String actionType, User user) {
@@ -178,7 +171,8 @@ public class AdminPage extends Page {
 
         if (editingUsers) {
             formLayout.getChildren().add(createUserManagerForm(managerType, actionType, user));
-        } else {
+        }
+        else if (editingMachines) {
             formLayout.getChildren().add(createMachineManagerForm(managerType, actionType, user));
         }
 
