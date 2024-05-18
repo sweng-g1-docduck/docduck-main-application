@@ -30,7 +30,6 @@ public class AdminPage extends Page {
     private String currentRole = "All Users";
     private String currentMachineStatus = "All Machines";
     private ButtonWrapper lastPressedUserTypeButton;
-    private ButtonWrapper lastPressedManagerButton;
     private ButtonWrapper lastPressedUserButton;
     private ButtonWrapper lastPressedMachineButton;
     private boolean editingUsers = false;
@@ -77,7 +76,7 @@ public class AdminPage extends Page {
         managerBox.setPadding(new Insets(10));
         managerBox.getChildren().add(createManagerHeader(header));
         for (String buttonText : buttons) {
-            ButtonWrapper button = createButton(buttonText, header, ButtonType.MANAGER, null);
+            ButtonWrapper button = createButton(buttonText, header, ButtonType.MANAGER);
 
             managerBox.getChildren().add(button);
         }
@@ -90,7 +89,7 @@ public class AdminPage extends Page {
         return managerHeader;
     }
 
-    private ButtonWrapper createButton(String text, String managerType, ButtonType type, User user) {
+    private ButtonWrapper createButton(String text, String managerType, ButtonType type) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
@@ -109,13 +108,11 @@ public class AdminPage extends Page {
                 case "Edit User":
                     editingUsers = true;
                     editingMachines = false;
-                    updateHeader("Users");
                     createRightSection(); // Clear and refresh right section
                     break;
                 case "Edit Machine":
                     editingMachines = true;
                     editingUsers = false;
-                    updateHeader("Machines");
                     createRightSection(); // Clear and refresh right section
                     break;
                 case "Remove User":
@@ -124,19 +121,11 @@ public class AdminPage extends Page {
                     break;
                 case "Add User":
                 case "Add Machine":
-                    openWindow(managerType, text, user);
+                    openWindow(managerType, text, user, machine);
                     break;
             }
 
             if (type == ButtonType.MANAGER) {
-                if (editingUsers) {
-                    setLastPressedButton(button, lastPressedManagerButton);
-                    lastPressedManagerButton = button;
-                } else if (editingMachines) {
-                    setLastPressedButton(button, lastPressedMachineButton);
-                    lastPressedMachineButton = button;
-                }
-            } else {
                 setLastPressedButton(button, lastPressedUserTypeButton);
                 lastPressedUserTypeButton = button;
             }
@@ -148,9 +137,9 @@ public class AdminPage extends Page {
 
 
 
-    private void openWindow(String managerType, String actionType, User user) {
+    private void openWindow(String managerType, String actionType, User user, Machine machine) {
         Stage newStage = new Stage();
-        VBox formLayout = createManagerForm(managerType, actionType, user);
+        VBox formLayout = createManagerForm(managerType, actionType, user, machine);
 
         Scene scene = new Scene(formLayout, 500, 400); // Extend window size
         newStage.setTitle(managerType + " - " + actionType);
@@ -158,7 +147,7 @@ public class AdminPage extends Page {
         newStage.show();
     }
 
-    private VBox createManagerForm(String managerType, String actionType, User user) {
+    private VBox createManagerForm(String managerType, String actionType, User user, Machine machine) {
         VBox formLayout = new VBox(20);
         formLayout.setPadding(new Insets(20));
         formLayout.setAlignment(Pos.TOP_CENTER);
@@ -173,7 +162,7 @@ public class AdminPage extends Page {
             formLayout.getChildren().add(createUserManagerForm(managerType, actionType, user));
         }
         else if (editingMachines) {
-            formLayout.getChildren().add(createMachineManagerForm(managerType, actionType, user));
+            formLayout.getChildren().add(createMachineManagerForm(managerType, actionType, machine));
         }
 
         return formLayout;
@@ -204,7 +193,7 @@ public class AdminPage extends Page {
         return formLayout;
     }
 
-    private VBox createMachineManagerForm(String managerType, String actionType, User user) {
+    private VBox createMachineManagerForm(String managerType, String actionType, Machine machine) {
         VBox formLayout = new VBox(10);
 
         GridPane gridPane = new GridPane();
@@ -215,12 +204,12 @@ public class AdminPage extends Page {
         int row = 0;
         switch (managerType) {
             case "Machine Manager":
-                TextField machineNameField = createFormField("Machine Name", "");
+                TextField machineNameField = createFormField("Machine Name", machine.getName());
                 gridPane.add(machineNameField, 0, row++);
-                gridPane.add(createFormField("Location", ""), 0, row++);
-                gridPane.add(createComboBox("Status", "Online", "Offline", "Maintenance"), 0, row++);
-                gridPane.add(createFormField("Attribute 1", ""), 0, row++);
-                gridPane.add(createFormField("Attribute 2", ""), 0, row++);
+                gridPane.add(createFormField("Location", machine.getRoom()), 0, row++);
+                gridPane.add(createComboBox("Status", machine.getStatus(), "Online", "Offline", "Maintenance"), 0, row++);
+                gridPane.add(createFormField("Id", machine.getSerialNumber()), 0, row++);
+                gridPane.add(createFormField("Datasheet Hyperlink", machine.getDatasheet()), 0, row++);
                 break;
             default:
                 break;
@@ -239,17 +228,54 @@ public class AdminPage extends Page {
         return textField;
     }
 
-    private ComboBox<String> createComboBox(String label, String... items) {
+    private ComboBox<String> createComboBox(String label, String selectedItem, String... items) {
         Label fieldLabel = new Label(label + ":");
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.getItems().addAll(items);
-        comboBox.getSelectionModel().selectFirst();
+
+        // Set the initial selection to the closest matching item
+        String closestMatch = findClosestMatch(selectedItem.toLowerCase(), items);
+        comboBox.getSelectionModel().select(closestMatch);
 
         fieldLabel.setPrefWidth(100); // Ensure labels and combo boxes are aligned
         fieldLabel.setFont(new Font("Arial", 14));
 
         return comboBox;
     }
+
+    // Method to find the closest matching item from the list (case-insensitive)
+    private String findClosestMatch(String selectedItem, String... items) {
+        int minDistance = Integer.MAX_VALUE;
+        String closestMatch = null;
+        for (String item : items) {
+            int distance = computeLevenshteinDistance(selectedItem, item.toLowerCase());
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestMatch = item;
+            }
+        }
+        return closestMatch;
+    }
+
+    // Method to compute the Levenshtein distance between two strings
+    private int computeLevenshteinDistance(String s1, String s2) {
+        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
+        for (int i = 0; i <= s1.length(); i++) {
+            for (int j = 0; j <= s2.length(); j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else {
+                    dp[i][j] = Math.min(Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
+                            dp[i - 1][j - 1] + (s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1));
+                }
+            }
+        }
+        return dp[s1.length()][s2.length()];
+    }
+
+
 
     private HBox createFormButtons() {
         HBox buttonBox = new HBox(20);
@@ -302,23 +328,25 @@ public class AdminPage extends Page {
         headerLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 24px;");
 
         ButtonWrapper allUsersButton = createUserTypeButton("All Users");
-        allUsersButton.setBorderColour(Color.BLACK); // Highlight the All Users button
-
         ButtonWrapper adminsButton = createUserTypeButton("Admins");
         ButtonWrapper engineersButton = createUserTypeButton("Engineers");
         ButtonWrapper operatorsButton = createUserTypeButton("Operators");
+        ButtonWrapper allMachinesButton = createMachineTypeButton("All Machines");
+        ButtonWrapper onlineButton = createMachineTypeButton("Online");
+        ButtonWrapper offlineButton = createMachineTypeButton("Offline");
+        ButtonWrapper maintenanceButton = createMachineTypeButton("Maintenance");
 
         TextField searchBar = new TextField();
         searchBar.setPromptText("Search Users");
         searchBar.setMaxWidth(400);
 
-        searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterUsersByName(newValue));
-
-        headerBox.getChildren().addAll(headerLabel, allUsersButton, adminsButton, engineersButton, operatorsButton, searchBar);
 
 
         // User or Machine list section
         if (editingUsers) {
+            updateHeader("Users");
+            searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterUsersByName(newValue));
+            headerBox.getChildren().addAll(headerLabel, allUsersButton, adminsButton, engineersButton, operatorsButton, searchBar);
             userListVBox = new VBox(10);
             userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
             userListVBox.setPadding(new Insets(5));
@@ -356,6 +384,12 @@ public class AdminPage extends Page {
 
             return rightSection;
         } else if (editingMachines) {
+            searchBar.setPromptText("Search Machines");
+            searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterMachinesByName(newValue));
+            updateHeader("Machines");
+            //headerBox.getChildren().removeAll(allUsersButton, adminsButton, engineersButton, operatorsButton);
+            headerBox.getChildren().addAll(headerLabel,allMachinesButton,onlineButton,offlineButton,maintenanceButton,searchBar);
+
             machineListVBox = new VBox(10);
             machineListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
             machineListVBox.setPadding(new Insets(5));
@@ -398,19 +432,31 @@ public class AdminPage extends Page {
     }
 
 
+
+
     // Method to open the edit window with user's information filled out
     private void openEditWindow(User user) {
-        openWindow("User Manager", "Edit User", user);
+        openWindow("User Manager", "Edit User", user, null);
     }
 
     // Method to open the edit window with machine's information filled out
     private void openEditWindow(Machine machine) {
-        openWindow("Machine Manager", "Edit Machine", null);
+        openWindow("Machine Manager", "Edit Machine", null, machine);
     }
 
     private void filterUsersByName(String name) {
         currentName = name;
         applyUserFilters();
+    }
+
+    private void filterUsersByRole(String role) {
+        currentRole = role;
+        applyUserFilters();
+    }
+
+    private void filterMachinesByName(String name) {
+        currentName = name;
+        applyMachineFilters();
     }
 
     private void filterMachinesByStatus(String status) {
@@ -428,10 +474,14 @@ public class AdminPage extends Page {
 
     private void applyMachineFilters() {
         filteredMachineList = machines.stream()
-                .filter(machine -> machine.getStatus().equalsIgnoreCase(currentMachineStatus) || currentMachineStatus.equalsIgnoreCase("All Machines"))
+                .filter(machine -> machine.getName().toLowerCase().contains(currentName.toLowerCase()))
+                .filter(machine -> currentMachineStatus.equalsIgnoreCase("All Machines") || machine.getStatus().equalsIgnoreCase(currentMachineStatus))
                 .collect(Collectors.toList());
         updateDisplayedMachineList(filteredMachineList);
+        System.out.println(filteredMachineList);
     }
+
+
 
     private void updateDisplayedUserList(List<User> users) {
         userListVBox.getChildren().clear();
@@ -444,7 +494,6 @@ public class AdminPage extends Page {
         machineListVBox.getChildren().clear();
         for (Machine machine : machines) {
             machineListVBox.getChildren().add(createMachineButton(machine));
-            System.out.println(1);
         }
     }
 
@@ -521,15 +570,30 @@ public class AdminPage extends Page {
 
         String finalRole = role;
         button.setOnAction(event -> {
-            if (editingUsers) {
-                filterUsersByRole(finalRole);
-                setLastPressedButton(button, lastPressedUserTypeButton);
-                lastPressedUserTypeButton = button;
-            } else {
-                filterMachinesByStatus(finalRole);
-                setLastPressedButton(button, lastPressedUserTypeButton);
-                lastPressedUserTypeButton = button;
-            }
+            filterUsersByRole(finalRole);
+            setLastPressedButton(button, lastPressedMachineButton);
+            lastPressedMachineButton = button;
+        });
+        return button;
+    }
+
+    private ButtonWrapper createMachineTypeButton(String MachineStatus) {
+        ButtonWrapper button = new ButtonWrapper();
+        button.setCornerRadius(5);
+        button.setButtonWidth(100);
+        button.setButtonHeight(24);
+        button.setFontName("Arial");
+        button.setText(MachineStatus);
+        button.setBackgroundColour("#fbb12eff");
+        button.setClickcolour(Color.WHITE);
+        button.setHoverColour("#ff8c00ff");
+        button.setFontColour(Color.WHITE);
+        button.setFontSize(12);
+        button.removeBorder();
+
+        button.setOnAction(event -> {filterMachinesByStatus(MachineStatus);
+            setLastPressedButton(button, lastPressedMachineButton);
+            lastPressedMachineButton = button;
         });
         return button;
     }
@@ -582,13 +646,7 @@ public class AdminPage extends Page {
         headerLabel.setText(text);
     }
 
-    private void filterUsersByRole(String role) {
-        currentRole = role;
-        applyUserFilters();
-    }
-
     private enum ButtonType {
-        USER,
         MANAGER
     }
 }

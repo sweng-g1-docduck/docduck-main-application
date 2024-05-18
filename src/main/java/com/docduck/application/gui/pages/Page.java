@@ -2,6 +2,7 @@ package com.docduck.application.gui.pages;
 
 import java.util.List;
 
+import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.application.gui.EventManager;
 import com.docduck.buttonlibrary.ButtonWrapper;
@@ -28,6 +29,7 @@ public class Page extends BorderPane {
 
     protected EventManager events;
     protected User user;
+    protected Machine machine;
 
     public Page() {
         super();
