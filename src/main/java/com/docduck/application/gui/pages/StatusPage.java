@@ -110,7 +110,8 @@ public class StatusPage extends Page {
     }
 
     /**
-     * Draws the room selection dropdown box
+     * Draws the Bottom section of the machine selection bar containing the dropdown
+     * menu
      * 
      * @return HBox Containing the room selection dropdown
      * @author jrb617
@@ -251,17 +252,6 @@ public class StatusPage extends Page {
      */
     private void drawReport(Machine machine) {
 
-        /*
-         * Experimental animation code
-         */
-//        TranslateTransition fadeOut = new TranslateTransition(); 
-//        fadeOut.setDuration(Duration.millis(500)); 
-//        fadeOut.setNode(getRight()); 
-//        fadeOut.setByX(350); 
-//        fadeOut.setCycleCount(1); 
-//        fadeOut.setAutoReverse(false); 
-//        fadeOut.play();  
-
         VBox reportBox = new VBox();
         reportBox.setAlignment(Pos.TOP_CENTER);
         reportBox.setPrefWidth(reportWidth);
@@ -360,17 +350,6 @@ public class StatusPage extends Page {
         reportBox.getChildren().addAll(machineName, descriptionBox, mediaBtn, submitBtn, cancelBtn);
         setRight(reportBox);
 
-        /*
-         * Experimental animation code
-         */
-//        TranslateTransition translateTransition = new TranslateTransition();
-//        translateTransition.setDuration(Duration.millis(500));
-//        translateTransition.setNode(reportBox);
-//        translateTransition.setFromX(350);
-//        translateTransition.setByX(-350);
-//        translateTransition.setCycleCount(1);
-//        translateTransition.setAutoReverse(false);
-//        fadeOut.setOnFinished(e -> {setRight(reportBox); translateTransition.play();}); 
     }
 
     /**
@@ -425,7 +404,7 @@ public class StatusPage extends Page {
         datasheet.setFont(new Font(fontName, smallFontSize));
         datasheet.setTranslateX(-4);
         datasheet.setTranslateY(-2);
-        
+
         Hyperlink purchaseLink = new Hyperlink("Purchase Link");
         purchaseLink.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
         purchaseLink.setFont(new Font(fontName, smallFontSize));

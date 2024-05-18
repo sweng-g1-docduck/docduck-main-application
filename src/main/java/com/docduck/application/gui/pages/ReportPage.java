@@ -50,7 +50,7 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Draws the top section of the reports bar
+     * Draws reports bar
      * 
      * @return HBOX for the top of the bar
      * @author jrb617
@@ -390,6 +390,13 @@ public class ReportPage extends Page {
         drawReportButtons();
     }
 
+    /**
+     * Creates a node specific to the desired media, img for and image
+     * TODO audio and video
+     * 
+     * @param filePath The path to the file
+     * @return Node of the correct type to display the data
+     */
     private Node drawAttachedMedia(String filePath) {
         String extension = getExtension(filePath);
         if (extension.equals("png") || extension.equals("jpeg")) {
@@ -406,8 +413,14 @@ public class ReportPage extends Page {
         return null;
     }
 
-    private String getExtension(String fileName) {
-        String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
+    /**
+     * Gets the extension from the specified filepath
+     * 
+     * @param filePath The name of the filepath to the desired file
+     * @return String extension of the file e.g "png"
+     */
+    private String getExtension(String filePath) {
+        String fileExtension = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
         return fileExtension;
     }
 
