@@ -11,6 +11,8 @@ public class User {
     private String role;
     private String passwordHash; // Store the hashed password
 
+
+
     public User(String name, String email, String role, String password) {
         this.name = name;
         this.email = email;

@@ -76,13 +76,22 @@ public class AdminPage extends Page {
         managerBox.setBackground(new Background(new BackgroundFill(Color.web("#F5F5F5"), new CornerRadii(5), new Insets(5))));
         managerBox.setPadding(new Insets(10));
         managerBox.getChildren().add(createManagerHeader(header));
+
         for (String buttonText : buttons) {
-            ButtonWrapper button = createButton(buttonText, header, ButtonType.MANAGER);
+            ButtonWrapper button = createManagerButton(buttonText, header, ButtonType.MANAGER);
 
             managerBox.getChildren().add(button);
+
+            // Disable the buttons for Components Manager and Parts Manager
+            if ("Components Manager".equals(header) || "Parts Manager".equals(header)) {
+                button.setDisable(true);
+                button.setStyle("-fx-opacity: 0.5;");
+            }
         }
+
         return managerBox;
     }
+
 
     private Label createManagerHeader(String headerText) {
         Label managerHeader = new Label(headerText);
@@ -90,7 +99,7 @@ public class AdminPage extends Page {
         return managerHeader;
     }
 
-    private ButtonWrapper createButton(String text, String managerType, ButtonType type) {
+    private ButtonWrapper createManagerButton(String text, String managerType, ButtonType type) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
@@ -244,19 +253,20 @@ public class AdminPage extends Page {
         int row = 0;
         switch (managerType) {
             case "Machine Manager":
-                if (machine != null) {
-                    gridPane.add(createFormField("Machine Name", machine.getName()), 0, row++);
-                    gridPane.add(createFormField("Location", machine.getRoom()), 0, row++);
-                    gridPane.add(createComboBox("Status", machine.getStatus(), "Online", "Offline", "Maintenance"), 0, row++);
-                    gridPane.add(createFormField("Id", machine.getSerialNumber()), 0, row++);
-                    gridPane.add(createFormField("Datasheet Hyperlink", machine.getDatasheet()), 0, row++);
-                } else {
-                    gridPane.add(createFormField("Machine Name", ""), 0, row++);
-                    gridPane.add(createFormField("Location", ""), 0, row++);
-                    gridPane.add(createComboBox("Status", "", "Online", "Offline", "Maintenance"), 0, row++);
-                    gridPane.add(createFormField("Id", ""), 0, row++);
-                    gridPane.add(createFormField("Datasheet Hyperlink", ""), 0, row++);
-                }
+                gridPane.add(createLabel("Machine Name"), 0, row);
+                gridPane.add(createFormField("Machine Name", machine != null ? machine.getName() : ""), 1, row++);
+
+                gridPane.add(createLabel("Location"), 0, row);
+                gridPane.add(createFormField("Location", machine != null ? machine.getRoom() : ""), 1, row++);
+
+                gridPane.add(createLabel("Status"), 0, row);
+                gridPane.add(createComboBox("Status", machine != null ? machine.getStatus() : "", "Online", "Offline", "Maintenance"), 1, row++);
+
+                gridPane.add(createLabel("Id"), 0, row);
+                gridPane.add(createFormField("Id", machine != null ? machine.getSerialNumber() : ""), 1, row++);
+
+                gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
+                gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheet() : ""), 1, row++);
                 break;
             default:
                 break;
@@ -266,6 +276,7 @@ public class AdminPage extends Page {
 
         return formLayout;
     }
+
 
     private TextField createFormField(String label, String value) {
         TextField textField = new TextField();
@@ -415,6 +426,7 @@ public class AdminPage extends Page {
             userListVBox = new VBox(10);
             userListVBox.setBackground(new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
             userListVBox.setPadding(new Insets(5));
+
 
             allUsersList = generateUserList();
             filteredUserList = new ArrayList<>(allUsersList);
@@ -635,20 +647,35 @@ public class AdminPage extends Page {
 
         String finalRole = role;
         button.setOnAction(event -> {
+            // Remove highlight from the last pressed button before applying to the new one
+            if (lastPressedUserButton != null) {
+                lastPressedUserButton.setBackgroundColour("#fbb12eff"); // Default colour
+            }
+
+            // Set highlight to the current button
+            button.setBackgroundColour("#2e78fb"); // Highlight colour
+
             filterUsersByRole(finalRole);
-            setLastPressedButton(button, lastPressedMachineButton);
-            lastPressedMachineButton = button;
+            lastPressedUserButton = button;
         });
+
+        // Highlight the "All Users" button by default
+        if (userType.equals("All Users")) {
+            button.setBackgroundColour("#2e78fb"); // Highlight colour
+            lastPressedUserButton = button;
+        }
+
         return button;
     }
 
-    private ButtonWrapper createMachineTypeButton(String MachineStatus) {
+
+    private ButtonWrapper createMachineTypeButton(String machineStatus) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(100);
         button.setButtonHeight(24);
         button.setFontName("Arial");
-        button.setText(MachineStatus);
+        button.setText(machineStatus);
         button.setBackgroundColour("#fbb12eff");
         button.setClickcolour(Color.WHITE);
         button.setHoverColour("#ff8c00ff");
@@ -656,15 +683,30 @@ public class AdminPage extends Page {
         button.setFontSize(12);
         button.removeBorder();
 
-        button.setOnAction(event -> {filterMachinesByStatus(MachineStatus);
-            setLastPressedButton(button, lastPressedMachineButton);
+        button.setOnAction(event -> {
+            // Remove highlight from the last pressed button before applying to the new one
+            if (lastPressedMachineButton != null) {
+                lastPressedMachineButton.setBackgroundColour("#fbb12eff"); // Default colour
+            }
+
+            // Set highlight to the current button
+            button.setBackgroundColour("#2e78fb"); // Highlight colour
+
+            filterMachinesByStatus(machineStatus);
             lastPressedMachineButton = button;
         });
+
+        // Highlight the "All Machines" button by default
+        if (machineStatus.equals("All Machines")) {
+            button.setBackgroundColour("#2e78fb"); // Highlight colour
+            lastPressedMachineButton = button;
+        }
+
         return button;
     }
 
+
     private List<User> generateUserList() {
-        List<User> userList = new ArrayList<>();
         userList.add(new User("John Doe", "john@docduck.com", "Admin", "password123"));
         userList.add(new User("Jane Smith", "jane@docduck.com", "Operator", "password123"));
         userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer", "password123"));
@@ -686,7 +728,6 @@ public class AdminPage extends Page {
 
 
     private List<Machine> generateMachineList() {
-        List<Machine> machineList = new ArrayList<>();
         machineList.add(new Machine("Machine One", "Room 1", "ONLINE", "1", "1"));
         machineList.add(new Machine("Machine Two", "Room 2", "ONLINE", "2", "2"));
         machineList.add(new Machine("Machine Three", "Room 1", "MAINTENANCE", "3", "2"));

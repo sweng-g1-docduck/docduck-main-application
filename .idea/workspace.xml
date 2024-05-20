@@ -8,7 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/data/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/data/User.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/AdminPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/AdminPage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/StatusPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/StatusPage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/Page.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/docduck/application/gui/pages/Page.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -108,7 +108,7 @@
       <workItem from="1715997361184" duration="1914000" />
       <workItem from="1716038086058" duration="17169000" />
       <workItem from="1716058154345" duration="689000" />
-      <workItem from="1716131451953" duration="4977000" />
+      <workItem from="1716131451953" duration="11981000" />
     </task>
     <servers />
   </component>

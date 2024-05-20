@@ -1,5 +1,6 @@
 package com.docduck.application.gui.pages;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.docduck.application.data.Machine;
@@ -30,6 +31,8 @@ public class Page extends BorderPane {
     protected EventManager events;
     protected User user;
     protected Machine machine;
+    List<User> userList = new ArrayList<>();
+    List<Machine> machineList = new ArrayList<>();
 
     public Page() {
         super();
