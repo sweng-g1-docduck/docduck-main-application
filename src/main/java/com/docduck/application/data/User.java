@@ -9,7 +9,7 @@ public class User {
     private String name;
     private String email;
     private String role;
-    private String passwordHash; // Store the hashed password
+    private String passwordHash;
 
 
 
@@ -17,7 +17,7 @@ public class User {
         this.name = name;
         this.email = email;
         this.role = role;
-        setPassword(password); // Hash and store the password
+        setPassword(password);
     }
 
     public String getName() {
