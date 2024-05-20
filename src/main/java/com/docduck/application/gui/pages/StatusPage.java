@@ -442,7 +442,7 @@ public class StatusPage extends Page {
     @Override
     public void buildPage() {
         populateMachineData();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
+        user = new User("Bob", "bob@york.ac.uk", "ADMIN","password");
         setupRoomSelect();
         drawRoomSelect();
         setTop(drawMenuBar());

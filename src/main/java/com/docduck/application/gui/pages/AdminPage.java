@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class AdminPage extends Page {
 
     public AdminPage() {
         super();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
+        user = new User("Bob", "bob@york.ac.uk", "ADMIN","password");
         setTop(drawMenuBar());
         buildPage();
     }
@@ -116,12 +117,26 @@ public class AdminPage extends Page {
                     createRightSection(); // Clear and refresh right section
                     break;
                 case "Remove User":
+                    editingUsers = true;
+                    editingMachines = false;
+                    createRightSection(); // Clear and refresh right section
+                    break;
                 case "Remove Machine":
-                    // Select to delete feature soon
+                    editingMachines = true;
+                    editingUsers = false;
+                    createRightSection(); // Clear and refresh right section
                     break;
                 case "Add User":
+                    editingUsers = true;
+                    editingMachines = false;
+                    createRightSection(); // Clear and refresh right section
+                    openWindow(managerType, text, user, null);
+                    break;
                 case "Add Machine":
-                    openWindow(managerType, text, user, machine);
+                    editingUsers = false;
+                    editingMachines = true;
+                    createRightSection(); // Clear and refresh right section
+                    openWindow(managerType, text, null, machine);
                     break;
             }
 
@@ -140,8 +155,10 @@ public class AdminPage extends Page {
     private void openWindow(String managerType, String actionType, User user, Machine machine) {
         Stage newStage = new Stage();
         VBox formLayout = createManagerForm(managerType, actionType, user, machine);
+        formLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), new Insets(50))));
 
-        Scene scene = new Scene(formLayout, 500, 400); // Extend window size
+        Scene scene = new Scene(formLayout, 700, 600);
+        scene.setFill(Color.web("#1f5398"));
         newStage.setTitle(managerType + " - " + actionType);
         newStage.setScene(scene);
         newStage.show();
@@ -150,18 +167,16 @@ public class AdminPage extends Page {
     private VBox createManagerForm(String managerType, String actionType, User user, Machine machine) {
         VBox formLayout = new VBox(20);
         formLayout.setPadding(new Insets(20));
-        formLayout.setAlignment(Pos.TOP_CENTER);
+        formLayout.setAlignment(Pos.CENTER);
 
         Label headerLabel = new Label(managerType + " Form - " + actionType);
-        headerLabel.setFont(new Font("Arial", 20));
-        headerLabel.setStyle("-fx-font-weight: bold;");
+        headerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
         formLayout.getChildren().add(headerLabel);
 
         if (editingUsers) {
             formLayout.getChildren().add(createUserManagerForm(managerType, actionType, user));
-        }
-        else if (editingMachines) {
+        } else if (editingMachines) {
             formLayout.getChildren().add(createMachineManagerForm(managerType, actionType, machine));
         }
 
@@ -170,6 +185,8 @@ public class AdminPage extends Page {
 
     private VBox createUserManagerForm(String managerType, String actionType, User user) {
         VBox formLayout = new VBox(10);
+        formLayout.setPadding(new Insets(20));
+        formLayout.setAlignment(Pos.CENTER);
 
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
@@ -179,10 +196,24 @@ public class AdminPage extends Page {
         int row = 0;
         switch (managerType) {
             case "User Manager":
-                TextField usernameField = createFormField("Username", user != null ? user.getName() : "");
-                gridPane.add(usernameField, 0, row++);
-                gridPane.add(createFormField("Email", user != null ? user.getEmail() : ""), 0, row++);
-                gridPane.add(createComboBox("Role", "Admin", "Operator", "Engineer"), 0, row++);
+                gridPane.add(createLabel("Username"), 0, row);
+                gridPane.add(createFormField("Username", user != null ? user.getName() : ""), 1, row++);
+
+                gridPane.add(createLabel("Email"), 0, row);
+                gridPane.add(createFormField("Email", user != null ? user.getEmail() : ""), 1, row++);
+
+                if (user != null) {
+                    gridPane.add(createLabel("Role"), 0, row);
+                    gridPane.add(createComboBox("Role", user.getRole(), "Admin", "Operator", "Engineer"), 1, row++);
+                } else {
+                    gridPane.add(createLabel("Role"), 0, row);
+                    gridPane.add(createComboBox("Role", "", "Admin", "Operator", "Engineer"), 1, row++);
+                }
+
+                PasswordField passwordField = new PasswordField();
+                passwordField.setPromptText("Enter password");
+                gridPane.add(createLabel("Password"), 0, row);
+                gridPane.add(passwordField, 1, row++);
                 break;
             default:
                 break;
@@ -193,8 +224,17 @@ public class AdminPage extends Page {
         return formLayout;
     }
 
+    private Label createLabel(String text) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        return label;
+    }
+
+
     private VBox createMachineManagerForm(String managerType, String actionType, Machine machine) {
         VBox formLayout = new VBox(10);
+        formLayout.setPadding(new Insets(20));
+        formLayout.setAlignment(Pos.CENTER);
 
         GridPane gridPane = new GridPane();
         gridPane.setVgap(10);
@@ -204,12 +244,19 @@ public class AdminPage extends Page {
         int row = 0;
         switch (managerType) {
             case "Machine Manager":
-                TextField machineNameField = createFormField("Machine Name", machine.getName());
-                gridPane.add(machineNameField, 0, row++);
-                gridPane.add(createFormField("Location", machine.getRoom()), 0, row++);
-                gridPane.add(createComboBox("Status", machine.getStatus(), "Online", "Offline", "Maintenance"), 0, row++);
-                gridPane.add(createFormField("Id", machine.getSerialNumber()), 0, row++);
-                gridPane.add(createFormField("Datasheet Hyperlink", machine.getDatasheet()), 0, row++);
+                if (machine != null) {
+                    gridPane.add(createFormField("Machine Name", machine.getName()), 0, row++);
+                    gridPane.add(createFormField("Location", machine.getRoom()), 0, row++);
+                    gridPane.add(createComboBox("Status", machine.getStatus(), "Online", "Offline", "Maintenance"), 0, row++);
+                    gridPane.add(createFormField("Id", machine.getSerialNumber()), 0, row++);
+                    gridPane.add(createFormField("Datasheet Hyperlink", machine.getDatasheet()), 0, row++);
+                } else {
+                    gridPane.add(createFormField("Machine Name", ""), 0, row++);
+                    gridPane.add(createFormField("Location", ""), 0, row++);
+                    gridPane.add(createComboBox("Status", "", "Online", "Offline", "Maintenance"), 0, row++);
+                    gridPane.add(createFormField("Id", ""), 0, row++);
+                    gridPane.add(createFormField("Datasheet Hyperlink", ""), 0, row++);
+                }
                 break;
             default:
                 break;
@@ -225,8 +272,10 @@ public class AdminPage extends Page {
         textField.setPromptText(label);
         textField.setText(value);
         textField.setPrefWidth(200);
+        //textField.setStyle("-fx-background-color: #2E5D68; -fx-text-fill: white;");
         return textField;
     }
+
 
     private ComboBox<String> createComboBox(String label, String selectedItem, String... items) {
         Label fieldLabel = new Label(label + ":");
@@ -238,7 +287,7 @@ public class AdminPage extends Page {
         comboBox.getSelectionModel().select(closestMatch);
 
         fieldLabel.setPrefWidth(100); // Ensure labels and combo boxes are aligned
-        fieldLabel.setFont(new Font("Arial", 14));
+        fieldLabel.setFont(Font.font("Arial", 14));
 
         return comboBox;
     }
@@ -275,35 +324,51 @@ public class AdminPage extends Page {
         return dp[s1.length()][s2.length()];
     }
 
-
-
     private HBox createFormButtons() {
         HBox buttonBox = new HBox(20);
         buttonBox.setAlignment(Pos.CENTER);
 
         ButtonWrapper saveButton = new ButtonWrapper();
         saveButton.setText("Save");
+        saveButton.setCornerRadius(5);
         saveButton.setButtonWidth(100);
-        saveButton.setButtonHeight(30);
-        saveButton.setFontSize(14);
+        saveButton.setButtonHeight(24);
+        saveButton.setFontName("Arial");
+        saveButton.setBackgroundColour("#fbb12eff");
+        saveButton.setClickcolour(Color.WHITE);
+        saveButton.setHoverColour("#ff8c00ff");
+        saveButton.setFontColour(Color.WHITE);
+        saveButton.setFontSize(12);
+        saveButton.removeBorder();
+
+        ButtonWrapper cancelButton = new ButtonWrapper();
+        cancelButton.setText("Cancel");
+        cancelButton.setCornerRadius(5);
+        cancelButton.setButtonWidth(100);
+        cancelButton.setButtonHeight(24);
+        cancelButton.setFontName("Arial");
+        cancelButton.setBackgroundColour("#fbb12eff");
+        cancelButton.setClickcolour(Color.WHITE);
+        cancelButton.setHoverColour("#ff8c00ff");
+        cancelButton.setFontColour(Color.WHITE);
+        cancelButton.setFontSize(12);
+        cancelButton.removeBorder();
+
         saveButton.setOnAction(event -> {
             // Handle save action
             System.out.println("Save button pressed");
         });
 
-        ButtonWrapper cancelButton = new ButtonWrapper();
-        cancelButton.setText("Cancel");
-        cancelButton.setButtonWidth(100);
-        cancelButton.setButtonHeight(30);
-        cancelButton.setFontSize(14);
         cancelButton.setOnAction(event -> {
             // Handle cancel action
-            ((Stage) cancelButton.getScene().getWindow()).close();
+            System.out.println("Cancel button pressed");
         });
 
         buttonBox.getChildren().addAll(saveButton, cancelButton);
         return buttonBox;
     }
+
+
 
     private void setLastPressedButton(ButtonWrapper currentButton, ButtonWrapper lastPressedButton) {
         if (lastPressedButton != null) {
@@ -600,24 +665,25 @@ public class AdminPage extends Page {
 
     private List<User> generateUserList() {
         List<User> userList = new ArrayList<>();
-        userList.add(new User("John Doe", "john@docduck.com", "Admin"));
-        userList.add(new User("Jane Smith", "jane@docduck.com", "Operator"));
-        userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer"));
-        userList.add(new User("Emily Brown", "emily@docduck.com", "Admin"));
-        userList.add(new User("Michael Clark", "michael@docduck.com", "Operator"));
-        userList.add(new User("Alice Green", "alice@docduck.com", "Engineer"));
-        userList.add(new User("Kelvin Zacharias", "KZ@docduck.com", "Engineer"));
+        userList.add(new User("John Doe", "john@docduck.com", "Admin", "password123"));
+        userList.add(new User("Jane Smith", "jane@docduck.com", "Operator", "password123"));
+        userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer", "password123"));
+        userList.add(new User("Emily Brown", "emily@docduck.com", "Admin", "password123"));
+        userList.add(new User("Michael Clark", "michael@docduck.com", "Operator", "password123"));
+        userList.add(new User("Alice Green", "alice@docduck.com", "Engineer", "password123"));
+        userList.add(new User("Kelvin Zacharias", "KZ@docduck.com", "Engineer", "password123"));
 
         for (int i = 0; i < 20; i++) {
             String[] names = {"Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack"};
             String[] roles = {"Admin", "Operator", "Engineer"};
             String name = names[(int) (Math.random() * names.length)];
             String role = roles[(int) (Math.random() * roles.length)];
-            userList.add(new User(name + " " + (i + 1), name.toLowerCase() + (i + 1) + "@docduck.com", role));
+            userList.add(new User(name + " " + (i + 1), name.toLowerCase() + (i + 1) + "@docduck.com", role, "password123"));
         }
 
         return userList;
     }
+
 
     private List<Machine> generateMachineList() {
         List<Machine> machineList = new ArrayList<>();
