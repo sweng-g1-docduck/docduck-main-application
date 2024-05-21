@@ -23,5 +23,16 @@ public class Hashtest {
         } else {
             System.out.println("Password verification failed!");
         }
+        
+        // Verify the incorrect password
+        String incorrectPassword = "WrongPassword"; // Incorrect password to verify
+        boolean isIncorrectPasswordVerified = Bcrypt.verifyPassword(incorrectPassword, hashedPassword);
+        
+        // Print incorrect password verification result
+        if (isIncorrectPasswordVerified) {
+            System.out.println("Incorrect password verification failed!");
+        } else {
+            System.out.println("Incorrect password verification successful!");
+        }
     }
 }
