@@ -8,20 +8,21 @@ public class Hashtest {
 
         // Test password
         String testPassword = "Docduck123";
+        System.out.println("\nInput password: " + testPassword);
         
         // Hash the test password
         String hashedPassword = Bcrypt.hashPassword(testPassword);
         System.out.println("\nHashed password: " + hashedPassword);
 
         // Verify the password
-        String inputPassword = "Docduck123"; // Password to verify
-        boolean isPasswordCorrect = Bcrypt.verifyPassword(inputPassword, hashedPassword);
+        
+        boolean isPasswordCorrect = Bcrypt.verifyPassword(testPassword, hashedPassword);
         
         // Print verification result
         if (isPasswordCorrect) {
-            System.out.println("Password verification successful!");
+            System.out.println("\nPassword verification successful!");
         } else {
-            System.out.println("Password verification failed!");
+            System.out.println("\nPassword verification failed!");
         }
         
         // Verify the incorrect password
@@ -30,9 +31,9 @@ public class Hashtest {
         
         // Print incorrect password verification result
         if (isIncorrectPasswordVerified) {
-            System.out.println("Incorrect password verification failed!");
+            System.out.println("\nIncorrect password verification failed!");
         } else {
-            System.out.println("Incorrect password verification successful!");
+            System.out.println("\nIncorrect password verification successful!");
         }
     }
 }
