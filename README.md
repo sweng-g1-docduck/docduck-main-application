@@ -21,3 +21,22 @@ When loading the official application, you will be greeted with a login page. Ne
 
 
 # Technical Details
+
+## Building from Source
+### Required Tools
+For building the DocDuck application from source, you will require:
+    - [Apache Maven](https://https://maven.apache.org/), version 3.9.x.
+    - [Java JDK 11](https://jdk.java.net/archive/)
+
+### Build Command
+Once the tools have been installed, and the source code downloaded, navigate to the root directory of the application within your preferred terminal.
+Make sure Maven and Java 11 are configured correctly:
+    - `java --version`
+    - `mvn --version`
+Now run the command to build the application:
+    - `mvn clean install`
+This will build the application and produce a jar within the `./target` folder. And the jar will be called docduckapplication-{version}.jar
+
+### Running the jar
+To run the application, please run the jar with the following command:
+    - `java -jar docduckapplication-{version}.jar`

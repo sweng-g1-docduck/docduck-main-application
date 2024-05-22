@@ -1,7 +1,7 @@
 package com.docduck.application.xmldom;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Stack;
@@ -29,6 +29,7 @@ public class XMLJDOM {
     static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
+    private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     protected Document document;
 
@@ -50,6 +51,9 @@ public class XMLJDOM {
     public void setupJDOM() {
         this.document = null;
 
+        InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
+        InputStream schemaStream = classloader.getResourceAsStream(schemaFilename);
+
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
@@ -69,7 +73,7 @@ public class XMLJDOM {
             }
 
             if (schemaFilename != null) {
-                factory.setAttribute(JAXP_SCHEMA_SOURCE, new File(schemaFilename));
+                factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
             }
 
             DocumentBuilder documentBuilder = factory.newDocumentBuilder();
@@ -77,10 +81,11 @@ public class XMLJDOM {
             OutputStreamWriter errorWriter = new OutputStreamWriter(System.err, outputEncoding);
             documentBuilder.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
 
-            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlFilename);
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (IOException | SAXException | ParserConfigurationException e) {
+            System.out.println(e.getClass());
             e.printStackTrace();
         }
     }
