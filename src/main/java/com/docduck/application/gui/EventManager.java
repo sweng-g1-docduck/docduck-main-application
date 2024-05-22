@@ -203,6 +203,13 @@ public class EventManager {
         }
     }
 
+    /**
+     * Event handler to open the report page to a specific machine
+     * 
+     * @param eventID The ID of the event
+     * @param machine The machine which's report is to be opened
+     * @return
+     */
     public EventHandler<ActionEvent> getActionEvent(String eventID, Machine machine) {
 
         switch (eventID) {

@@ -70,12 +70,14 @@ public class StatusPage extends Page {
      */
     private HBox drawMachineBar() {
         HBox contents = new HBox();
+        int machineBoxHeight = 45;
+        
         contents.setPadding(new Insets(10, 10, 10, 15));
         contents.setBackground(
                 new Background(new BackgroundFill(barColour, new CornerRadii(10, 10, 0, 0, false), new Insets(0))));
         contents.setSpacing(10);
-        contents.setPrefSize(machineBoxWidth, 45);
-        contents.setMaxSize(machineBoxWidth, 45);
+        contents.setPrefSize(machineBoxWidth, machineBoxHeight);
+        contents.setMaxSize(machineBoxWidth, machineBoxHeight);
         contents.setAlignment(Pos.CENTER_LEFT);
 
         TextBox title = new TextBox();

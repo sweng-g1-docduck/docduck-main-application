@@ -110,17 +110,17 @@ public class ReportPage extends Page {
         ArrayList<ButtonWrapper> buttons = new ArrayList<ButtonWrapper>();
         for (Machine machine : reportMachines) {
 
-            ButtonWrapper button = new ButtonWrapper();
-            button.setButtonHeight(60);
-            button.setButtonWidth(reportBoxWidth - 45);
+            ButtonWrapper reportButton = new ButtonWrapper();
+            reportButton.setButtonHeight(60);
+            reportButton.setButtonWidth(reportBoxWidth - 45);
 
-            button.setCornerRadius(10);
-            button.setContentDisplay(ContentDisplay.TOP);
+            reportButton.setCornerRadius(10);
+            reportButton.setContentDisplay(ContentDisplay.TOP);
 
-            button.setBackgroundColour(buttonColour);
-            button.setHoverColour(buttonHoverColour);
-            button.setClickcolour(buttonClickColour);
-            button.setAlignment(Pos.TOP_LEFT);
+            reportButton.setBackgroundColour(buttonColour);
+            reportButton.setHoverColour(buttonHoverColour);
+            reportButton.setClickcolour(buttonClickColour);
+            reportButton.setAlignment(Pos.TOP_LEFT);
 
             BorderPane pane = new BorderPane();
             HBox infoBox = new HBox(10);
@@ -135,10 +135,10 @@ public class ReportPage extends Page {
             Label userName = new Label(machine.getReport().getUser().getName());
             userName.setFont(new Font(fontName, smallFontSize));
             userName.setTextFill(btnTextColour);
-            
-            Label description = new Label(machine.getReport().getDescription());
-            description.setFont(new Font(fontName, smallFontSize));
-            description.setTextFill(btnTextColour);
+
+            Label faultDescription = new Label(machine.getReport().getDescription());
+            faultDescription.setFont(new Font(fontName, smallFontSize));
+            faultDescription.setTextFill(btnTextColour);
 
             Label spacer = new Label("|");
             spacer.setFont(new Font(fontName, smallFontSize));
@@ -149,14 +149,16 @@ public class ReportPage extends Page {
             spacer2.setFont(new Font(fontName, smallFontSize));
             spacer2.setTextFill(btnTextColour);
 
-            infoBox.getChildren().addAll(location, spacer, userName, spacer2, description);
+            infoBox.getChildren().addAll(location, spacer, userName, spacer2, faultDescription);
             infoBox.setAlignment(Pos.BOTTOM_LEFT);
 
-            button.setGraphic(pane);
-            button.setContentDisplay(ContentDisplay.BOTTOM);
+            reportButton.setGraphic(pane);
+            reportButton.setContentDisplay(ContentDisplay.BOTTOM);
             pane.setTop(machineName);
             pane.setBottom(infoBox);
-            button.setOnAction((new EventHandler<ActionEvent>() {
+
+            // Recolours button to show it has been clicked if not. Draws the report info
+            reportButton.setOnAction((new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
                     for (ButtonWrapper button : buttons) {
@@ -166,16 +168,16 @@ public class ReportPage extends Page {
                             button.setBorderWidth(1);
                         }
                     }
-                    button.setBackgroundColour(buttonClickColour);
-                    button.setBorderWidth(3);
+                    reportButton.setBackgroundColour(buttonClickColour);
+                    reportButton.setBorderWidth(3);
                     if (currentMachine != machine) {
                         currentMachine = machine;
                         drawReportInfo(machine);
                     }
                 }
             }));
-            buttons.add(button);
-            machineGrid.getChildren().add(button);
+            buttons.add(reportButton);
+            machineGrid.getChildren().add(reportButton);
         }
 
         machineScroll.setContent(machineGrid);
@@ -242,7 +244,7 @@ public class ReportPage extends Page {
         datasheet.setFont(new Font(fontName, smallFontSize));
         datasheet.setTranslateX(-4);
         datasheet.setTranslateY(-2);
-        
+
         Hyperlink purchaseLink = new Hyperlink("Purchase Link");
         purchaseLink.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
         purchaseLink.setFont(new Font(fontName, smallFontSize));
@@ -280,7 +282,7 @@ public class ReportPage extends Page {
 
         ///////////////////////////////
 
-        // Description
+        // Fault Description
 
         Label descTitle = new Label("Description: ");
         descTitle.setFont(new Font(fontName, smallFontSize));
@@ -335,6 +337,8 @@ public class ReportPage extends Page {
         completeBtn.setFontColour(lightTextColour);
         completeBtn.setFontSize(20);
         completeBtn.removeBorder();
+        
+        // Requests a description if not provided, log the machine online if one has
         completeBtn.setOnAction((new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -365,6 +369,8 @@ public class ReportPage extends Page {
         closeBtn.setFontColour(lightTextColour);
         closeBtn.setFontSize(20);
         closeBtn.removeBorder();
+        
+        // Removes the report from the page
         closeBtn.setOnAction((new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -391,8 +397,8 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Creates a node specific to the desired media, img for and image
-     * TODO audio and video
+     * Creates a node specific to the desired media, img for and image TODO audio
+     * and video
      * 
      * @param filePath The path to the file
      * @return Node of the correct type to display the data
@@ -402,7 +408,7 @@ public class ReportPage extends Page {
         if (extension.equals("png") || extension.equals("jpeg")) {
             Image img = new Image(filePath);
             ImageView view1 = new ImageView(img);
-            view1.setFitWidth(reportDescWidth - 35);
+            view1.setFitWidth(reportDescWidth - 35); //Offset to fit the bar 
             view1.setPreserveRatio(true);
             return view1;
         }
