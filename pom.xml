@@ -13,7 +13,7 @@
         <javafx.version>17.0.10</javafx.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
-        <spring-security.version>6.2.1</spring-security.version>
+        <spring-security.version>5.8.12</spring-security.version>
   	</properties>
   	
   	<repositories>
