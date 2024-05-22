@@ -1,7 +1,8 @@
 package com.docduck.application;
 
+import java.io.File;
 import java.util.List;
-import com.docduck.application.xmlreader.XMLReader;
+
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
@@ -31,7 +32,10 @@ public class DocDuckApplication extends Application {
 
         // XMLJDOM example method
         jdom2Example();
-      
+
+        File f = new File("/DocDuckDataExample.xml");
+        System.out.println(f);
+
         root = new Pane();
         xmlBuilder = XMLBuilder.createInstance(root);
         guiBuilder = GUIBuilder.createInstance(root);
@@ -50,15 +54,15 @@ public class DocDuckApplication extends Application {
         stage.setWidth(1296);
 
         System.out.println();
-        
+
         stage.setTitle("DocDuck");
         stage.setScene(scene);
 
         stage.show();
         guiBuilder.buildPages();
         guiBuilder.displayPage("ADMIN");
-        //guiBuilder.StartPage();
-        //ftpHandler.startApp();
+        // guiBuilder.StartPage();
+        // ftpHandler.startApp();
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());
 
@@ -78,8 +82,8 @@ public class DocDuckApplication extends Application {
      */
     private void jdom2Example() {
 
-        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("src/main/resources/DocDuckDataExample.xml",
-                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true, true);
+        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("DocDuckDataExample.xml",
+                "DocDuckStandardSchema_WithData.xsd", true, true);
 
         jdomData.setupJDOM();
 
