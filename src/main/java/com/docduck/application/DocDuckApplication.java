@@ -2,12 +2,7 @@ package com.docduck.application;
 
 import java.util.List;
 
-import org.w3c.dom.NodeList;
-
 import com.docduck.application.gui.GUIBuilder;
-import com.docduck.application.utils.InvalidID;
-import com.docduck.application.xmldom.XMLDOM;
-import com.docduck.application.xmldom.XMLDOMDataHandler;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
 import com.docduck.application.xmlreader.XMLReader;
 
@@ -90,59 +85,6 @@ public class DocDuckApplication extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    private void xmlExample() {
-        XMLDOM xmlDom = new XMLDOM("src/main/resources/DocDuckDataExample.xml",
-                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true);
-
-        try {
-            xmlDom.setupDOM();
-        }
-        catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        xmlDom.printDOMTree();
-
-//        System.out.println(xmlDom.findNodeValue("docduckData"));
-//        System.out.println(xmlDom.getText(xmlDom.findSubNode("name", xmlDom.getParentNode("userData", 1))));
-
-        try {
-            System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("machine", 1)));
-            System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("component", 1)));
-            System.out.println(xmlDom.getChildNodeValue("title", xmlDom.getNode("report", 1)));
-            System.out.println(xmlDom.getChildNodeValue("description", xmlDom.getNode("report", 1)));
-            System.out.println(xmlDom.getChildNodeValue("name", xmlDom.getNode("user", 2)));
-            System.out.println(xmlDom.getChildNodeValue("role", xmlDom.getNode("user", 2)));
-        }
-        catch (InvalidID e) {
-
-            if (e.isIDInvalid() == true) {
-                System.out.println("The provided ID is not valid");
-            }
-        }
-
-        XMLDOMDataHandler data = new XMLDOMDataHandler("src/main/resources/DocDuckDataExample.xml",
-                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true);
-
-        try {
-            data.setupDOM();
-        }
-        catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        NodeList machineOneData = data.getMachineData(1);
-
-        data.printNodeListValues((data.getComponentPartData(1, 1, 1)));
-
-        System.out.println(data.getNodeListNodeValue(machineOneData, "name"));
-
-        data.printNodeListValues(data.getPartData(2));
-
     }
 
     // COMMAND LINE ARGUMENTS CODE:
