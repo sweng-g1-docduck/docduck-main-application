@@ -10,7 +10,9 @@ import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.Page;
 import com.docduck.application.gui.pages.ReportPage;
+import com.docduck.application.gui.pages.StatusPage;
 import com.docduck.buttonlibrary.ButtonWrapper;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -21,7 +23,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
-import com.docduck.application.gui.pages.StatusPage;
 
 public class GUIBuilder {
 
@@ -201,7 +202,7 @@ public class GUIBuilder {
     }
 
     public void LoginPage() {
-    
+
     }
 
     public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
@@ -241,38 +242,40 @@ public class GUIBuilder {
         CURRENT_WINDOW_WIDTH = windowWidth;
         CURRENT_WINDOW_HEIGHT = windowHeight;
     }
-    
+
     /**
      * Displays the desired page
-     *  
+     * 
      * @param pageName Name of the page to be displayed in ALL CAPS
      */
     public void displayPage(String pageName) {
         root.getChildren().clear();
+
         switch (pageName) {
-            
+
         case "STATUS":
             root.getChildren().add(statusPage);
             statusPage.drawMachineButtons();
             break;
-        
+
         case "REPORT":
             root.getChildren().add(reportPage);
             reportPage.drawReportButtons();
             break;
-            
+
         case "ADMIN":
-                root.getChildren().add(adminPage);
-                scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
-                break;
+            root.getChildren().add(adminPage);
+            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+            break;
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
-    
+
     public void displayPage(String pageName, Machine machine) {
         root.getChildren().clear();
+
         switch (pageName) {
-        
+
         case "REPORT":
             root.getChildren().add(reportPage);
             reportPage.drawReportButtons();
@@ -289,28 +292,27 @@ public class GUIBuilder {
         populateMachineData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-         adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
+        adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
     }
-    
-    
+
     private void populateMachineData() {
         machines = new ArrayList<Machine>();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
-        
-        Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1","1","");
-        Report report = new Report(user,"Broken");
+        user = new User("Bob", "bob@york.ac.uk", "ADMIN", "password");
+
+        Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1", "1", "");
+        Report report = new Report(user, "Broken");
         report.setPathToFile("/docducklogo.png");
         machine1.addReport(report);
         machines.add(machine1);
-        Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2","");
-        machine2.addReport(new Report(user,"It not work now"));
+        Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2", "");
+        machine2.addReport(new Report(user, "It not work now"));
         machines.add(machine2);
-        machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2",""));
-        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2",""));
-        machines.add(new Machine("Machine Five", "Room 1", "ONLINE", "5", "2",""));
-        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2",""));
-        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2",""));
-        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2",""));
-        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2",""));
+        machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2", ""));
+        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2", ""));
+        machines.add(new Machine("Machine Five", "Room 1", "ONLINE", "5", "2", ""));
+        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2", ""));
+        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2", ""));
+        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2", ""));
+        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2", ""));
     }
 }
