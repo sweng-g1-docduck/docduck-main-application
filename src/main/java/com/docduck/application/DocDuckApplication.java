@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
+import com.docduck.application.xmldom.XMLJDOMDataHandler.DataType;
 import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
@@ -80,6 +81,9 @@ public class DocDuckApplication extends Application {
         for (String s : l) {
             System.out.println(s);
         }
+
+        System.out.println("\n");
+        System.out.println(jdomData.getDataValue(1, "title", DataType.REPORT));
 
     }
 

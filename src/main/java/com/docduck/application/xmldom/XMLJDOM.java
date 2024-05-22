@@ -38,6 +38,7 @@ public class XMLJDOM {
         this.schemaFilename = schemaFilename;
         this.xsdValidate = validate;
         this.namespaceAware = setNamespaceAware;
+
     }
 
     /**
@@ -145,6 +146,10 @@ public class XMLJDOM {
         }
 
         return desiredElement;
+    }
+
+    public void addElement(Element parentElement, Element desiredELement, String value) {
+
     }
 
     /**

@@ -10,6 +10,19 @@ public class XMLJDOMDataHandler extends XMLJDOM {
     private XMLJDOM JDOM = null;
 
     /**
+     * An enum to identify the type of data searching for
+     * 
+     * @author William-A-B
+     */
+    public enum DataType {
+        MACHINE,
+        COMPONENT,
+        PART,
+        REPORT,
+        USER
+    }
+
+    /**
      * Constructor for specific DocDuck data handling for docduck xml files, the
      * super method is called to parse the xml files given
      * 
@@ -195,8 +208,51 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         return getElement("report", reportID, true, null);
     }
 
-    public void addNewMachine() {
+    /**
+     * Gets a specified data value for a given element name
+     * 
+     * @param id          - The ID of the parent element / The ID of the specified
+     *                    data type
+     * @param elementName - The name of the element to search for, e.g. serialNumber
+     * @param typeOfData  - The type of data requesting, e.g. MACHINE, REPORT etc.
+     * @return A string containing the data value of the element specified
+     * @author William-A-B
+     */
+    public String getDataValue(int id, String elementName, DataType typeOfData) {
 
+        String dataValue = null;
+        List<Element> dataList = new ArrayList<>();
+
+        switch (typeOfData) {
+
+        case MACHINE:
+            dataList = getMachineData(id);
+            break;
+        case COMPONENT:
+            dataList = getComponentData(id);
+            break;
+        case PART:
+            dataList = getPartData(id);
+            break;
+        case REPORT:
+            dataList = getMachineReportData(id);
+            break;
+        case USER:
+            dataList = getUserData(id);
+            break;
+        default:
+            break;
+
+        }
+
+        for (Element target : dataList) {
+
+            if (target.getName().equals(elementName)) {
+                dataValue = target.getValue();
+                return dataValue;
+            }
+        }
+
+        return dataValue;
     }
-
 }
