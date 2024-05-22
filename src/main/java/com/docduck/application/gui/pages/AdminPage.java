@@ -272,7 +272,7 @@ public class AdminPage extends Page {
             gridPane.add(createFormField("Machine Name", machine != null ? machine.getName() : ""), 1, row++);
 
             gridPane.add(createLabel("Location"), 0, row);
-            gridPane.add(createFormField("Location", machine != null ? machine.getRoom() : ""), 1, row++);
+            gridPane.add(createFormField("Location", machine != null ? machine.getLocation() : ""), 1, row++);
 
             gridPane.add(createLabel("Status"), 0, row);
             gridPane.add(createStatusComboBox(machine != null ? machine.getStatus() : ""), 1, row++);
@@ -617,7 +617,7 @@ public class AdminPage extends Page {
         double height = Math.max(50, Math.min(70, 500 / machines.size()));
         machineButton.setButtonHeight(height);
         machineButton.setFont(Font.font("System", 80));
-        machineButton.setText(machine.getName() + " - " + machine.getRoom() + " - " + machine.getStatus());
+        machineButton.setText(machine.getName() + " - " + machine.getLocation() + " - " + machine.getStatus());
         machineButton.setBackgroundColour("#fbb12eff");
         machineButton.setClickcolour(Color.WHITE);
         machineButton.setHoverColour("#ff8c00ff");

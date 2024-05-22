@@ -1,24 +1,23 @@
 package com.docduck.application.data;
 
 /**
- * A Class for storing all data for a report
- * - The User which has submitted the report
- * - The description of the fault
- * - The path of the uploaded media 
+ * A Class for storing all data for a report - The User which has submitted the
+ * report - The description of the fault - The path of the uploaded media
  * 
  * @author jrb617
  */
-public class Report {
+public class Report extends BaseData {
 
     private User user;
     private String description;
     private String pathToFile;
-    
-    public Report(User user, String description){
+
+    public Report(User user, String description) {
+        super();
         this.user = user;
         this.description = description;
     }
-    
+
     public String getPathToFile() {
         return pathToFile;
     }
@@ -35,7 +34,4 @@ public class Report {
         return this.description;
     }
 
-
-    
-    
 }

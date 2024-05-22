@@ -1,14 +1,11 @@
 package com.docduck.application;
 
 import java.io.File;
-import java.util.List;
 
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.gui.XMLBuilder;
-import com.docduck.application.xmldom.XMLJDOMDataHandler;
-import com.docduck.application.xmldom.XMLJDOMDataHandler.DataType;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -31,7 +28,7 @@ public class DocDuckApplication extends Application {
         System.out.println("Starting DocDuck Application");
 
         // XMLJDOM example method
-        jdom2Example();
+//        jdom2Example();
 
         File f = new File("/DocDuckDataExample.xml");
         System.out.println(f);
@@ -80,23 +77,23 @@ public class DocDuckApplication extends Application {
      * 
      * @author William-A-B
      */
-    private void jdom2Example() {
-
-        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("DocDuckDataExample.xml",
-                "DocDuckStandardSchema_WithData.xsd", true, true);
-
-        jdomData.setupJDOM();
-
-        List<String> l = jdomData.getMachineNamesAtLocation("Labs_4th_Floor");
-
-        for (String s : l) {
-            System.out.println(s);
-        }
-
-        System.out.println("\n");
-        System.out.println(jdomData.getDataValue(1, "title", DataType.REPORT));
-
-    }
+//    private void jdom2Example() {
+//
+//        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("DocDuckDataExample.xml",
+//                "DocDuckStandardSchema_WithData.xsd", true, true);
+//
+//        jdomData.setupJDOM();
+//
+//        List<String> l = jdomData.getMachineNamesAtLocation("Labs_4th_Floor");
+//
+//        for (String s : l) {
+//            System.out.println(s);
+//        }
+//
+//        System.out.println("\n");
+//        System.out.println(jdomData.getDataValue(1, "title", DataType.REPORT));
+//
+//    }
 
     @Override
     public void stop() {

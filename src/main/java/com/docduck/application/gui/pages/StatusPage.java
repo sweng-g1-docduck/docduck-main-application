@@ -160,7 +160,7 @@ public class StatusPage extends Page {
         ArrayList<ButtonWrapper> buttons = new ArrayList<ButtonWrapper>();
         for (Machine machine : machines) {
 
-            if (machine.getRoom().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
+            if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ImageView view1 = new ImageView(img);
                 view1.setFitWidth(buttonWidth);
@@ -396,7 +396,7 @@ public class StatusPage extends Page {
         serialNum.setFont(new Font(fontName, smallFontSize));
         serialNum.setTextFill(infoTextColour);
 
-        Label location = new Label("Location: " + machine.getRoom());
+        Label location = new Label("Location: " + machine.getLocation());
         location.setFont(new Font(fontName, smallFontSize));
         location.setTextFill(infoTextColour);
 

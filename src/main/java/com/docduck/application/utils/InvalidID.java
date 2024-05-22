@@ -2,13 +2,14 @@ package com.docduck.application.utils;
 
 public class InvalidID extends Throwable {
 
-    private boolean isIDInvalid;
+    private String errorMessage;
 
-    public InvalidID(boolean idInvalid) {
-        this.isIDInvalid = idInvalid;
+    public InvalidID(String message) {
+        this.errorMessage = message;
     }
 
-    public boolean isIDInvalid() {
-        return isIDInvalid;
+    @Override
+    public void printStackTrace() {
+        System.err.println(errorMessage);
     }
 }

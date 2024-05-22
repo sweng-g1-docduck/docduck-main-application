@@ -128,7 +128,7 @@ public class ReportPage extends Page {
             machineName.setFont(new Font(fontName, smallFontSize));
             machineName.setTextFill(btnTextColour);
 
-            Label location = new Label(machine.getRoom());
+            Label location = new Label(machine.getLocation());
             location.setFont(new Font(fontName, smallFontSize));
             location.setTextFill(btnTextColour);
 
@@ -234,7 +234,7 @@ public class ReportPage extends Page {
         serialNum.setFont(new Font(fontName, smallFontSize));
         serialNum.setTextFill(reportTextColour);
 
-        Label location = new Label("Location: " + machine.getRoom());
+        Label location = new Label("Location: " + machine.getLocation());
         location.setFont(new Font(fontName, smallFontSize));
         location.setTextFill(reportTextColour);
 

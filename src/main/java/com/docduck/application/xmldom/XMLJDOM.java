@@ -30,6 +30,8 @@ public class XMLJDOM {
     static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
     private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+    private DocumentBuilderFactory factory;
+    private DocumentBuilder documentBuilder;
 
     protected Document document;
 
@@ -55,7 +57,7 @@ public class XMLJDOM {
         InputStream schemaStream = classloader.getResourceAsStream(schemaFilename);
 
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory = DocumentBuilderFactory.newInstance();
 
             factory.setNamespaceAware(namespaceAware);
             factory.setValidating(xsdValidate);
@@ -76,7 +78,7 @@ public class XMLJDOM {
                 factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
             }
 
-            DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+            documentBuilder = factory.newDocumentBuilder();
 
             OutputStreamWriter errorWriter = new OutputStreamWriter(System.err, outputEncoding);
             documentBuilder.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
@@ -85,6 +87,27 @@ public class XMLJDOM {
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (IOException | SAXException | ParserConfigurationException e) {
+            System.out.println(e.getClass());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Using the same settings as when setting up the JDOM, this method parses a new
+     * xml document and overwrites the original document
+     * 
+     * @param xmlFilename - The filename of the xml file to parse
+     * @author William-A-B
+     */
+    public void parseNewXMLFile(String xmlFilename) {
+
+        InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
+
+        try {
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
+            this.document = new DOMBuilder().build(w3cDocument);
+        }
+        catch (SAXException | IOException e) {
             System.out.println(e.getClass());
             e.printStackTrace();
         }
