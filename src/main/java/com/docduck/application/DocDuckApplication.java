@@ -1,9 +1,13 @@
 package com.docduck.application;
 
+import java.util.List;
+import com.docduck.application.xmlreader.XMLReader;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.gui.XMLBuilder;
+import com.docduck.application.xmldom.XMLJDOMDataHandler;
+import com.docduck.application.xmldom.XMLJDOMDataHandler.DataType;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -22,7 +26,12 @@ public class DocDuckApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+
         System.out.println("Starting DocDuck Application");
+
+        // XMLJDOM example method
+        jdom2Example();
+      
         root = new Pane();
         xmlBuilder = XMLBuilder.createInstance(root);
         guiBuilder = GUIBuilder.createInstance(root);
@@ -32,6 +41,7 @@ public class DocDuckApplication extends Application {
         eventManager.updateInstances();
         xmlBuilder.updateInstances();
         ftpHandler.updateInstances();
+
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
 
         stage.setMinHeight(759);
@@ -43,6 +53,7 @@ public class DocDuckApplication extends Application {
         
         stage.setTitle("DocDuck");
         stage.setScene(scene);
+
         stage.show();
         guiBuilder.buildPages();
         guiBuilder.displayPage("ADMIN");
@@ -57,12 +68,29 @@ public class DocDuckApplication extends Application {
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
 
-        // ORDER OF PROGRAM
-        // Load up JavaFX
-        // Needs to check if there are any xml files to display a slide or slideshow
-        // If there are xml files, find ids of each and order them
-        // Display ID 1 slide
-        // If buttons, add in their actions, do they go to slide 2? etc.
+    }
+
+    /**
+     * An example method to show how the JDOM2 API Implementation works for the
+     * DocDuck Application
+     * 
+     * @author William-A-B
+     */
+    private void jdom2Example() {
+
+        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("src/main/resources/DocDuckDataExample.xml",
+                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true, true);
+
+        jdomData.setupJDOM();
+
+        List<String> l = jdomData.getMachineNamesAtLocation("Labs_4th_Floor");
+
+        for (String s : l) {
+            System.out.println(s);
+        }
+
+        System.out.println("\n");
+        System.out.println(jdomData.getDataValue(1, "title", DataType.REPORT));
 
     }
 
