@@ -37,6 +37,11 @@ public class AdminPage extends Page {
     private boolean editingMachines = false;
     private Label headerLabel;
 
+    private enum ButtonType {
+        MANAGER
+    }
+
+
     public AdminPage() {
         super();
         user = new User("Bob", "bob@york.ac.uk", "ADMIN","password");
@@ -740,9 +745,5 @@ public class AdminPage extends Page {
 
     private void updateHeader(String text) {
         headerLabel.setText(text);
-    }
-
-    private enum ButtonType {
-        MANAGER
     }
 }
