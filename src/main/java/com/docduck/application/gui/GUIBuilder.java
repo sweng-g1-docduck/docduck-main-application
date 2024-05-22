@@ -7,6 +7,7 @@ import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.Page;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.buttonlibrary.ButtonWrapper;
@@ -38,6 +39,8 @@ public class GUIBuilder {
     private ReportPage reportPage;
     private ArrayList<Machine> machines;
     private User user;
+
+    private AdminPage adminPage;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -247,6 +250,7 @@ public class GUIBuilder {
     public void displayPage(String pageName) {
         root.getChildren().clear();
         switch (pageName) {
+            
         case "STATUS":
             root.getChildren().add(statusPage);
             statusPage.drawMachineButtons();
@@ -256,6 +260,11 @@ public class GUIBuilder {
             root.getChildren().add(reportPage);
             reportPage.drawReportButtons();
             break;
+            
+        case "ADMIN":
+                root.getChildren().add(adminPage);
+                scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+                break;
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
@@ -280,6 +289,7 @@ public class GUIBuilder {
         populateMachineData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
+         adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
     }
     
     

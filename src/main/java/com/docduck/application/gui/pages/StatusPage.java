@@ -480,6 +480,7 @@ public class StatusPage extends Page {
      */
     @Override
     public void buildPage() {
+      
         setupRoomSelect();
         drawRoomSelect();
         setTop(drawMenuBar());

@@ -1,6 +1,7 @@
 package com.docduck.application.gui.pages;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
@@ -27,6 +28,13 @@ public class Page extends BorderPane {
 
     protected EventManager events;
     protected User user;
+
+    protected Machine machine; // admin (needs integrating)
+    List<User> userList = new ArrayList<>(); // admin (needs integrating)
+    List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
+
+    public Page() {
+
     protected ArrayList<Machine> machines;
     
     protected final Color barColour = Color.web("245494");
@@ -45,6 +53,7 @@ public class Page extends BorderPane {
         this.machines=machines;
         this.user = user;
         this.events = EventManager.getInstance();
+        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     // return list of nodes
@@ -63,7 +72,9 @@ public class Page extends BorderPane {
         HBox menuBar = new HBox();
         menuBar.setPadding(new Insets(15, 15, 15, 15));
         menuBar.setBackground(
+
                 new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
+      
         menuBar.setSpacing(15);
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
