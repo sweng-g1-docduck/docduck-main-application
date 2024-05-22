@@ -8,8 +8,6 @@ import com.docduck.application.data.User;
 import com.docduck.application.gui.EventManager;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
@@ -30,12 +28,30 @@ public class Page extends BorderPane {
 
     protected EventManager events;
     protected User user;
-    protected Machine machine;
-    List<User> userList = new ArrayList<>();
-    List<Machine> machineList = new ArrayList<>();
+
+    protected Machine machine; // admin (needs integrating)
+    List<User> userList = new ArrayList<>(); // admin (needs integrating)
+    List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
 
     public Page() {
+
+    protected ArrayList<Machine> machines;
+    
+    protected final Color barColour = Color.web("245494");
+    protected final Color backgroundColour = Color.LIGHTSLATEGREY;
+    protected final Color boxColour = Color.LIGHTGREY;
+    protected final Color btnColour = Color.web("fbb12eff");
+    protected final Color btnHoverColour = Color.web("#ff8c00ff");
+    protected final Color btnClickColour = Color.web("fbb12eff");
+    protected final Color lightTextColour = Color.WHITE;
+    protected final Color darkTextColour = Color.BLACK;
+    protected final String fontName = "Arial";
+    protected final int smallFontSize = 12;
+
+    public Page(ArrayList<Machine> machines, User user) {
         super();
+        this.machines=machines;
+        this.user = user;
         this.events = EventManager.getInstance();
         setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
     }
@@ -56,7 +72,9 @@ public class Page extends BorderPane {
         HBox menuBar = new HBox();
         menuBar.setPadding(new Insets(15, 15, 15, 15));
         menuBar.setBackground(
-                new Background(new BackgroundFill(Color.web("F5F5F5"), new CornerRadii(10), new Insets(5))));
+
+                new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
+      
         menuBar.setSpacing(15);
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
@@ -65,34 +83,31 @@ public class Page extends BorderPane {
         overviewBtn.setCornerRadius(5);
         overviewBtn.setButtonWidth(200);
         overviewBtn.setButtonHeight(60);
-        overviewBtn.setFontName("Arial");
+        overviewBtn.setFontName(fontName);
         overviewBtn.setText("Machine Overview");
-        overviewBtn.setBackgroundColour("fbb12eff");
-        overviewBtn.setClickcolour(Color.WHITE);
-        overviewBtn.setHoverColour("#ff8c00ff");
+        overviewBtn.setBackgroundColour(btnColour);
+        overviewBtn.setClickcolour(btnClickColour);
+        overviewBtn.setHoverColour(btnHoverColour);
         overviewBtn.setPositionX(150);
         overviewBtn.setPositionY(30);
-        overviewBtn.setFontColour("#ffffffff");
+        overviewBtn.setFontColour(lightTextColour);
         overviewBtn.setFontSize(20);
         overviewBtn.removeBorder();
-        overviewBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            }
-        }));
+        overviewBtn.setOnAction(events.getActionEvent("statusPage"));
+
 
         ButtonWrapper logOutBtn = new ButtonWrapper();
         logOutBtn.setCornerRadius(5);
         logOutBtn.setButtonWidth(120);
         logOutBtn.setButtonHeight(60);
-        logOutBtn.setFontName("Arial");
+        logOutBtn.setFontName(fontName);
         logOutBtn.setText("Log Out");
-        logOutBtn.setBackgroundColour("fbb12eff");
-        logOutBtn.setClickcolour(Color.WHITE);
-        logOutBtn.setHoverColour("#ff8c00ff");
+        logOutBtn.setBackgroundColour(btnColour);
+        logOutBtn.setClickcolour(btnClickColour);
+        logOutBtn.setHoverColour(btnHoverColour);
         logOutBtn.setPositionX(150);
         logOutBtn.setPositionY(30);
-        logOutBtn.setFontColour("#ffffffff");
+        logOutBtn.setFontColour(lightTextColour);
         logOutBtn.setFontSize(20);
         logOutBtn.removeBorder();
 
@@ -104,31 +119,29 @@ public class Page extends BorderPane {
             reportBtn.setCornerRadius(5);
             reportBtn.setButtonWidth(240);
             reportBtn.setButtonHeight(60);
-            reportBtn.setFontName("Arial");
+            reportBtn.setFontName(fontName);
             reportBtn.setText("Maintainance Reports");
-            reportBtn.setBackgroundColour("fbb12eff");
-            reportBtn.setClickcolour(Color.WHITE);
-            reportBtn.setHoverColour("#ff8c00ff");
-            reportBtn.setPositionX(290);
-            reportBtn.setPositionY(30);
-            reportBtn.setFontColour("#ffffffff");
+            reportBtn.setBackgroundColour(btnColour);
+            reportBtn.setClickcolour(btnClickColour);
+            reportBtn.setHoverColour(btnHoverColour);
+            reportBtn.setFontColour(lightTextColour);
             reportBtn.setFontSize(20);
             reportBtn.removeBorder();
+            reportBtn.setOnAction(events.getActionEvent("reportPage"));
 
             ButtonWrapper partBtn = new ButtonWrapper();
             partBtn.setCornerRadius(5);
             partBtn.setButtonWidth(160);
             partBtn.setButtonHeight(60);
-            partBtn.setFontName("Arial");
+            partBtn.setFontName(fontName);
             partBtn.setText("Part Search");
-            partBtn.setBackgroundColour("fbb12eff");
-            partBtn.setClickcolour(Color.WHITE);
-            partBtn.setHoverColour("#ff8c00ff");
-            partBtn.setPositionX(290);
-            partBtn.setPositionY(30);
-            partBtn.setFontColour("#ffffffff");
+            partBtn.setBackgroundColour(btnColour);
+            partBtn.setClickcolour(btnClickColour);
+            partBtn.setHoverColour(btnHoverColour);
+            partBtn.setFontColour(lightTextColour);
             partBtn.setFontSize(20);
             partBtn.removeBorder();
+            partBtn.setDisable(true);
             menuBar.getChildren().addAll(reportBtn, partBtn);
         }
 
@@ -138,14 +151,12 @@ public class Page extends BorderPane {
             settingsBtn.setCornerRadius(5);
             settingsBtn.setButtonWidth(120);
             settingsBtn.setButtonHeight(60);
-            settingsBtn.setFontName("Arial");
+            settingsBtn.setFontName(fontName);
             settingsBtn.setText("Settings");
-            settingsBtn.setBackgroundColour("fbb12eff");
-            settingsBtn.setClickcolour(Color.WHITE);
-            settingsBtn.setHoverColour("#ff8c00ff");
-            settingsBtn.setPositionX(290);
-            settingsBtn.setPositionY(30);
-            settingsBtn.setFontColour("#ffffffff");
+            settingsBtn.setBackgroundColour(btnColour);
+            settingsBtn.setClickcolour(btnClickColour);
+            settingsBtn.setHoverColour(btnHoverColour);
+            settingsBtn.setFontColour(lightTextColour);
             settingsBtn.setFontSize(20);
             settingsBtn.removeBorder();
             menuBar.getChildren().add(settingsBtn);

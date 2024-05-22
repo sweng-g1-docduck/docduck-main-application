@@ -3,21 +3,20 @@ package com.docduck.application.gui;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.Report;
+import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.Page;
+import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -37,6 +36,9 @@ public class GUIBuilder {
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private ArrayList<Page> pageList = new ArrayList<Page>();
     private StatusPage statusPage;
+    private ReportPage reportPage;
+    private ArrayList<Machine> machines;
+    private User user;
 
     private AdminPage adminPage;
 
@@ -248,22 +250,67 @@ public class GUIBuilder {
     public void displayPage(String pageName) {
         root.getChildren().clear();
         switch (pageName) {
-            case "STATUS":
-                root.getChildren().add(statusPage);
-                scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
-                break;
-            case "ADMIN":
+            
+        case "STATUS":
+            root.getChildren().add(statusPage);
+            statusPage.drawMachineButtons();
+            break;
+        
+        case "REPORT":
+            root.getChildren().add(reportPage);
+            reportPage.drawReportButtons();
+            break;
+            
+        case "ADMIN":
                 root.getChildren().add(adminPage);
                 scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
                 break;
         }
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+    }
+    
+    public void displayPage(String pageName, Machine machine) {
+        root.getChildren().clear();
+        switch (pageName) {
+        
+        case "REPORT":
+            root.getChildren().add(reportPage);
+            reportPage.drawReportButtons();
+            reportPage.drawReportInfo(machine);
+            break;
+        }
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
     /**
      * Builds all of the pages
      */
     public void buildPages() {
-        statusPage = new StatusPage();
-        adminPage = new AdminPage();
+        populateMachineData();
+        statusPage = new StatusPage(machines, user);
+        reportPage = new ReportPage(machines, user);
+         adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
+    }
+    
+    
+    private void populateMachineData() {
+        machines = new ArrayList<Machine>();
+        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
+        
+        Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1","1","");
+        Report report = new Report(user,"Broken");
+        report.setPathToFile("/docducklogo.png");
+        machine1.addReport(report);
+        machines.add(machine1);
+        Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2","");
+        machine2.addReport(new Report(user,"It not work now"));
+        machines.add(machine2);
+        machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2",""));
+        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2",""));
+        machines.add(new Machine("Machine Five", "Room 1", "ONLINE", "5", "2",""));
+        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2",""));
+        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2",""));
+        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2",""));
+        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2",""));
     }
 }

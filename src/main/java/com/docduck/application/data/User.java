@@ -1,9 +1,18 @@
 package com.docduck.application.data;
 
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+/**
+ * A Class for storing the non-secure data related to a user
+ * - The User's name
+ * - The User's email
+ * - The User's role
+ * 
+ * @author jrb617
+ */
 public class User {
 
     private String name;
