@@ -58,7 +58,7 @@
         <dependency>
 			<groupId>com.docduck.textlibrary</groupId>
         	<artifactId>textlibrary</artifactId>
-        	<version>0.0.1-SNAPSHOT</version>
+        	<version>3.2</version>
         </dependency>
         <dependency>
 			<groupId>com.docduck.graphicslibrary</groupId>
@@ -70,16 +70,16 @@
         	<artifactId>buttonlibrary</artifactId>
         	<version>0.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>${spring-security.version}</version>
-        </dependency>
-        <dependency>
+      <dependency>
     		<groupId>org.slf4j</groupId>
     		<artifactId>slf4j-simple</artifactId>
     		<version>1.7.32</version>
-		</dependency>
+		  </dependency>
+      <dependency>
+			    <groupId>uk.co.bookcook</groupId>
+        	<artifactId>media-library</artifactId>
+        	<version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     
     <build>

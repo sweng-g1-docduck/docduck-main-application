@@ -1,15 +1,16 @@
 package com.docduck.application;
 
 import java.util.List;
-
+import com.docduck.application.xmlreader.XMLReader;
+import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
+import com.docduck.application.gui.XMLBuilder;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
 import com.docduck.application.xmldom.XMLJDOMDataHandler.DataType;
-import com.docduck.application.xmlreader.XMLReader;
 
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -17,39 +18,52 @@ import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
-    private Node[] nodes;
     private static Pane root;
+    private static XMLBuilder xmlBuilder;
+    private static GUIBuilder guiBuilder;
+    private static FTPHandler ftpHandler;
+    private static EventManager eventManager;
 
     @Override
     public void start(Stage stage) {
 
         System.out.println("Starting DocDuck Application");
 
+        // XMLJDOM example method
         jdom2Example();
-
-//        FTPHandler FTPHandler = new FTPHandler();
-//        FTPHandler.downloadAllFiles();
-        XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
-                "src/main/resources/DocDuckStandardSchema.xsd", true);
-        myReader.readXML();
-//        myReader.printXMLData();
-
+      
         root = new Pane();
-
-        GUIBuilder builder = GUIBuilder.createInstance(myReader.getData(), root, this.getHostServices());
-        builder.buildSlide(1);
+        xmlBuilder = XMLBuilder.createInstance(root);
+        guiBuilder = GUIBuilder.createInstance(root);
+        ftpHandler = FTPHandler.createInstance();
+        eventManager = EventManager.createInstance(root, this.getHostServices(), stage);
+        guiBuilder.updateInstances();
+        eventManager.updateInstances();
+        xmlBuilder.updateInstances();
+        ftpHandler.updateInstances();
 
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
-        stage.setMinHeight(720);
-        stage.setMinWidth(1280);
-        stage.setHeight(720);
-        stage.setWidth(1280);
+
+        stage.setMinHeight(759);
+        stage.setMinWidth(1296);
+        stage.setHeight(759);
+        stage.setWidth(1296);
+
+        System.out.println();
+        
         stage.setTitle("DocDuck");
         stage.setScene(scene);
-//        stage.show();
 
-        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> builder
-                .scaleNodes(stage.getWidth(), stage.getHeight());
+        stage.show();
+        guiBuilder.buildPages();
+        guiBuilder.displayPage("ADMIN");
+        //guiBuilder.StartPage();
+        //ftpHandler.startApp();
+        System.out.println(stage.getWidth());
+        System.out.println(stage.getHeight());
+
+        ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
+                stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
@@ -80,34 +94,13 @@ public class DocDuckApplication extends Application {
 
     }
 
+    @Override
+    public void stop() {
+        // Executed when the application shuts down
+        ftpHandler.stopFileUpdates();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
-
-    // COMMAND LINE ARGUMENTS CODE:
-//    Parameters parameters = getParameters();
-//    List<String> args = parameters.getRaw();
-//
-//    String xmlPath = null;
-//    String schemaPath = null;
-//    boolean validate = false;
-//
-//    if (args.size() == 0) {
-//        System.out.println("Please specify command line arguments with -xml 'PATH_TO_XML' etc.");
-//    }
-//
-//    for (int i = 0; i < args.size(); i++) {
-//
-//        if (args.get(i) == "-xml") {
-//            xmlPath = args.get(i + 1);
-//        }
-//        else if (args.get(i) == "-xsd") {
-//            schemaPath = args.get(i + 1);
-//        }
-//        else if (args.get(i) == "-validate") {
-//            validate = true;
-//        }
-//    }
-//
-//    XMLReader myReader = new XMLReader(xmlPath, schemaPath, validate);
 }

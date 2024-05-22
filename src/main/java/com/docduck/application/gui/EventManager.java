@@ -1,5 +1,10 @@
 package com.docduck.application.gui;
 
+import java.io.File;
+
+import com.docduck.application.data.Machine;
+import com.docduck.application.files.FTPHandler;
+import com.docduck.application.xmlreader.XMLReader;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
 
@@ -8,31 +13,134 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class EventManager {
 
-    private GUIBuilder builder;
+    private static XMLBuilder xmlBuilder;
+    private static GUIBuilder guiBuilder;
+    private static FTPHandler ftpHandler;
     private HostServices hostServices;
     private Pane root;
+    private Stage stage;
     private static EventManager instance;
 
-    private EventManager(GUIBuilder builder, HostServices hostServices, Pane root) {
-        this.builder = builder;
+    private EventManager(Pane root, HostServices hostServices, Stage stage) {
         this.hostServices = hostServices;
         this.root = root;
+        this.stage = stage;
     }
 
-    public static EventManager createInstance(GUIBuilder builder, HostServices hostServices, Pane root) {
+    public static EventManager createInstance(Pane root, HostServices hostServices, Stage stage) {
 
         if (instance == null) {
-            instance = new EventManager(builder, hostServices, root);
+            instance = new EventManager(root, hostServices, stage);
         }
         return instance;
+    }
+
+    public static EventManager getInstance() {
+        return instance;
+    }
+
+    public void updateInstances() {
+        xmlBuilder = XMLBuilder.getInstance();
+        guiBuilder = GUIBuilder.getInstance();
+        ftpHandler = FTPHandler.getInstance();
     }
 
     public EventHandler<ActionEvent> getActionEvent(String eventID) {
 
         switch (eventID) {
+
+        case "xmlPage":
+            EventHandler<ActionEvent> xmlPage = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    guiBuilder.LoadFromXMLPage();
+                }
+            };
+            return xmlPage;
+
+        case "goBack":
+            EventHandler<ActionEvent> goBack = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    guiBuilder.StartPage();
+                }
+            };
+            return goBack;
+
+        case "loadApp":
+            EventHandler<ActionEvent> loadApp = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    ftpHandler.startApp();
+                }
+            };
+            return loadApp;
+
+        case "loadAppOffline":
+            EventHandler<ActionEvent> loadAppOffline = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
+                            "src/main/resources/DocDuckStandardSchema.xsd", true);
+                    myReader.readXML();
+                    xmlBuilder.setData(myReader.getData());
+                    guiBuilder.setData(myReader.getData());
+                    guiBuilder.LoginPage();
+                }
+            };
+            return loadAppOffline;
+
+        case "chooseXML":
+            EventHandler<ActionEvent> chooseXML = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML File", "*.xml"));
+                    File selectedFile = fileChooser.showOpenDialog(stage);
+
+                    if (selectedFile != null) {
+                        String filePath = selectedFile.getAbsolutePath();
+                        XMLReader myReader = new XMLReader(filePath, "src/main/resources/DocDuckStandardSchema.xsd",
+                                true);
+                        myReader.readXML();
+                        int slideCount = myReader.getSlideCount();
+                        xmlBuilder.setData(myReader.getData());
+                        xmlBuilder.buildCustomXML(1, slideCount);
+                    }
+                }
+            };
+            return chooseXML;
+            
+        case "chooseMedia":
+            EventHandler<ActionEvent> chooseMedia = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    FileChooser fileChooser = new FileChooser();
+                    fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Media File", "*.png"));
+                    File selectedFile = fileChooser.showOpenDialog(stage);
+
+                    if (selectedFile != null) {
+                        String filePath = selectedFile.getAbsolutePath();
+                        String filename = selectedFile.getName();
+                        System.out.println(filePath);
+                        ftpHandler.connect();
+                        ftpHandler.uploadFileFromPath(filePath, filename);
+                    }
+                }
+            };
+            return chooseMedia;
+
         case "signup":
             EventHandler<ActionEvent> signup = new EventHandler<ActionEvent>() {
 
@@ -55,7 +163,6 @@ public class EventManager {
                     if (username.getText().equals("admin") && password.getText().equals("password")) {
                         password.setBorderWidth(0);
                         System.out.println("Logged in!");
-                        builder.buildSlide(2);
                     }
                     else {
                         password.setBorderWidth(2);
@@ -70,17 +177,17 @@ public class EventManager {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    builder.buildSlide(2);
+                    guiBuilder.displayPage("STATUS");
                 }
             };
             return statusPage;
 
-        case "testPage":
+        case "reportPage":
             EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    builder.buildSlide(3);
+                    guiBuilder.displayPage("REPORT");
                 }
             };
             return testPage;
@@ -96,6 +203,39 @@ public class EventManager {
         }
     }
 
+    /**
+     * Event handler to open the report page to a specific machine
+     * 
+     * @param eventID The ID of the event
+     * @param machine The machine which's report is to be opened
+     * @return
+     */
+    public EventHandler<ActionEvent> getActionEvent(String eventID, Machine machine) {
+
+        switch (eventID) {
+
+        case "reportPage":
+            EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    guiBuilder.displayPage("REPORT", machine);
+                }
+            };
+            return testPage;
+
+        default:
+            EventHandler<ActionEvent> fault = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    System.out.println("ERROR: Event not attached, check eventID");
+                }
+            };
+            return fault;
+        }
+    }
+    
     public EventHandler<KeyEvent> getKeyEvent(String eventID) {
 
         switch (eventID) {
@@ -121,5 +261,27 @@ public class EventManager {
             };
             return fault;
         }
+    }
+
+    public EventHandler<ActionEvent> getHyperlinkEvent(String url) {
+        EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                hostServices.showDocument(url);
+            }
+        };
+        return e;
+    }
+
+    public EventHandler<ActionEvent> getSlideEvent(int nextSlide, int slideCount) {
+        EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent e) {
+                xmlBuilder.buildCustomXML(nextSlide, slideCount);
+            }
+        };
+        return e;
     }
 }

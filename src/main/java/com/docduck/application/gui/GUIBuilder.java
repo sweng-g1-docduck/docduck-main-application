@@ -2,54 +2,56 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import com.docduck.buttonlibrary.ButtonWrapper;
-import com.docduck.graphicslibrary.Ellipse;
-import com.docduck.graphicslibrary.Rectangle;
-import com.docduck.graphicslibrary.RegularShape;
-import com.docduck.textlibrary.TextBox;
-import com.docduck.textlibrary.TextBox.Origin;
-import com.docduck.textlibrary.TextBoxField;
-import com.docduck.textlibrary.TextBoxPassword;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
-import javafx.application.HostServices;
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.Report;
+import com.docduck.application.data.User;
+import com.docduck.application.files.FTPHandler;
+import com.docduck.application.gui.pages.AdminPage;
+import com.docduck.application.gui.pages.Page;
+import com.docduck.application.gui.pages.ReportPage;
+import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
+import com.docduck.application.gui.pages.StatusPage;
 
 public class GUIBuilder {
 
-    private Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
     private Pane root;
-    private HostServices hostServices;
-    private static GUIBuilder instance;
+    private static FTPHandler ftpHandler;
+    private static GUIBuilder instance = null;
+    private static XMLBuilder xmlBuilder;
     private static EventManager events;
-    private double CURRENT_WINDOW_WIDTH = 1280;
-    private double CURRENT_WINDOW_HEIGHT = 720;
+    public double CURRENT_WINDOW_WIDTH = 1296;
+    public double CURRENT_WINDOW_HEIGHT = 759;
     private Scale scale;
+    protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
+    private ArrayList<Page> pageList = new ArrayList<Page>();
+    private StatusPage statusPage;
+    private ReportPage reportPage;
+    private ArrayList<Machine> machines;
+    private User user;
 
-    private GUIBuilder(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root, HostServices hostServices) {
-        this.xmlData = xmlData;
+    private AdminPage adminPage;
+
+    private GUIBuilder(Pane root) {
         this.root = root;
-        this.hostServices = hostServices;
         this.scale = new Scale();
     }
 
-    public static GUIBuilder createInstance(Hashtable<String, Hashtable<String, Object>> xmlData, Pane root,
-            HostServices hostServices) {
+    public static GUIBuilder createInstance(Pane root) {
 
         if (instance == null) {
-            instance = new GUIBuilder(xmlData, root, hostServices);
+            instance = new GUIBuilder(root);
         }
-        events = EventManager.createInstance(getInstance(), hostServices, root);
         return instance;
     }
 
@@ -57,566 +59,258 @@ public class GUIBuilder {
         return instance;
     }
 
-    public void buildSlide(int slideNumber) {
+    public void updateInstances() {
+        xmlBuilder = XMLBuilder.getInstance();
+        events = EventManager.getInstance();
+        ftpHandler = FTPHandler.getInstance();
+    }
 
-        ArrayList<Node> nodeList = new ArrayList<>();
+    public void setData(Hashtable<String, Hashtable<String, Object>> xmlData) {
+        this.xmlData = xmlData;
+    }
 
+    public void StartPage() {
         root.getChildren().clear();
-        root.setStyle("-fx-background-color: #f8f4f4");
-
-        nodeList = buildShapes(nodeList, slideNumber);
-        nodeList = buildTextBoxes(nodeList, slideNumber);
-        nodeList = buildImages(nodeList, slideNumber);
-        nodeList = buildAudio(nodeList, slideNumber);
-        nodeList = buildVideos(nodeList, slideNumber);
-        nodeList = buildButtons(nodeList, slideNumber);
-        nodeList = buildHyperlinks(nodeList, slideNumber);
-        nodeList = buildBackgroundColours(nodeList, slideNumber);
-        nodeList = buildTextFields(nodeList, slideNumber);
-
-        root.getChildren().addAll(nodeList);
-        
-        scaleNodes(CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+        root.setStyle("-fx-background-color: #1f5398");
+        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+        logo.setLayoutX(390);
+        logo.setLayoutY(80);
+        logo.setFitWidth(500);
+        logo.setPreserveRatio(true);
+        ButtonWrapper doc = new ButtonWrapper();
+        ButtonWrapper xml = new ButtonWrapper();
+        doc.setText("Load DocDuck Application");
+        xml.setText("Load Application from XML Files");
+        doc.setBackgroundColour("#fbb12eff");
+        xml.setBackgroundColour("#fbb12eff");
+        doc.setCornerRadius(10);
+        xml.setCornerRadius(10);
+        doc.setButtonWidth(210);
+        xml.setButtonWidth(230);
+        doc.setButtonHeight(70);
+        xml.setButtonHeight(70);
+        doc.setFontName("Arial");
+        xml.setFontName("Arial");
+        doc.setFontSize(14);
+        xml.setFontSize(14);
+        doc.setFontColour(Color.web("#292929"));
+        xml.setFontColour(Color.web("#292929"));
+        doc.setPositionX(400);
+        xml.setPositionX(650);
+        doc.setPositionY(470);
+        xml.setPositionY(470);
+        doc.setBorderWidth(2);
+        xml.setBorderWidth(2);
+        xml.setClickcolour(Color.web("#ffffffff"));
+        xml.setHoverColour(Color.web("#ff8c00ff"));
+        doc.setClickcolour(Color.web("#ffffffff"));
+        doc.setHoverColour(Color.web("#ff8c00ff"));
+        xml.setOnAction(events.getActionEvent("xmlPage"));
+        doc.setOnAction(events.getActionEvent("loadApp"));
+        root.getChildren().addAll(logo, doc, xml);
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
-    private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String textBox = "textBox";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(textBox + delimiter + slideNumber + delimiter + occurance) == true) {
-                TextBox textbox = new TextBox();
-                Hashtable<String, Object> textBoxData = xmlData
-                        .get(textBox + delimiter + slideNumber + delimiter + occurance);
-
-                if (textBoxData.get("hasBackground") != null) {
-                    Boolean hasBackground = (Boolean) textBoxData.get("hasBackground");
-
-                    if (hasBackground) {
-                        textbox.addBackground();
-                    }
-                    else {
-                        textbox.removeBackground();
-                    }
-                }
-
-                if (textBoxData.get("cornerRadius") != null) {
-                    textbox.setCornerRadius((Double) textBoxData.get("cornerRadius"));
-                }
-
-                if (textBoxData.get("backgroundColour") != null) {
-                    textbox.setBackgroundColour((String) textBoxData.get("backgroundColour"));
-                }
-
-                if (textBoxData.get("textOrigin") != null) {
-                    String textOrigin = (String) textBoxData.get("textOrigin");
-
-                    switch (textOrigin) {
-                    case "CORNER":
-                        textbox.setTextOrigin(Origin.CORNER);
-                        break;
-                    case "CENTRE":
-                        textbox.setTextOrigin(Origin.CENTRE);
-                        break;
-                    }
-                }
-
-                textbox.setBoxWidth((Double) textBoxData.get("width"));
-                textbox.setBoxHeight((Double) textBoxData.get("height"));
-                textbox.setFontName((String) textBoxData.get("font"));
-                textbox.setContent((String) textBoxData.get("text"));
-                textbox.setFontSize((Integer) textBoxData.get("fontSize"));
-                textbox.setFontColour((String) textBoxData.get("fontColour"));
-                textbox.setCharacterSpacing((Double) textBoxData.get("characterSpacing"));
-                textbox.setLineSpacing((Double) textBoxData.get("lineSpacing"));
-                textbox.addBorder();
-                textbox.setBorderColour((String) textBoxData.get("borderColour"));
-                Double borderWidth = (Double) textBoxData.get("borderWidth");
-                textbox.setBorderWidth(borderWidth.intValue());
-                textbox.setMargin(borderWidth / 2.0);
-                textbox.setPositionX((Integer) textBoxData.get("xCoordinate"));
-                textbox.setPositionY((Integer) textBoxData.get("yCoordinate"));
-                nodeList.add(textbox.returnBackground());
-                nodeList.add(textbox);
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
+    public void LoadFromXMLPage() {
+        root.getChildren().clear();
+        root.setStyle("-fx-background-color: #1f5398");
+        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+        logo.setLayoutX(390);
+        logo.setLayoutY(80);
+        logo.setFitWidth(500);
+        logo.setPreserveRatio(true);
+        ButtonWrapper xml = new ButtonWrapper();
+        xml.setText("Choose PWS or DocDuck compliant XML File");
+        xml.setBackgroundColour("#fbb12eff");
+        xml.setCornerRadius(10);
+        xml.setButtonWidth(400);
+        xml.setButtonHeight(70);
+        xml.setFontName("Arial");
+        xml.setFontSize(14);
+        xml.setFontColour(Color.web("#292929"));
+        xml.setPositionX(440);
+        xml.setPositionY(440);
+        xml.setBorderWidth(2);
+        xml.setClickcolour(Color.web("#ffffffff"));
+        xml.setHoverColour(Color.web("#ff8c00ff"));
+        xml.setOnAction(events.getActionEvent("chooseXML"));
+        ButtonWrapper back = new ButtonWrapper();
+        back.setText("Go Back");
+        back.setBackgroundColour("#fbb12eff");
+        back.setCornerRadius(10);
+        back.setButtonWidth(80);
+        back.setButtonHeight(40);
+        back.setFontName("Arial");
+        back.setFontSize(12);
+        back.setFontColour(Color.web("#292929"));
+        back.setPositionX(600);
+        back.setPositionY(550);
+        back.setBorderWidth(2);
+        back.setClickcolour(Color.web("#ffffffff"));
+        back.setHoverColour(Color.web("#ff8c00ff"));
+        back.setOnAction(events.getActionEvent("goBack"));
+        root.getChildren().addAll(logo, xml, back);
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
-    private ArrayList<Node> buildShapes(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String shape = "shape";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(shape + delimiter + slideNumber + delimiter + occurance) == true) {
-
-                Hashtable<String, Object> shapeData = xmlData
-                        .get(shape + delimiter + slideNumber + delimiter + occurance);
-                
-                Double SHAPE_SCALE_RANGE = 100.0;
-                String shapeType = (String) shapeData.get("type");
-                String c = (String) shapeData.get("shapeColour");
-                String shapeColour = c.substring(0,c.length()-2);
-                Double shapeRotation = (Double) shapeData.get("shapeRotation");
-                Integer x = (Integer) shapeData.get("xCoordinate");
-                Double xCoordinate = x.doubleValue();
-                Integer y = (Integer) shapeData.get("yCoordinate");
-                Double yCoordinate = y.doubleValue();
-                Double shapeScale = (Double) shapeData.get("shapeScale");
-                String o = c.substring(c.length()-2);
-                Long hex = Long.parseLong(o,16);
-                Double shapeOpacity = hex.doubleValue() / 255;
-                System.out.println(shapeOpacity);
-                System.out.println(hex);
-                Double radius;
-                Double radius2;
-                Double width;
-                Double height;
-                String borderColour = (String) shapeData.get("borderColour");
-                Double borderWidth = (Double) shapeData.get("borderWidth");
-                
-                if (shapeData.get("radius") != null && shapeData.get("radius2") != null) {
-                	radius = (Double) shapeData.get("radius");
-                	radius2 = (Double) shapeData.get("radius2");
-                }
-            	else if (shapeData.get("radius") != null && shapeData.get("radius2") == null) {
-            		radius = (Double) shapeData.get("radius");
-            		radius2 = 1.5*radius;
-            	}
-            	else if (shapeData.get("radius") == null && shapeData.get("radius2") != null) {
-            		radius2 = (Double) shapeData.get("radius2");
-            		radius = radius2/1.5;
-            	}
-                else {
-                	radius = 720 * shapeScale/SHAPE_SCALE_RANGE;
-                	radius2 = 1.5*radius;
-                }
-                
-                if (shapeData.get("width") != null && shapeData.get("height") != null) {
-                	width = (Double) shapeData.get("width");
-                	height = (Double) shapeData.get("height");
-                }
-            	else if (shapeData.get("width") != null && shapeData.get("height") == null) {
-            		width = (Double) shapeData.get("width");
-            		height = width/1.5;
-            	}
-            	else if (shapeData.get("width") == null && shapeData.get("height") != null) {
-            		height = (Double) shapeData.get("height");
-            		width = height*1.5;
-            	}
-                else {
-                	height = 720 * shapeScale/SHAPE_SCALE_RANGE;
-                	width = 1.5*height;
-                }
-
-                switch (shapeType) {
-                case "circle":
-                    Ellipse circle = new Ellipse(radius, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    circle.rotate(shapeRotation);
-                    circle.setStroke(Color.web(borderColour), borderWidth);
-                    
-                    nodeList.add(circle);
-                    break;
-                case "ellipse":
-                    Ellipse ellipse = new Ellipse(radius, radius2, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    ellipse.rotate(shapeRotation);
-                    ellipse.setStroke(Color.web(borderColour), borderWidth);
-                    
-                    nodeList.add(ellipse);
-                    break;
-                case "lineSegment":
-//                    LineSegment line = new LineSegment((Double) shapeData.get("xCoordinate"),
-//                            (Double) shapeData.get("yCoordinate"), OLD_CENTER_X, OLD_CENTER_X, null, OLD_CENTER_X,
-//                            OLD_CENTER_X);
-                    break;
-                case "triangle":
-                	RegularShape triangle = new RegularShape(3, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    triangle.rotate(shapeRotation);
-                    triangle.setStroke(Color.web(borderColour), borderWidth);
-                    nodeList.add(triangle);
-                    break;
-                case "square":
-                	RegularShape square = new RegularShape(4, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    square.rotate(shapeRotation);
-                    square.setStroke(Color.web(borderColour), borderWidth);
-                    nodeList.add(square);
-                    break;
-                case "pentagon":
-                	RegularShape pentagon = new RegularShape(5, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    pentagon.rotate(shapeRotation);
-                    pentagon.setStroke(Color.web(borderColour), borderWidth);
-                    nodeList.add(pentagon);
-                    break;
-                case "hexagon":
-                	RegularShape hexagon = new RegularShape(6, radius.intValue(), Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    hexagon.rotate(shapeRotation);
-                    hexagon.setStroke(Color.web(borderColour), borderWidth);
-                    nodeList.add(hexagon);
-                    break;
-                case "rectangle":
-                    Rectangle rectangle = new Rectangle(width, height, Color.web(shapeColour), shapeOpacity, xCoordinate, yCoordinate);
-                    rectangle.rotate(shapeRotation);
-                    rectangle.setStroke(Color.web(borderColour), borderWidth);
-                    nodeList.add(rectangle);
-                    break;
-                }
-
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
+    public void OfflinePage() {
+        root.getChildren().clear();
+        root.setStyle("-fx-background-color: #1f5398");
+        Label text1 = new Label("Unable to connect to server. Would you like to continue offline?");
+        text1.setFont(new Font("Arial", 30));
+        text1.setStyle("-fx-text-fill: #FFFFFF");
+        text1.setLayoutX(250);
+        text1.setLayoutY(300);
+        Label text2 = new Label("Any changes made to local files could be lost");
+        text2.setFont(new Font("Arial", 30));
+        text2.setStyle("-fx-text-fill: #FFFFFF");
+        text2.setLayoutX(350);
+        text2.setLayoutY(350);
+        ButtonWrapper doc = new ButtonWrapper();
+        ButtonWrapper xml = new ButtonWrapper();
+        doc.setText("Load DocDuck Application Offline");
+        xml.setText("Load Application from XML Files");
+        doc.setBackgroundColour("#fbb12eff");
+        xml.setBackgroundColour("#fbb12eff");
+        doc.setCornerRadius(10);
+        xml.setCornerRadius(10);
+        doc.setButtonWidth(250);
+        xml.setButtonWidth(230);
+        doc.setButtonHeight(70);
+        xml.setButtonHeight(70);
+        doc.setFontName("Arial");
+        xml.setFontName("Arial");
+        doc.setFontSize(14);
+        xml.setFontSize(14);
+        doc.setFontColour(Color.web("#292929"));
+        xml.setFontColour(Color.web("#292929"));
+        doc.setPositionX(385);
+        xml.setPositionX(650);
+        doc.setPositionY(470);
+        xml.setPositionY(470);
+        doc.setBorderWidth(2);
+        xml.setBorderWidth(2);
+        xml.setClickcolour(Color.web("#ffffffff"));
+        xml.setHoverColour(Color.web("#ff8c00ff"));
+        doc.setClickcolour(Color.web("#ffffffff"));
+        doc.setHoverColour(Color.web("#ff8c00ff"));
+        xml.setOnAction(events.getActionEvent("xmlPage"));
+        doc.setOnAction(events.getActionEvent("loadAppOffline"));
+        root.getChildren().addAll(text1, text2, doc, xml);
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
-    private ArrayList<Node> buildImages(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String image = "image";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(image + delimiter + slideNumber + delimiter + occurance) == true) {
-                Hashtable<String, Object> imageData = xmlData
-                        .get(image + delimiter + slideNumber + delimiter + occurance);
-
-                // Hard coded logo as Image Library not done yet
-                ImageView logo = null;
-				try {
-					logo = new ImageView(
-					        new Image(new FileInputStream("src/main/resources" + (String) imageData.get("imageURL"))));
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-//                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
-                logo.setLayoutX((int) imageData.get("xCoordinate"));
-                logo.setLayoutY((int) imageData.get("yCoordinate"));
-                logo.setFitWidth((Double) imageData.get("imageScale"));
-                logo.setPreserveRatio(true);
-                nodeList.add(logo);
-
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
+    public void LoginPage() {
+    
     }
 
-    private ArrayList<Node> buildAudio(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String audio = "audio";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(audio + delimiter + slideNumber + delimiter + occurance) == true) {
-                System.out.println("Audio-" + slideNumber + "-" + occurance + ": "
-                        + xmlData.get(audio + delimiter + slideNumber + delimiter + occurance));
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
-    }
-
-    private ArrayList<Node> buildVideos(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String video = "video";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(video + delimiter + slideNumber + delimiter + occurance) == true) {
-                System.out.println("Video-" + slideNumber + "-" + occurance + ": "
-                        + xmlData.get(video + delimiter + slideNumber + delimiter + occurance));
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
-    }
-
-    private ArrayList<Node> buildButtons(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String button = "button";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(button + delimiter + slideNumber + delimiter + occurance) == true) {
-                Hashtable<String, Object> buttonData = xmlData
-                        .get(button + delimiter + slideNumber + delimiter + occurance);
-                ButtonWrapper b = new ButtonWrapper();
-
-                if ((boolean) buttonData.get("hasBackground")) {
-                    b.addBackground();
-                    b.setBackgroundColour((String) buttonData.get("backgroundColour"));
-                }
-                else {
-                    b.removeBackground();
-                }
-
-                if (buttonData.get("eventID") != null) {
-                    b.setOnAction(events.getActionEvent((String) buttonData.get("eventID")));
-                }
-
-                if (buttonData.get("text") != null) {
-                    b.setText((String) buttonData.get("text"));
-                }
-
-                if (buttonData.get("hoverColour") != null) {
-                    b.setHoverColour((String) buttonData.get("hoverColour"));
-                }
-
-                if (buttonData.get("clickColour") != null) {
-                    b.setClickcolour((String) buttonData.get("clickColour"));
-                }
-
-                b.addBorder();
-                b.setBorderColour((String) buttonData.get("borderColour"));
-                Double borderWidth = (Double) buttonData.get("borderWidth");
-                b.setBorderWidth(borderWidth.intValue());
-                b.setButtonWidth((Double) buttonData.get("width"));
-                b.setButtonHeight((Double) buttonData.get("height"));
-                b.setCornerRadius((Integer) buttonData.get("cornerRadius"));
-                b.setFontName((String) buttonData.get("font"));
-                b.setFontColour((String) buttonData.get("fontColour"));
-                b.setFontSize((Integer) buttonData.get("fontSize"));
-                b.setLayoutX((Integer) buttonData.get("xCoordinate"));
-                b.setLayoutY((Integer) buttonData.get("yCoordinate"));
-                
-                nodeList.add(b);
-
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
-    }
-
-    private ArrayList<Node> buildHyperlinks(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String hyperlink = "hyperlink";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(hyperlink + delimiter + slideNumber + delimiter + occurance) == true) {
-                Hashtable<String, Object> hyperlinkData = xmlData
-                        .get(hyperlink + delimiter + slideNumber + delimiter + occurance);
-                Hyperlink link = new Hyperlink((String) hyperlinkData.get("URL"));
-
-                link.setStyle("-fx-color: " + (String) hyperlinkData.get("fontColour"));
-                link.setStyle("-fx-font: " + (String) hyperlinkData.get("font"));
-                link.setStyle("-fx-font-size: " + hyperlinkData.get("fontSize"));
-                link.setLineSpacing((Double) hyperlinkData.get("lineSpacing"));
-                Integer xCoordinate = (Integer) hyperlinkData.get("xCoordinate");
-                Integer yCoordinate = (Integer) hyperlinkData.get("yCoordinate");
-                link.setLayoutX(xCoordinate.doubleValue());
-                link.setLayoutY(yCoordinate.doubleValue());
-
-                if (hyperlinkData.get("text") != null) {
-                    link.setText((String) hyperlinkData.get("text"));
-                }
-
-                EventHandler<ActionEvent> e = new EventHandler<ActionEvent>() {
-
-                    @Override
-                    public void handle(ActionEvent e) {
-                        hostServices.showDocument((String) hyperlinkData.get("URL"));
-                    }
-                };
-
-                link.setOnAction(e);
-                nodeList.add(link);
-
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
-    }
-
-    private ArrayList<Node> buildBackgroundColours(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String backgroundColour = "backgroundColour";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(backgroundColour + delimiter + slideNumber + delimiter + occurance) == true) {
-                Hashtable<String, Object> backgroundColourData = xmlData
-                        .get(backgroundColour + delimiter + slideNumber + delimiter + occurance);
-                String colour = (String) backgroundColourData.get("colour");
-                root.setStyle("-fx-background-color: " + colour);
-
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
-    }
-
-    private ArrayList<Node> buildTextFields(ArrayList<Node> nodeList, int slideNumber) {
-        int occurance = 1;
-        boolean hasDataRemaining = true;
-        final String textField = "textField";
-        final String delimiter = "-";
-
-        while (hasDataRemaining == true) {
-            hasDataRemaining = false;
-
-            if (xmlData.containsKey(textField + delimiter + slideNumber + delimiter + occurance) == true) {
-                Hashtable<String, Object> textFieldData = xmlData
-                        .get(textField + delimiter + slideNumber + delimiter + occurance);
-
-                if ((boolean) textFieldData.get("password")) {
-                    TextBoxPassword textfield = new TextBoxPassword();
-
-                    textfield.setBoxWidth((Double) textFieldData.get("width"));
-                    textfield.setBoxHeight((Double) textFieldData.get("height"));
-                    textfield.setFontName((String) textFieldData.get("font"));
-                    textfield.setFontColour((String) textFieldData.get("fontColour"));
-                    textfield.setFontSize((Integer) textFieldData.get("fontSize"));
-                    textfield.addBorder();
-                    textfield.setBorderColour((String) textFieldData.get("borderColour"));
-                    Double borderWidth = (Double) textFieldData.get("borderWidth");
-                    textfield.setBorderWidth(borderWidth.intValue());
-                    textfield.setCornerRadius((Integer) textFieldData.get("cornerRadius"));
-                    textfield.setBackgroundColour((String) textFieldData.get("backgroundColour"));
-                    textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
-                    textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
-                    textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
-                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
-                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
-
-                    if (textFieldData.get("promptText") != null) {
-                        textfield.setPromptText((String) textFieldData.get("promptText"));
-                    }
-
-                    if (textFieldData.get("initialText") != null) {
-                        textfield.setText((String) textFieldData.get("initialText"));
-                    }
-
-                    if (textFieldData.get("hoverColour") != null) {
-                        textfield.setHoverColour((String) textFieldData.get("hoverColour"));
-                    }
-
-                    if (textFieldData.get("selectColour") != null) {
-                        textfield.setSelectColour((String) textFieldData.get("selectColour"));
-                    }
-
-                    // Could add text origin?
-                    
-
-                    nodeList.add(textfield.returnPasswordField());
-                    nodeList.add(textfield);
-
-                    if ((boolean) textFieldData.get("passwordButton")) {
-                        textfield.createButton();
-                        nodeList.add(textfield.returnButton());
-                    }
-                }
-                else {
-                    TextBoxField textfield = new TextBoxField();
-
-                    textfield.setBoxWidth((Double) textFieldData.get("width"));
-                    textfield.setBoxHeight((Double) textFieldData.get("height"));
-                    textfield.setFontName((String) textFieldData.get("font"));
-                    textfield.setFontColour((String) textFieldData.get("fontColour"));
-                    textfield.setFontSize((Integer) textFieldData.get("fontSize"));
-                    textfield.addBorder();
-                    textfield.setBorderColour((String) textFieldData.get("borderColour"));
-                    Double borderWidth = (Double) textFieldData.get("borderWidth");
-                    textfield.setBorderWidth(borderWidth.intValue());
-                    textfield.setCornerRadius((Integer) textFieldData.get("cornerRadius"));
-                    textfield.setBackgroundColour((String) textFieldData.get("backgroundColour"));
-                    textfield.setPromptTextColour((String) textFieldData.get("promptTextColour"));
-                    textfield.setHighlightColour((String) textFieldData.get("highlightColour"));
-                    textfield.setHighlightFontColour((String) textFieldData.get("fontHighlightColour"));
-                    textfield.setPositionX((Integer) textFieldData.get("xCoordinate"));
-                    textfield.setPositionY((Integer) textFieldData.get("yCoordinate"));
-
-                    if (textFieldData.get("promptText") != null) {
-                        textfield.setPromptText((String) textFieldData.get("promptText"));
-                    }
-
-                    if (textFieldData.get("initialText") != null) {
-                        textfield.setText((String) textFieldData.get("initialText"));
-                    }
-
-                    if (textFieldData.get("hoverColour") != null) {
-                        textfield.setHoverColour((String) textFieldData.get("hoverColour"));
-                    }
-
-                    if (textFieldData.get("selectColour") != null) {
-                        textfield.setSelectColour((String) textFieldData.get("selectColour"));
-                    }
-
-                    // Could add text origin?
-                    textfield.setOnKeyTyped(events.getKeyEvent((String) textFieldData.get("promptText")));
-
-                    nodeList.add(textfield);
-                }
-
-                hasDataRemaining = true;
-                occurance++;
-            }
-        }
-        return nodeList;
-    }
-
-    public void scaleNodes(double windowWidth, double windowHeight) {
-        double WIDTH = 1280;
-        double HEIGHT = 720;
+    public void scaleNodes(Parent container, double windowWidth, double windowHeight) {
+        double WIDTH = 1296;
+        double HEIGHT = 759;
         double widthScale = windowWidth / WIDTH;
         double heightScale = windowHeight / HEIGHT;
-        ObservableList<Node> nodes = root.getChildren();
-        
+        ObservableList<Node> nodes = null;
+
+        if (container instanceof Pane) {
+            Pane pane = (Pane) container;
+            nodes = pane.getChildren();
+        }
+
         if (widthScale < heightScale) {
-        	scale.setX(widthScale);
-        	scale.setY(widthScale);
+            scale.setX(widthScale);
+            scale.setY(widthScale);
         }
         else {
-        	scale.setX(heightScale);
-        	scale.setY(heightScale);
+            scale.setX(heightScale);
+            scale.setY(heightScale);
         }
 
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
-            
+
             if (!node.getTransforms().contains(scale)) {
-            	node.getTransforms().add(scale);
+                node.getTransforms().add(scale);
             }
-            
-            double newX = (node.getLayoutX()*(widthScale-1));
+
+            double newX = (node.getLayoutX() * (widthScale - 1));
             node.setTranslateX(newX);
 
-            double newY = (node.getLayoutY()*(heightScale-1));
+            double newY = (node.getLayoutY() * (heightScale - 1));
             node.setTranslateY(newY);
         }
         CURRENT_WINDOW_WIDTH = windowWidth;
         CURRENT_WINDOW_HEIGHT = windowHeight;
+    }
+    
+    /**
+     * Displays the desired page
+     *  
+     * @param pageName Name of the page to be displayed in ALL CAPS
+     */
+    public void displayPage(String pageName) {
+        root.getChildren().clear();
+        switch (pageName) {
+            
+        case "STATUS":
+            root.getChildren().add(statusPage);
+            statusPage.drawMachineButtons();
+            break;
+        
+        case "REPORT":
+            root.getChildren().add(reportPage);
+            reportPage.drawReportButtons();
+            break;
+            
+        case "ADMIN":
+                root.getChildren().add(adminPage);
+                scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+                break;
+        }
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+    }
+    
+    public void displayPage(String pageName, Machine machine) {
+        root.getChildren().clear();
+        switch (pageName) {
+        
+        case "REPORT":
+            root.getChildren().add(reportPage);
+            reportPage.drawReportButtons();
+            reportPage.drawReportInfo(machine);
+            break;
+        }
+        scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+    }
+
+    /**
+     * Builds all of the pages
+     */
+    public void buildPages() {
+        populateMachineData();
+        statusPage = new StatusPage(machines, user);
+        reportPage = new ReportPage(machines, user);
+         adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
+    }
+    
+    
+    private void populateMachineData() {
+        machines = new ArrayList<Machine>();
+        user = new User("Bob", "bob@york.ac.uk", "ADMIN");
+        
+        Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1","1","");
+        Report report = new Report(user,"Broken");
+        report.setPathToFile("/docducklogo.png");
+        machine1.addReport(report);
+        machines.add(machine1);
+        Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2","");
+        machine2.addReport(new Report(user,"It not work now"));
+        machines.add(machine2);
+        machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2",""));
+        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2",""));
+        machines.add(new Machine("Machine Five", "Room 1", "ONLINE", "5", "2",""));
+        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2",""));
+        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2",""));
+        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2",""));
+        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2",""));
     }
 }
