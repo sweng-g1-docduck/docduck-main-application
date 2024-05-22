@@ -25,7 +25,6 @@ public class DocDuckApplication extends Application {
 
         System.out.println("Starting DocDuck Application");
 
-//        xmlExample();
         jdom2Example();
 
 //        FTPHandler FTPHandler = new FTPHandler();
@@ -57,19 +56,13 @@ public class DocDuckApplication extends Application {
 
     }
 
+    /**
+     * An example method to show how the JDOM2 API Implementation works for the
+     * DocDuck Application
+     * 
+     * @author William-A-B
+     */
     private void jdom2Example() {
-//        XMLJDOM xmlJDom = new XMLJDOM("src/main/resources/DocDuckDataExample.xml",
-//                "src/main/resources/DocDuckStandardSchema_WithData.xsd", true, true);
-//
-//        try {
-//            xmlJDom.setupJDOM();
-//        }
-//        catch (Exception e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-//
-//        xmlJDom.printDoc();
 
         XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("src/main/resources/DocDuckDataExample.xml",
                 "src/main/resources/DocDuckStandardSchema_WithData.xsd", true, true);
