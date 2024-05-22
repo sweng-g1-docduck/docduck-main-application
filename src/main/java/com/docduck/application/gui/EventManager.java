@@ -2,6 +2,7 @@ package com.docduck.application.gui;
 
 import java.io.File;
 
+import com.docduck.application.data.Machine;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.xmlreader.XMLReader;
 import com.docduck.textlibrary.TextBoxField;
@@ -176,17 +177,17 @@ public class EventManager {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    xmlBuilder.buildSlide(2);
+                    guiBuilder.displayPage("STATUS");
                 }
             };
             return statusPage;
 
-        case "testPage":
+        case "reportPage":
             EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle(ActionEvent e) {
-                    xmlBuilder.buildSlide(3);
+                    guiBuilder.displayPage("REPORT");
                 }
             };
             return testPage;
@@ -202,6 +203,39 @@ public class EventManager {
         }
     }
 
+    /**
+     * Event handler to open the report page to a specific machine
+     * 
+     * @param eventID The ID of the event
+     * @param machine The machine which's report is to be opened
+     * @return
+     */
+    public EventHandler<ActionEvent> getActionEvent(String eventID, Machine machine) {
+
+        switch (eventID) {
+
+        case "reportPage":
+            EventHandler<ActionEvent> testPage = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    guiBuilder.displayPage("REPORT", machine);
+                }
+            };
+            return testPage;
+
+        default:
+            EventHandler<ActionEvent> fault = new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent e) {
+                    System.out.println("ERROR: Event not attached, check eventID");
+                }
+            };
+            return fault;
+        }
+    }
+    
     public EventHandler<KeyEvent> getKeyEvent(String eventID) {
 
         switch (eventID) {

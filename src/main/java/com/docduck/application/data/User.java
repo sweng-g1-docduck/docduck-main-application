@@ -1,5 +1,13 @@
 package com.docduck.application.data;
 
+/**
+ * A Class for storing the non-secure data related to a user
+ * - The User's name
+ * - The User's email
+ * - The User's role
+ * 
+ * @author jrb617
+ */
 public class User {
 
     private String name;
