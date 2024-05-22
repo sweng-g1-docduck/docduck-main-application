@@ -31,9 +31,9 @@ public class Hashtest {
         
         // Print incorrect password verification result
         if (isIncorrectPasswordVerified) {
-            System.out.println("\nIncorrect password verification failed!");
+            System.out.println("\nIncorrect password verified!");
         } else {
-            System.out.println("\nIncorrect password verification successful!");
+            System.out.println("\nIncorrect password not verified!");
         }
     }
 }
