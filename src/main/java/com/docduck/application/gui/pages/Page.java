@@ -33,10 +33,8 @@ public class Page extends BorderPane {
     List<User> userList = new ArrayList<>(); // admin (needs integrating)
     List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
 
-    public Page() {
-
     protected ArrayList<Machine> machines;
-    
+
     protected final Color barColour = Color.web("245494");
     protected final Color backgroundColour = Color.LIGHTSLATEGREY;
     protected final Color boxColour = Color.LIGHTGREY;
@@ -50,7 +48,7 @@ public class Page extends BorderPane {
 
     public Page(ArrayList<Machine> machines, User user) {
         super();
-        this.machines=machines;
+        this.machines = machines;
         this.user = user;
         this.events = EventManager.getInstance();
         setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
@@ -74,7 +72,7 @@ public class Page extends BorderPane {
         menuBar.setBackground(
 
                 new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
-      
+
         menuBar.setSpacing(15);
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
@@ -94,7 +92,6 @@ public class Page extends BorderPane {
         overviewBtn.setFontSize(20);
         overviewBtn.removeBorder();
         overviewBtn.setOnAction(events.getActionEvent("statusPage"));
-
 
         ButtonWrapper logOutBtn = new ButtonWrapper();
         logOutBtn.setCornerRadius(5);
