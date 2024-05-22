@@ -213,10 +213,10 @@ public class AdminPage extends Page {
 
                 if (user != null) {
                     gridPane.add(createLabel("Role"), 0, row);
-                    gridPane.add(createComboBox("Role", user.getRole(), "Admin", "Operator", "Engineer"), 1, row++);
+                    gridPane.add(createUserComboBox(user.getRole()), 1, row++);
                 } else {
                     gridPane.add(createLabel("Role"), 0, row);
-                    gridPane.add(createComboBox("Role", "", "Admin", "Operator", "Engineer"), 1, row++);
+                    gridPane.add(createUserComboBox(""), 1, row++);
                 }
 
                 PasswordField passwordField = new PasswordField();
@@ -260,7 +260,7 @@ public class AdminPage extends Page {
                 gridPane.add(createFormField("Location", machine != null ? machine.getRoom() : ""), 1, row++);
 
                 gridPane.add(createLabel("Status"), 0, row);
-                gridPane.add(createComboBox("Status", machine != null ? machine.getStatus() : "", "Online", "Offline", "Maintenance"), 1, row++);
+                gridPane.add(createStatusComboBox(machine != null ? machine.getStatus() : ""), 1, row++);
 
                 gridPane.add(createLabel("Id"), 0, row);
                 gridPane.add(createFormField("Id", machine != null ? machine.getSerialNumber() : ""), 1, row++);
@@ -288,51 +288,40 @@ public class AdminPage extends Page {
     }
 
 
-    private ComboBox<String> createComboBox(String label, String selectedItem, String... items) {
-        Label fieldLabel = new Label(label + ":");
+    private ComboBox<String> createUserComboBox(String selectedItem) {
         ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.getItems().addAll(items);
-
-        // Set the initial selection to the closest matching item
-        String closestMatch = findClosestMatch(selectedItem.toLowerCase(), items);
-        comboBox.getSelectionModel().select(closestMatch);
-
-        fieldLabel.setPrefWidth(100); // Ensure labels and combo boxes are aligned
-        fieldLabel.setFont(Font.font("Arial", 14));
-
+        comboBox.getItems().addAll("Operator", "Engineer", "Admin");
+        
+        switch(selectedItem) {
+        case "Admin":
+            comboBox.setValue("Admin");
+            break;
+        case "Engineer":
+            comboBox.setValue("Engineer");
+            break;
+        default:
+            comboBox.setValue("Operator");
+            break;
+        }
         return comboBox;
     }
-
-    // Method to find the closest matching item from the list (case-insensitive)
-    private String findClosestMatch(String selectedItem, String... items) {
-        int minDistance = Integer.MAX_VALUE;
-        String closestMatch = null;
-        for (String item : items) {
-            int distance = computeLevenshteinDistance(selectedItem, item.toLowerCase());
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestMatch = item;
-            }
+    
+    private ComboBox<String> createStatusComboBox(String selectedItem) {
+        ComboBox<String> comboBox = new ComboBox<>();
+        comboBox.getItems().addAll("Online", "Maintenance", "Offline");
+        
+        switch(selectedItem) {
+        case "MAINTENANCE":
+            comboBox.setValue("Maintenance");
+            break;
+        case "OFFLINE":
+            comboBox.setValue("Offline");
+            break;
+        default:
+            comboBox.setValue("Online");
+            break;
         }
-        return closestMatch;
-    }
-
-    // Method to compute the Levenshtein distance between two strings
-    private int computeLevenshteinDistance(String s1, String s2) {
-        int[][] dp = new int[s1.length() + 1][s2.length() + 1];
-        for (int i = 0; i <= s1.length(); i++) {
-            for (int j = 0; j <= s2.length(); j++) {
-                if (i == 0) {
-                    dp[i][j] = j;
-                } else if (j == 0) {
-                    dp[i][j] = i;
-                } else {
-                    dp[i][j] = Math.min(Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1),
-                            dp[i - 1][j - 1] + (s1.charAt(i - 1) == s2.charAt(j - 1) ? 0 : 1));
-                }
-            }
-        }
-        return dp[s1.length()][s2.length()];
+        return comboBox;
     }
 
     private HBox createFormButtons() {
