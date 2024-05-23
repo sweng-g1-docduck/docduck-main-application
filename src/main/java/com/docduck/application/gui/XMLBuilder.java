@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Objects;
 
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.graphicslibrary.Ellipse;
@@ -25,7 +26,7 @@ import uk.co.bookcook.BCMediaPlayer;
 public class XMLBuilder {
 
     private Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
-    private Pane root;
+    private final Pane root;
     private static XMLBuilder instance = null;
     private static EventManager events;
     private static GUIBuilder guiBuilder;
@@ -87,19 +88,9 @@ public class XMLBuilder {
         next.setOnAction(events.getSlideEvent(slideNumber + 1, slideCount));
         prev.setOnAction(events.getSlideEvent(slideNumber - 1, slideCount));
 
-        if (slideNumber > 1) {
-            prev.setVisible(true);
-        }
-        else {
-            prev.setVisible(false);
-        }
+        prev.setVisible(slideNumber > 1);
 
-        if (slideNumber < slideCount) {
-            next.setVisible(true);
-        }
-        else {
-            next.setVisible(false);
-        }
+        next.setVisible(slideNumber < slideCount);
         root.setStyle("-fx-background-color: #FFFFFF");
         root.getChildren().clear();
         root.getChildren().addAll(buildSlide(slideNumber));
@@ -111,15 +102,15 @@ public class XMLBuilder {
 
         ArrayList<Node> nodeList = new ArrayList<>();
 
-        nodeList = buildShapes(nodeList, slideNumber);
-        nodeList = buildTextBoxes(nodeList, slideNumber);
-        nodeList = buildImages(nodeList, slideNumber);
-        nodeList = buildAudio(nodeList, slideNumber);
-        nodeList = buildVideos(nodeList, slideNumber);
-        nodeList = buildButtons(nodeList, slideNumber);
-        nodeList = buildHyperlinks(nodeList, slideNumber);
-        nodeList = buildBackgroundColours(nodeList, slideNumber);
-        nodeList = buildTextFields(nodeList, slideNumber);
+        buildShapes(nodeList, slideNumber);
+        buildTextBoxes(nodeList, slideNumber);
+        buildImages(nodeList, slideNumber);
+        buildAudio(nodeList, slideNumber);
+        buildVideos(nodeList, slideNumber);
+        buildButtons(nodeList, slideNumber);
+        buildHyperlinks(nodeList, slideNumber);
+        buildBackgroundColours(nodeList, slideNumber);
+        buildTextFields(nodeList, slideNumber);
 
         return nodeList;
     }
@@ -130,10 +121,10 @@ public class XMLBuilder {
         final String textBox = "textBox";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(textBox + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(textBox + delimiter + slideNumber + delimiter + occurance)) {
                 TextBox textbox = new TextBox();
                 Hashtable<String, Object> textBoxData = xmlData
                         .get(textBox + delimiter + slideNumber + delimiter + occurance);
@@ -200,10 +191,10 @@ public class XMLBuilder {
         final String shape = "shape";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(shape + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(shape + delimiter + slideNumber + delimiter + occurance)) {
 
                 Hashtable<String, Object> shapeData = xmlData
                         .get(shape + delimiter + slideNumber + delimiter + occurance);
@@ -280,9 +271,6 @@ public class XMLBuilder {
                     nodeList.add(ellipse);
                     break;
                 case "lineSegment":
-//                    LineSegment line = new LineSegment((Double) shapeData.get("xCoordinate"),
-//                            (Double) shapeData.get("yCoordinate"), OLD_CENTER_X, OLD_CENTER_X, null, OLD_CENTER_X,
-//                            OLD_CENTER_X);
                     break;
                 case "triangle":
                     RegularShape triangle = new RegularShape(3, radius.intValue(), Color.web(shapeColour), shapeOpacity,
@@ -334,10 +322,10 @@ public class XMLBuilder {
         final String image = "image";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(image + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(image + delimiter + slideNumber + delimiter + occurance)) {
                 Hashtable<String, Object> imageData = xmlData
                         .get(image + delimiter + slideNumber + delimiter + occurance);
 
@@ -346,13 +334,13 @@ public class XMLBuilder {
 
                 try {
                     logo = new ImageView(
-                            new Image(new FileInputStream("src/main/resources" + (String) imageData.get("imageURL"))));
+                            new Image(new FileInputStream("src/main/resources" + imageData.get("imageURL"))));
                 }
                 catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 //                ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
-                logo.setLayoutX((int) imageData.get("xCoordinate"));
+                Objects.requireNonNull(logo).setLayoutX((int) imageData.get("xCoordinate"));
                 logo.setLayoutY((int) imageData.get("yCoordinate"));
                 logo.setFitWidth((Double) imageData.get("imageScale"));
                 logo.setPreserveRatio(true);
@@ -371,10 +359,10 @@ public class XMLBuilder {
         final String audio = "audio";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(audio + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(audio + delimiter + slideNumber + delimiter + occurance)) {
                 System.out.println("Audio-" + slideNumber + "-" + occurance + ": "
                         + xmlData.get(audio + delimiter + slideNumber + delimiter + occurance));
                 hasDataRemaining = true;
@@ -390,17 +378,17 @@ public class XMLBuilder {
         final String video = "video";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(video + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(video + delimiter + slideNumber + delimiter + occurance)) {
                 System.out.println("Video-" + slideNumber + "-" + occurance + ": "
                         + xmlData.get(video + delimiter + slideNumber + delimiter + occurance));
 
                 Hashtable<String, Object> videoData = xmlData
                         .get(video + delimiter + slideNumber + delimiter + occurance);
 
-                String videoURL = "/src/main/resources" + (String) videoData.get("videoURL");
+                String videoURL = "/src/main/resources" + videoData.get("videoURL");
                 Integer videoStartTime = (Integer) videoData.get("videoStartTime");
                 Integer videoStopTime = (Integer) videoData.get("videoStopTime");
                 Double videoVolume = (Double) videoData.get("videoVolume");
@@ -426,10 +414,10 @@ public class XMLBuilder {
         final String button = "button";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(button + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(button + delimiter + slideNumber + delimiter + occurance)) {
                 Hashtable<String, Object> buttonData = xmlData
                         .get(button + delimiter + slideNumber + delimiter + occurance);
                 ButtonWrapper b = new ButtonWrapper();
@@ -486,16 +474,16 @@ public class XMLBuilder {
         final String hyperlink = "hyperlink";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(hyperlink + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(hyperlink + delimiter + slideNumber + delimiter + occurance)) {
                 Hashtable<String, Object> hyperlinkData = xmlData
                         .get(hyperlink + delimiter + slideNumber + delimiter + occurance);
                 Hyperlink link = new Hyperlink((String) hyperlinkData.get("URL"));
 
-                link.setStyle("-fx-color: " + (String) hyperlinkData.get("fontColour"));
-                link.setStyle("-fx-font: " + (String) hyperlinkData.get("font"));
+                link.setStyle("-fx-color: " + hyperlinkData.get("fontColour"));
+                link.setStyle("-fx-font: " + hyperlinkData.get("font"));
                 link.setStyle("-fx-font-size: " + hyperlinkData.get("fontSize"));
                 link.setLineSpacing((Double) hyperlinkData.get("lineSpacing"));
                 Integer xCoordinate = (Integer) hyperlinkData.get("xCoordinate");
@@ -523,10 +511,10 @@ public class XMLBuilder {
         final String backgroundColour = "backgroundColour";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(backgroundColour + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(backgroundColour + delimiter + slideNumber + delimiter + occurance)) {
                 Hashtable<String, Object> backgroundColourData = xmlData
                         .get(backgroundColour + delimiter + slideNumber + delimiter + occurance);
                 String colour = (String) backgroundColourData.get("colour");
@@ -545,10 +533,10 @@ public class XMLBuilder {
         final String textField = "textField";
         final String delimiter = "-";
 
-        while (hasDataRemaining == true) {
+        while (hasDataRemaining) {
             hasDataRemaining = false;
 
-            if (xmlData.containsKey(textField + delimiter + slideNumber + delimiter + occurance) == true) {
+            if (xmlData.containsKey(textField + delimiter + slideNumber + delimiter + occurance)) {
                 Hashtable<String, Object> textFieldData = xmlData
                         .get(textField + delimiter + slideNumber + delimiter + occurance);
 

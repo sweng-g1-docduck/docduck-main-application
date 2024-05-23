@@ -77,64 +77,64 @@ public class XMLReader {
 
             boolean hasDataRemaining = true;
 
-            while (hasDataRemaining == true) {
+            while (hasDataRemaining) {
                 hasDataRemaining = false;
 
-                if (xmlData.containsKey(id + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(id + delimiter + i + delimiter + occurance)) {
                     System.out.println("ID-" + i + "-" + occurance + ": "
                             + xmlData.get(id + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(textBox + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(textBox + delimiter + i + delimiter + occurance)) {
                     System.out.println("Text Box-" + i + "-" + occurance + ": "
                             + xmlData.get(textBox + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(textField + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(textField + delimiter + i + delimiter + occurance)) {
                     System.out.println("Text Field-" + i + "-" + occurance + ": "
                             + xmlData.get(textField + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(button + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(button + delimiter + i + delimiter + occurance)) {
                     System.out.println("Button-" + i + "-" + occurance + ": "
                             + xmlData.get(button + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(backgroundColour + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(backgroundColour + delimiter + i + delimiter + occurance)) {
                     System.out.println("Background Colour-" + i + "-" + occurance + ": "
                             + xmlData.get(backgroundColour + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(hyperlink + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(hyperlink + delimiter + i + delimiter + occurance)) {
                     System.out.println("Hyperlink-" + i + "-" + occurance + ": "
                             + xmlData.get(hyperlink + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(shape + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(shape + delimiter + i + delimiter + occurance)) {
                     System.out.println("Shape-" + i + "-" + occurance + ": "
                             + xmlData.get(shape + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(image + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(image + delimiter + i + delimiter + occurance)) {
                     System.out.println("Image-" + i + "-" + occurance + ": "
                             + xmlData.get(image + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(audio + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(audio + delimiter + i + delimiter + occurance)) {
                     System.out.println("Audio-" + i + "-" + occurance + ": "
                             + xmlData.get(audio + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;
                 }
 
-                if (xmlData.containsKey(video + delimiter + i + delimiter + occurance) == true) {
+                if (xmlData.containsKey(video + delimiter + i + delimiter + occurance)) {
                     System.out.println("Video-" + i + "-" + occurance + ": "
                             + xmlData.get(video + delimiter + i + delimiter + occurance));
                     hasDataRemaining = true;

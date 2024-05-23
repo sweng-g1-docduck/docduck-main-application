@@ -8,8 +8,6 @@ import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -39,7 +37,6 @@ public class StatusPage extends Page {
     private ComboBox<String> roomSelectBox;
     private final int reportWidth = 320;
     private final int machineBoxWidth = 1270 - reportWidth;
-    private final double buttonWidth = (machineBoxWidth - 75) / 3;
     private Machine currentMachine;
 
     private final Color onlineButtonColour = Color.LIMEGREEN;
@@ -93,22 +90,16 @@ public class StatusPage extends Page {
 
     /**
      * Initialises the room selection dropdown box
-     * 
+     * <p>
      * REQUIRES INTGRATION
      * 
      * @author jrb617
      */
     private void setupRoomSelect() {
-        roomSelectBox = new ComboBox<String>();
+        roomSelectBox = new ComboBox<>();
         roomSelectBox.getItems().addAll("All", "Room 1", "Room 2", "Room 3");
         roomSelectBox.setValue("All");
-        roomSelectBox.valueProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue ov, String t, String t1) {
-                drawMachineButtons();
-
-            }
-        });
+        roomSelectBox.valueProperty().addListener((ov, t, t1) -> drawMachineButtons());
     }
 
     /**
@@ -134,7 +125,7 @@ public class StatusPage extends Page {
 
     /**
      * Draws the scrollable machine grid
-     * 
+     * <p>
      * REQUIRES INTGRATION
      * 
      * @author jrb617
@@ -157,12 +148,13 @@ public class StatusPage extends Page {
 
         Image img = new Image("/docducklogo.png");
 
-        ArrayList<ButtonWrapper> buttons = new ArrayList<ButtonWrapper>();
+        ArrayList<ButtonWrapper> buttons = new ArrayList<>();
         for (Machine machine : machines) {
 
-            if (machine.getRoom().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
+            if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ImageView view1 = new ImageView(img);
+                double buttonWidth = (double) (machineBoxWidth - 75) / 3;
                 view1.setFitWidth(buttonWidth);
                 view1.setPreserveRatio(true);
 
@@ -202,25 +194,21 @@ public class StatusPage extends Page {
                 button.setText(machine.getName());
 
                 if (machine.getStatus().equals("ONLINE")) {
-                    button.setOnAction((new EventHandler<ActionEvent>() {
-
-                        @Override
-                        public void handle(ActionEvent event) {
-                            for (ButtonWrapper button : buttons) {
-                                if (button.getBackground().getFills().get(0).getFill().toString()
-                                        .equals(onlineClickColour.toString())) {
-                                    button.setBackgroundColour(onlineButtonColour);
-                                    button.setBorderWidth(1);
-                                }
+                    button.setOnAction((event -> {
+                        for (ButtonWrapper button1 : buttons) {
+                            if (button1.getBackground().getFills().get(0).getFill().toString()
+                                    .equals(onlineClickColour.toString())) {
+                                button1.setBackgroundColour(onlineButtonColour);
+                                button1.setBorderWidth(1);
                             }
-                            button.setBackgroundColour(onlineClickColour);
-                            button.setBorderWidth(3);
-                            if (currentMachine != machine) {
-                                currentMachine = machine;
-                                drawMachineInfo(machine);
-                            }
-
                         }
+                        button.setBackgroundColour(onlineClickColour);
+                        button.setBorderWidth(3);
+                        if (currentMachine != machine) {
+                            currentMachine = machine;
+                            drawMachineInfo(machine);
+                        }
+
                     }));
                 }
 
@@ -246,10 +234,10 @@ public class StatusPage extends Page {
 
     /**
      * Draws the machine report page
-     * 
+     * <p>
      * REQUIRES INTGRATION
      * 
-     * @param machine
+     * @param machine A machine in the database
      * @author jrb617
      */
     private void drawReport(Machine machine) {
@@ -310,21 +298,18 @@ public class StatusPage extends Page {
         submitBtn.setFontColour(lightTextColour);
         submitBtn.setFontSize(20);
         submitBtn.removeBorder();
-        submitBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (descriptionBox.getText().equals("")) {
-                    descriptionBox.setPromptText("A description of the fault is required");
-                }
-                else {
-                    // Submit report to XML
-                    machine.setStatus("OFFLINE");
-                    setRight(null);
-                    Report report = new Report(user, descriptionBox.getText());
-                    machine.addReport(report);
-                    drawMachineButtons();
+        submitBtn.setOnAction((event -> {
+            if (descriptionBox.getText().isEmpty()) {
+                descriptionBox.setPromptText("A description of the fault is required");
+            }
+            else {
+                // Submit report to XML
+                machine.setStatus("OFFLINE");
+                setRight(null);
+                Report report = new Report(user, descriptionBox.getText());
+                machine.addReport(report);
+                drawMachineButtons();
 
-                }
             }
         }));
 
@@ -342,12 +327,7 @@ public class StatusPage extends Page {
         cancelBtn.setFontColour(lightTextColour);
         cancelBtn.setFontSize(20);
         cancelBtn.removeBorder();
-        cancelBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                setRight(null);
-            }
-        }));
+        cancelBtn.setOnAction((event -> setRight(null)));
 
         reportBox.getChildren().addAll(machineName, descriptionBox, mediaBtn, submitBtn, cancelBtn);
         setRight(reportBox);
@@ -356,7 +336,7 @@ public class StatusPage extends Page {
 
     /**
      * Draws the Machine Information Side Panel
-     * 
+     * <p>
      * REQUIRES INTGRATION
      * 
      * @param machine Name of machine selected
@@ -396,7 +376,7 @@ public class StatusPage extends Page {
         serialNum.setFont(new Font(fontName, smallFontSize));
         serialNum.setTextFill(infoTextColour);
 
-        Label location = new Label("Location: " + machine.getRoom());
+        Label location = new Label("Location: " + machine.getLocation());
         location.setFont(new Font(fontName, smallFontSize));
         location.setTextFill(infoTextColour);
 
@@ -436,12 +416,7 @@ public class StatusPage extends Page {
         reportBtn.setFontColour(lightTextColour);
         reportBtn.setFontSize(20);
         reportBtn.removeBorder();
-        reportBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                drawReport(machine);
-            }
-        }));
+        reportBtn.setOnAction((event -> drawReport(machine)));
 
         ButtonWrapper cancelBtn = new ButtonWrapper();
         cancelBtn.setCornerRadius(5);
@@ -457,12 +432,7 @@ public class StatusPage extends Page {
         cancelBtn.setFontColour(lightTextColour);
         cancelBtn.setFontSize(20);
         cancelBtn.removeBorder();
-        cancelBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                setRight(null);
-            }
-        }));
+        cancelBtn.setOnAction((event -> setRight(null)));
         dataBox.getChildren().addAll(serialNum, location, datasheet, purchaseLink);
         dataPane.setTop(dataBox);
         btnBox.getChildren().addAll(reportBtn, cancelBtn);

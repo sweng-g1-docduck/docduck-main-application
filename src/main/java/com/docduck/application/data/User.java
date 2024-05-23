@@ -1,28 +1,24 @@
 package com.docduck.application.data;
 
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 /**
- * A Class for storing the non-secure data related to a user
- * - The User's name
- * - The User's email
- * - The User's role
+ * A Class for storing the non-secure data related to a user - The User's name -
+ * The User's email - The User's role
  * 
  * @author jrb617
  */
-public class User {
+public class User extends BaseData {
 
-    private String name;
-    private String email;
-    private String role;
+    private final String name;
+    private final String email;
+    private final String role;
     private String passwordHash;
 
-
-
     public User(String name, String email, String role, String password) {
+        super();
         this.name = name;
         this.email = email;
         this.role = role;
@@ -44,9 +40,11 @@ public class User {
     public String getUsername() {
         // First part of the email before the '@' symbol
         int atIndex = email.indexOf('@');
+
         if (atIndex != -1) {
             return email.substring(0, atIndex);
-        } else {
+        }
+        else {
             // If email format is invalid, return the entire email
             return email;
         }
@@ -57,11 +55,13 @@ public class User {
     }
 
     private String hashPassword(String password) {
+
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
         }
     }

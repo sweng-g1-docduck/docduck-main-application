@@ -32,7 +32,7 @@ import javafx.scene.text.TextAlignment;
 
 public class ReportPage extends Page {
 
-    private ArrayList<Machine> reportMachines = new ArrayList<Machine>();
+    private final ArrayList<Machine> reportMachines = new ArrayList<>();
     private final int reportDescWidth = 320;
     private final int reportBoxWidth = 1270 - reportDescWidth;
     private Machine currentMachine;
@@ -80,9 +80,8 @@ public class ReportPage extends Page {
     /**
      * Draws the scrollable report grid
      * 
-     * REQUIRES INTGRATION
-     * 
      * @author jrb617
+     * @apiNote Pending integration
      */
     public void drawReportButtons() {
 
@@ -107,7 +106,7 @@ public class ReportPage extends Page {
             }
         }
 
-        ArrayList<ButtonWrapper> buttons = new ArrayList<ButtonWrapper>();
+        ArrayList<ButtonWrapper> buttons = new ArrayList<>();
         for (Machine machine : reportMachines) {
 
             ButtonWrapper reportButton = new ButtonWrapper();
@@ -128,7 +127,7 @@ public class ReportPage extends Page {
             machineName.setFont(new Font(fontName, smallFontSize));
             machineName.setTextFill(btnTextColour);
 
-            Label location = new Label(machine.getRoom());
+            Label location = new Label(machine.getLocation());
             location.setFont(new Font(fontName, smallFontSize));
             location.setTextFill(btnTextColour);
 
@@ -158,22 +157,19 @@ public class ReportPage extends Page {
             pane.setBottom(infoBox);
 
             // Recolours button to show it has been clicked if not. Draws the report info
-            reportButton.setOnAction((new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    for (ButtonWrapper button : buttons) {
-                        if (button.getBackground().getFills().get(0).getFill().toString()
-                                .equals(buttonClickColour.toString())) {
-                            button.setBackgroundColour(buttonColour);
-                            button.setBorderWidth(1);
-                        }
+            reportButton.setOnAction((event -> {
+                for (ButtonWrapper button : buttons) {
+                    if (button.getBackground().getFills().get(0).getFill().toString()
+                            .equals(buttonClickColour.toString())) {
+                        button.setBackgroundColour(buttonColour);
+                        button.setBorderWidth(1);
                     }
-                    reportButton.setBackgroundColour(buttonClickColour);
-                    reportButton.setBorderWidth(3);
-                    if (currentMachine != machine) {
-                        currentMachine = machine;
-                        drawReportInfo(machine);
-                    }
+                }
+                reportButton.setBackgroundColour(buttonClickColour);
+                reportButton.setBorderWidth(3);
+                if (currentMachine != machine) {
+                    currentMachine = machine;
+                    drawReportInfo(machine);
                 }
             }));
             buttons.add(reportButton);
@@ -234,7 +230,7 @@ public class ReportPage extends Page {
         serialNum.setFont(new Font(fontName, smallFontSize));
         serialNum.setTextFill(reportTextColour);
 
-        Label location = new Label("Location: " + machine.getRoom());
+        Label location = new Label("Location: " + machine.getLocation());
         location.setFont(new Font(fontName, smallFontSize));
         location.setTextFill(reportTextColour);
 
@@ -337,21 +333,17 @@ public class ReportPage extends Page {
         completeBtn.setFontColour(lightTextColour);
         completeBtn.setFontSize(20);
         completeBtn.removeBorder();
-        
-        // Requests a description if not provided, log the machine online if one has
-        completeBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (solution.getText().equals("")) {
-                    solution.setPromptText("A description of the performed repairs is required");
 
-                }
-                else {
-                    machine.archiveReport();
-                    machine.setStatus("ONLINE");
-                    drawReportButtons();
-                    setRight(null);
-                }
+        // Requests a description if not provided, log the machine online if one has
+        completeBtn.setOnAction((event -> {
+            if (solution.getText().isEmpty()) {
+                solution.setPromptText("A description of the performed repairs is required");
+
+            } else {
+                machine.archiveReport();
+                machine.setStatus("ONLINE");
+                drawReportButtons();
+                setRight(null);
             }
         }));
 
@@ -369,14 +361,11 @@ public class ReportPage extends Page {
         closeBtn.setFontColour(lightTextColour);
         closeBtn.setFontSize(20);
         closeBtn.removeBorder();
-        
+
         // Removes the report from the page
-        closeBtn.setOnAction((new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                setRight(null);
-                drawReportButtons();
-            }
+        closeBtn.setOnAction((event -> {
+            setRight(null);
+            drawReportButtons();
         }));
 
         infoBox.getChildren().addAll(new Label(), solution, new Label(), completeBtn, new Label(), closeBtn);
@@ -412,10 +401,6 @@ public class ReportPage extends Page {
             view1.setPreserveRatio(true);
             return view1;
         }
-
-        else if (extension.equals("mp3")) {
-
-        }
         return null;
     }
 
@@ -426,8 +411,7 @@ public class ReportPage extends Page {
      * @return String extension of the file e.g "png"
      */
     private String getExtension(String filePath) {
-        String fileExtension = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
-        return fileExtension;
+        return filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
     }
 
 }

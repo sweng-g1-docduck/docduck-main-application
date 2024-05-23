@@ -1,10 +1,6 @@
 package com.docduck.application.files;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -30,8 +26,8 @@ public class FTPHandler {
     private static FTPHandler instance = null;
     private FTPClient ftp;
     private ScheduledExecutorService executor;
-    private DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-    private boolean debug = true;
+    private final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+    private final boolean debug = true;
     private final static String SERVER_IP = "81.101.49.54";
     private final static String USERNAME = "docduck";
     private final static String PASSWORD = "sweng";
@@ -74,24 +70,11 @@ public class FTPHandler {
     public void connect() {
         try {
             if (ftp == null) {
-                ftp = new FTPClient();
-
-                ftp.connect(SERVER_IP);
-
-                if (!ftp.login(USERNAME, PASSWORD)) {
-                    ftp.logout();
-                }
-                int reply = ftp.getReplyCode();
-
-                if (!FTPReply.isPositiveCompletion(reply)) {
-                    ftp.disconnect();
-                }
-
-                ftp.enterLocalPassiveMode();
+                prepareClient();
             }
         }
         catch (Exception ex) {
-            
+            ex.printStackTrace();
         }
     }
     
@@ -103,20 +86,7 @@ public class FTPHandler {
 
         try {
 
-            ftp = new FTPClient();
-
-            ftp.connect(SERVER_IP);
-
-            if (!ftp.login(USERNAME, PASSWORD)) {
-                ftp.logout();
-            }
-            int reply = ftp.getReplyCode();
-
-            if (!FTPReply.isPositiveCompletion(reply)) {
-                ftp.disconnect();
-            }
-
-            ftp.enterLocalPassiveMode();
+            prepareClient();
 
             if (debug) {
                 System.out.println("Remote system is " + ftp.getSystemType());
@@ -125,7 +95,7 @@ public class FTPHandler {
 
             FTPFile[] ftpFiles = ftp.listFiles();
 
-            if (ftpFiles != null && ftpFiles.length > 0) {
+            if (ftpFiles != null) {
 
                 for (FTPFile ftpFile : ftpFiles) {
 
@@ -160,20 +130,31 @@ public class FTPHandler {
             guiBuilder.OfflinePage();
         }
     }
-    
+
+    private void prepareClient() throws IOException {
+        ftp = new FTPClient();
+
+        ftp.connect(SERVER_IP);
+
+        if (!ftp.login(USERNAME, PASSWORD)) {
+            ftp.logout();
+        }
+        int reply = ftp.getReplyCode();
+
+        if (!FTPReply.isPositiveCompletion(reply)) {
+            ftp.disconnect();
+        }
+
+        ftp.enterLocalPassiveMode();
+    }
+
     /**
      * Starts file update scheduler.
-     * @param updateDelay - Time in seconds between updates
+     *
      * @author rw1834
      */
     private void scheduleFileUpdates(Double updateDelay) {
-        Runnable updateFiles = new Runnable() {
-
-            @Override
-            public void run() {
-                updateFiles();
-            }
-        };
+        Runnable updateFiles = this::updateFiles;
 
         executor = Executors.newScheduledThreadPool(1);
         executor.scheduleAtFixedRate(updateFiles, updateDelay.longValue(), updateDelay.longValue(), TimeUnit.SECONDS);
@@ -203,7 +184,7 @@ public class FTPHandler {
                 FTPFile[] ftpFiles = ftp.listFiles();
                 File[] localFiles = local.listFiles();
 
-                if (ftpFiles != null && ftpFiles.length > 0) {
+                if (ftpFiles != null) {
 
                     for (FTPFile ftpFile : ftpFiles) {
 
@@ -216,7 +197,7 @@ public class FTPHandler {
                         Date ftpDate = df.parse(stringTime);
                         Instant ftpTime = ftpDate.toInstant().truncatedTo(ChronoUnit.SECONDS);
 
-                        if (localFiles != null && localFiles.length > 0) {
+                        if (localFiles != null) {
 
                             for (File localFile : localFiles) {
                                 String localName = localFile.getName();
@@ -348,7 +329,7 @@ public class FTPHandler {
             try {
                 FTPFile[] ftpFiles = ftp.listFiles();
 
-                if (ftpFiles != null && ftpFiles.length > 0) {
+                if (ftpFiles != null) {
 
                     for (FTPFile ftpFile : ftpFiles) {
 

@@ -21,15 +21,16 @@ import org.xml.sax.SAXException;
 
 public class XMLJDOM {
 
-    private String xmlFilename;
-    private String schemaFilename;
-    private boolean xsdValidate;
-    private boolean namespaceAware;
+    private final String xmlFilename;
+    private final String schemaFilename;
+    private final boolean xsdValidate;
+    private final boolean namespaceAware;
     static final String outputEncoding = "UTF-8";
     static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
     static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
     private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+    private DocumentBuilder documentBuilder;
 
     protected Document document;
 
@@ -66,7 +67,7 @@ public class XMLJDOM {
                     factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
                 }
                 catch (IllegalArgumentException x) {
-                    System.err.println("Error: JAXP DocumentBuilderFacotry attribute " + "not recognised: "
+                    System.err.println("Error: JAXP DocumentBuilderFactory attribute " + "not recognised: "
                             + JAXP_SCHEMA_LANGUAGE);
                     System.err.println("Check to see if parser conforms to JAXP spec");
                 }
@@ -76,7 +77,7 @@ public class XMLJDOM {
                 factory.setAttribute(JAXP_SCHEMA_SOURCE, schemaStream);
             }
 
-            DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+            documentBuilder = factory.newDocumentBuilder();
 
             OutputStreamWriter errorWriter = new OutputStreamWriter(System.err, outputEncoding);
             documentBuilder.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
@@ -85,6 +86,27 @@ public class XMLJDOM {
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (IOException | SAXException | ParserConfigurationException e) {
+            System.out.println(e.getClass());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Using the same settings as when setting up the JDOM, this method parses a new
+     * xml document and overwrites the original document
+     * 
+     * @param xmlFilename - The filename of the xml file to parse
+     * @author William-A-B
+     */
+    public void parseNewXMLFile(String xmlFilename) {
+
+        InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
+
+        try {
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
+            this.document = new DOMBuilder().build(w3cDocument);
+        }
+        catch (SAXException | IOException e) {
             System.out.println(e.getClass());
             e.printStackTrace();
         }
@@ -105,19 +127,19 @@ public class XMLJDOM {
      */
     public Element getElement(String desiredElementName, int desiredID, boolean documentRoot, Element rootElement) {
 
-        if (documentRoot == true) {
+        if (documentRoot) {
             rootElement = document.getRootElement();
         }
 
         Element currentElement = rootElement;
 
-        Element desiredElement = null;
+        Element desiredElement;
 
         Stack<Element> elementStack = new Stack<>();
 
         elementStack.push(currentElement);
 
-        while (elementStack.isEmpty() == false) {
+        while (!elementStack.isEmpty()) {
             currentElement = elementStack.pop();
 
             if (currentElement.getName().equals(desiredElementName)) {
@@ -145,12 +167,12 @@ public class XMLJDOM {
 
             }
 
-            if (currentElement.getChildren().isEmpty() == false) {
+            if (!currentElement.getChildren().isEmpty()) {
                 elementStack.addAll(currentElement.getChildren());
             }
         }
 
-        return desiredElement;
+        return null;
     }
 
     public void addElement(Element parentElement, Element desiredELement, String value) {
@@ -168,9 +190,8 @@ public class XMLJDOM {
     protected String getAttributeValue(Element element, String attributeName) {
 
         Attribute att = element.getAttribute(attributeName);
-        String attValue = att.getValue();
 
-        return attValue;
+        return att.getValue();
     }
 
     /**

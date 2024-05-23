@@ -2,6 +2,7 @@ package com.docduck.application.gui;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Objects;
 
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
@@ -26,16 +27,14 @@ import javafx.scene.transform.Scale;
 
 public class GUIBuilder {
 
-    private Pane root;
-    private static FTPHandler ftpHandler;
+    private final Pane root;
     private static GUIBuilder instance = null;
-    private static XMLBuilder xmlBuilder;
     private static EventManager events;
     public double CURRENT_WINDOW_WIDTH = 1296;
     public double CURRENT_WINDOW_HEIGHT = 759;
-    private Scale scale;
+    private final Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
-    private ArrayList<Page> pageList = new ArrayList<Page>();
+    private final ArrayList<Page> pageList = new ArrayList<>();
     private StatusPage statusPage;
     private ReportPage reportPage;
     private ArrayList<Machine> machines;
@@ -61,9 +60,9 @@ public class GUIBuilder {
     }
 
     public void updateInstances() {
-        xmlBuilder = XMLBuilder.getInstance();
+        XMLBuilder xmlBuilder = XMLBuilder.getInstance();
         events = EventManager.getInstance();
-        ftpHandler = FTPHandler.getInstance();
+        FTPHandler ftpHandler = FTPHandler.getInstance();
     }
 
     public void setData(Hashtable<String, Hashtable<String, Object>> xmlData) {
@@ -73,7 +72,7 @@ public class GUIBuilder {
     public void StartPage() {
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #1f5398");
-        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+        ImageView logo = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
         logo.setLayoutX(390);
         logo.setLayoutY(80);
         logo.setFitWidth(500);
@@ -115,7 +114,7 @@ public class GUIBuilder {
     public void LoadFromXMLPage() {
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #1f5398");
-        ImageView logo = new ImageView(new Image(getClass().getResourceAsStream("/docducklogo.png")));
+        ImageView logo = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
         logo.setLayoutX(390);
         logo.setLayoutY(80);
         logo.setFitWidth(500);
@@ -226,7 +225,7 @@ public class GUIBuilder {
             scale.setY(heightScale);
         }
 
-        for (int i = 0; i < nodes.size(); i++) {
+        for (int i = 0; i < Objects.requireNonNull(nodes).size(); i++) {
             Node node = nodes.get(i);
 
             if (!node.getTransforms().contains(scale)) {
@@ -274,19 +273,16 @@ public class GUIBuilder {
     public void displayPage(String pageName, Machine machine) {
         root.getChildren().clear();
 
-        switch (pageName) {
-
-        case "REPORT":
+        if (pageName.equals("REPORT")) {
             root.getChildren().add(reportPage);
             reportPage.drawReportButtons();
             reportPage.drawReportInfo(machine);
-            break;
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
 
     /**
-     * Builds all of the pages
+     * Builds all the pages
      */
     public void buildPages() {
         populateMachineData();
@@ -296,7 +292,7 @@ public class GUIBuilder {
     }
 
     private void populateMachineData() {
-        machines = new ArrayList<Machine>();
+        machines = new ArrayList<>();
         user = new User("Bob", "bob@york.ac.uk", "ADMIN", "password");
 
         Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1", "1", "");

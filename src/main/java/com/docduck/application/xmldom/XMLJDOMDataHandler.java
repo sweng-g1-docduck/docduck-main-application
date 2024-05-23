@@ -2,12 +2,14 @@ package com.docduck.application.xmldom;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
+import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
 public class XMLJDOMDataHandler extends XMLJDOM {
 
-    private XMLJDOM JDOM = null;
+    private static volatile XMLJDOMDataHandler domDataHandlerInstance = null;
 
     /**
      * An enum to identify the type of data searching for
@@ -33,13 +35,33 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @param setNamespaceAware - Whether to set the namespace awareness
      * @author William-A-B
      */
-    public XMLJDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware) {
+    private XMLJDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware) {
         super(xmlFilename, schemaFilename, validate, setNamespaceAware);
     }
 
-    public XMLJDOMDataHandler(XMLJDOM JDOM) {
-        super(null, null, false, false);
-        this.JDOM = JDOM;
+    public static XMLJDOMDataHandler createNewInstance(String xmlFilename, String schemaFilename, boolean validate,
+            boolean setNamespaceAware) {
+
+        synchronized (XMLJDOMDataHandler.class) {
+            domDataHandlerInstance = new XMLJDOMDataHandler(xmlFilename, schemaFilename, validate, setNamespaceAware);
+        }
+
+        return domDataHandlerInstance;
+    }
+
+    public static XMLJDOMDataHandler getInstance() throws JDOMDataHandlerNotInitialised {
+
+        if (domDataHandlerInstance == null) {
+
+            synchronized (XMLJDOMDataHandler.class) {
+
+                if (domDataHandlerInstance == null) {
+                    throw new JDOMDataHandlerNotInitialised();
+                }
+            }
+        }
+
+        return domDataHandlerInstance;
     }
 
     /**
@@ -117,7 +139,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @param dataType - The type of data to search for e.g. machine, component,
      *                 user etc.
      * @param id       - The ID of the data you are searching for
-     * @return A string containing the name of the of the data for the ID given
+     * @return A string containing the name of the data for the ID given
      * @author William-A-B
      */
     public String getNameFromID(String dataType, int id) {
@@ -252,7 +274,44 @@ public class XMLJDOMDataHandler extends XMLJDOM {
                 return dataValue;
             }
         }
-
-        return dataValue;
+        return null;
     }
+
+    public boolean checkIfIDExists(int id) {
+
+        boolean idExists = false;
+
+        Element currentElement = document.getRootElement();
+
+        Stack<Element> elementStack = new Stack<>();
+
+        elementStack.push(currentElement);
+
+        while (!elementStack.isEmpty()) {
+            currentElement = elementStack.pop();
+
+            int currentElementID = -1;
+
+            if (currentElement.hasAttributes()) {
+
+                try {
+                    currentElementID = currentElement.getAttribute("id").getIntValue();
+                }
+                catch (DataConversionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (currentElementID == id) {
+                return true;
+            }
+
+            if (!currentElement.getChildren().isEmpty()) {
+                elementStack.addAll(currentElement.getChildren());
+            }
+        }
+
+        return false;
+    }
+
 }
