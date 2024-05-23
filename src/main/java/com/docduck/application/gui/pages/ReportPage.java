@@ -319,41 +319,6 @@ public class ReportPage extends Page {
         solution.setPromptText("Performed repairs");
         solution.setFont(new Font(fontName, smallFontSize));
 
-        ButtonWrapper completeBtn = getButtonWrapper(machine, solution);
-
-        ButtonWrapper closeBtn = getButtonWrapper();
-
-        infoBox.getChildren().addAll(new Label(), solution, new Label(), completeBtn, new Label(), closeBtn);
-        reportScroll.setContent(infoBox);
-        setRight(reportScroll);
-
-    }
-
-    private ButtonWrapper getButtonWrapper() {
-        ButtonWrapper closeBtn = new ButtonWrapper();
-        closeBtn.setCornerRadius(5);
-        closeBtn.setButtonWidth(reportDescWidth - 35);
-        closeBtn.setButtonHeight(40);
-        closeBtn.setFontName(fontName);
-        closeBtn.setText("Close");
-        closeBtn.setBackgroundColour(btnColour);
-        closeBtn.setClickcolour(btnClickColour);
-        closeBtn.setHoverColour(btnHoverColour);
-        closeBtn.setPositionX(150);
-        closeBtn.setPositionY(30);
-        closeBtn.setFontColour(lightTextColour);
-        closeBtn.setFontSize(20);
-        closeBtn.removeBorder();
-
-        // Removes the report from the page
-        closeBtn.setOnAction((event -> {
-            setRight(null);
-            drawReportButtons();
-        }));
-        return closeBtn;
-    }
-
-    private ButtonWrapper getButtonWrapper(Machine machine, TextArea solution) {
         ButtonWrapper completeBtn = new ButtonWrapper();
         completeBtn.setCornerRadius(5);
         completeBtn.setButtonWidth(reportDescWidth - 35);
@@ -381,7 +346,32 @@ public class ReportPage extends Page {
                 setRight(null);
             }
         }));
-        return completeBtn;
+
+        ButtonWrapper closeBtn = new ButtonWrapper();
+        closeBtn.setCornerRadius(5);
+        closeBtn.setButtonWidth(reportDescWidth - 35);
+        closeBtn.setButtonHeight(40);
+        closeBtn.setFontName(fontName);
+        closeBtn.setText("Close");
+        closeBtn.setBackgroundColour(btnColour);
+        closeBtn.setClickcolour(btnClickColour);
+        closeBtn.setHoverColour(btnHoverColour);
+        closeBtn.setPositionX(150);
+        closeBtn.setPositionY(30);
+        closeBtn.setFontColour(lightTextColour);
+        closeBtn.setFontSize(20);
+        closeBtn.removeBorder();
+
+        // Removes the report from the page
+        closeBtn.setOnAction((event -> {
+            setRight(null);
+            drawReportButtons();
+        }));
+
+        infoBox.getChildren().addAll(new Label(), solution, new Label(), completeBtn, new Label(), closeBtn);
+        reportScroll.setContent(infoBox);
+        setRight(reportScroll);
+
     }
 
     /**
