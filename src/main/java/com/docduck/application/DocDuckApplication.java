@@ -17,10 +17,8 @@ import javafx.stage.Stage;
 public class DocDuckApplication extends Application {
 
     private static Pane root;
-    private static XMLBuilder xmlBuilder;
     private static GUIBuilder guiBuilder;
     private static FTPHandler ftpHandler;
-    private static EventManager eventManager;
 
     @Override
     public void start(Stage stage) {
@@ -34,10 +32,10 @@ public class DocDuckApplication extends Application {
         System.out.println(f);
 
         root = new Pane();
-        xmlBuilder = XMLBuilder.createInstance(root);
+        XMLBuilder xmlBuilder = XMLBuilder.createInstance(root);
         guiBuilder = GUIBuilder.createInstance(root);
         ftpHandler = FTPHandler.createInstance();
-        eventManager = EventManager.createInstance(root, this.getHostServices(), stage);
+        EventManager eventManager = EventManager.createInstance(root, this.getHostServices(), stage);
         guiBuilder.updateInstances();
         eventManager.updateInstances();
         xmlBuilder.updateInstances();
@@ -77,23 +75,6 @@ public class DocDuckApplication extends Application {
      * 
      * @author William-A-B
      */
-//    private void jdom2Example() {
-//
-//        XMLJDOMDataHandler jdomData = new XMLJDOMDataHandler("DocDuckDataExample.xml",
-//                "DocDuckStandardSchema_WithData.xsd", true, true);
-//
-//        jdomData.setupJDOM();
-//
-//        List<String> l = jdomData.getMachineNamesAtLocation("Labs_4th_Floor");
-//
-//        for (String s : l) {
-//            System.out.println(s);
-//        }
-//
-//        System.out.println("\n");
-//        System.out.println(jdomData.getDataValue(1, "title", DataType.REPORT));
-//
-//    }
 
     @Override
     public void stop() {

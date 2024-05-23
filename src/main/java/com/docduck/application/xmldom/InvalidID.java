@@ -1,8 +1,8 @@
-package com.docduck.application.utils;
+package com.docduck.application.xmldom;
 
 public class InvalidID extends Throwable {
 
-    private String errorMessage;
+    private final String errorMessage;
 
     public InvalidID(String message) {
         this.errorMessage = message;

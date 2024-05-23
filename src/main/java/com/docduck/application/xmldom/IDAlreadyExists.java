@@ -1,4 +1,4 @@
-package com.docduck.application.utils;
+package com.docduck.application.xmldom;
 
 public class IDAlreadyExists extends Throwable {
 

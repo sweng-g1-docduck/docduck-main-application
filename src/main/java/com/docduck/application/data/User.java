@@ -12,9 +12,9 @@ import java.util.Base64;
  */
 public class User extends BaseData {
 
-    private String name;
-    private String email;
-    private String role;
+    private final String name;
+    private final String email;
+    private final String role;
     private String passwordHash;
 
     public User(String name, String email, String role, String password) {

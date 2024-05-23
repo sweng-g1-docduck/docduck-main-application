@@ -8,8 +8,8 @@ package com.docduck.application.data;
  */
 public class Report extends BaseData {
 
-    private User user;
-    private String description;
+    private final User user;
+    private final String description;
     private String pathToFile;
 
     public Report(User user, String description) {

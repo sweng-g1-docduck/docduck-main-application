@@ -1,4 +1,4 @@
-package com.docduck.application.utils;
+package com.docduck.application.xmldom;
 
 public class JDOMDataHandlerNotInitialised extends Throwable {
 
@@ -6,8 +6,7 @@ public class JDOMDataHandlerNotInitialised extends Throwable {
 
     }
 
-    @Override
-    public void printStackTrace() {
+    public void printError() {
         System.err.println("XMLJDOMDataHandler instance is null, have you created an instance?");
     }
 }

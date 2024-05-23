@@ -93,7 +93,7 @@ public class AdminPage extends Page {
         managerBox.getChildren().add(createManagerHeader(header));
 
         for (String buttonText : buttons) {
-            ButtonWrapper button = createManagerButton(buttonText, header, ButtonType.MANAGER);
+            ButtonWrapper button = createManagerButton(buttonText, header);
 
             managerBox.getChildren().add(button);
 
@@ -113,7 +113,7 @@ public class AdminPage extends Page {
         return managerHeader;
     }
 
-    private ButtonWrapper createManagerButton(String text, String managerType, ButtonType type) {
+    private ButtonWrapper createManagerButton(String text, String managerType) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
         button.setButtonWidth(250);
@@ -131,26 +131,18 @@ public class AdminPage extends Page {
 
             switch (text) {
             case "Edit User":
-                editingUsers = true;
+                case "Remove User":
+                    editingUsers = true;
                 editingMachines = false;
                 createRightSection(); // Clear and refresh right section
                 break;
             case "Edit Machine":
-                editingMachines = true;
+                case "Remove Machine":
+                    editingMachines = true;
                 editingUsers = false;
                 createRightSection(); // Clear and refresh right section
                 break;
-            case "Remove User":
-                editingUsers = true;
-                editingMachines = false;
-                createRightSection(); // Clear and refresh right section
-                break;
-            case "Remove Machine":
-                editingMachines = true;
-                editingUsers = false;
-                createRightSection(); // Clear and refresh right section
-                break;
-            case "Add User":
+                case "Add User":
                 editingUsers = true;
                 editingMachines = false;
                 createRightSection(); // Clear and refresh right section
@@ -164,10 +156,8 @@ public class AdminPage extends Page {
                 break;
             }
 
-            if (type == ButtonType.MANAGER) {
-                setLastPressedButton(button, lastPressedUserTypeButton);
-                lastPressedUserTypeButton = button;
-            }
+            setLastPressedButton(button, lastPressedUserTypeButton);
+            lastPressedUserTypeButton = button;
         });
 
         return button;
@@ -217,8 +207,7 @@ public class AdminPage extends Page {
 
         int row = 0;
 
-        switch (managerType) {
-        case "User Manager":
+        if (managerType.equals("User Manager")) {
             gridPane.add(createLabel("Username"), 0, row);
             gridPane.add(createFormField("Username", user != null ? user.getName() : ""), 1, row++);
 
@@ -228,8 +217,7 @@ public class AdminPage extends Page {
             if (user != null) {
                 gridPane.add(createLabel("Role"), 0, row);
                 gridPane.add(createUserComboBox(user.getRole()), 1, row++);
-            }
-            else {
+            } else {
                 gridPane.add(createLabel("Role"), 0, row);
                 gridPane.add(createUserComboBox(""), 1, row++);
             }
@@ -238,9 +226,6 @@ public class AdminPage extends Page {
             passwordField.setPromptText("Enter password");
             gridPane.add(createLabel("Password"), 0, row);
             gridPane.add(passwordField, 1, row++);
-            break;
-        default:
-            break;
         }
 
         formLayout.getChildren().addAll(gridPane, createFormButtons());
@@ -266,8 +251,7 @@ public class AdminPage extends Page {
 
         int row = 0;
 
-        switch (managerType) {
-        case "Machine Manager":
+        if (managerType.equals("Machine Manager")) {
             gridPane.add(createLabel("Machine Name"), 0, row);
             gridPane.add(createFormField("Machine Name", machine != null ? machine.getName() : ""), 1, row++);
 
@@ -283,9 +267,6 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
             gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheet() : ""), 1,
                     row++);
-            break;
-        default:
-            break;
         }
 
         formLayout.getChildren().addAll(gridPane, createFormButtons());
@@ -469,8 +450,6 @@ public class AdminPage extends Page {
             searchBar.setPromptText("Search Machines");
             searchBar.textProperty().addListener((observable, oldValue, newValue) -> filterMachinesByName(newValue));
             updateHeader("Machines");
-            // headerBox.getChildren().removeAll(allUsersButton, adminsButton,
-            // engineersButton, operatorsButton);
             headerBox.getChildren().addAll(headerLabel, allMachinesButton, onlineButton, offlineButton,
                     maintenanceButton, searchBar);
 

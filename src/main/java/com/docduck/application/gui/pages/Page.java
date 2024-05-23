@@ -26,14 +26,14 @@ public class Page extends BorderPane {
      * pages content
      */
 
-    protected EventManager events;
+    protected final EventManager events;
     protected User user;
 
     protected Machine machine; // admin (needs integrating)
-    List<User> userList = new ArrayList<>(); // admin (needs integrating)
-    List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
+    final List<User> userList = new ArrayList<>(); // admin (needs integrating)
+    final List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
 
-    protected ArrayList<Machine> machines;
+    protected final ArrayList<Machine> machines;
 
     protected final Color barColour = Color.web("245494");
     protected final Color backgroundColour = Color.LIGHTSLATEGREY;
@@ -93,6 +93,35 @@ public class Page extends BorderPane {
         overviewBtn.removeBorder();
         overviewBtn.setOnAction(events.getActionEvent("statusPage"));
 
+        ButtonWrapper logOutBtn = getButtonWrapper();
+
+        menuBar.getChildren().addAll(overviewBtn);
+
+        if (user.getRole().equals("ENGINEER") || user.getRole().equals("ADMIN")) {
+
+            ButtonWrapper reportBtn = getButtonWrapper(240, "Maintainance Reports");
+            reportBtn.setOnAction(events.getActionEvent("reportPage"));
+
+            ButtonWrapper partBtn = getButtonWrapper(160, "Part Search");
+            partBtn.setDisable(true);
+            menuBar.getChildren().addAll(reportBtn, partBtn);
+        }
+
+        if (user.getRole().equals("ADMIN")) {
+
+            ButtonWrapper settingsBtn = getButtonWrapper(120, "Settings");
+            menuBar.getChildren().add(settingsBtn);
+        }
+        Pane spacer = new Pane();
+        spacer.setPrefWidth(1000);
+
+        menuBar.getChildren().addAll(spacer, logOutBtn);
+
+        return menuBar;
+
+    }
+
+    private ButtonWrapper getButtonWrapper() {
         ButtonWrapper logOutBtn = new ButtonWrapper();
         logOutBtn.setCornerRadius(5);
         logOutBtn.setButtonWidth(120);
@@ -107,64 +136,23 @@ public class Page extends BorderPane {
         logOutBtn.setFontColour(lightTextColour);
         logOutBtn.setFontSize(20);
         logOutBtn.removeBorder();
+        return logOutBtn;
+    }
 
-        menuBar.getChildren().addAll(overviewBtn);
-
-        if (user.getRole().equals("ENGINEER") || user.getRole().equals("ADMIN")) {
-
-            ButtonWrapper reportBtn = new ButtonWrapper();
-            reportBtn.setCornerRadius(5);
-            reportBtn.setButtonWidth(240);
-            reportBtn.setButtonHeight(60);
-            reportBtn.setFontName(fontName);
-            reportBtn.setText("Maintainance Reports");
-            reportBtn.setBackgroundColour(btnColour);
-            reportBtn.setClickcolour(btnClickColour);
-            reportBtn.setHoverColour(btnHoverColour);
-            reportBtn.setFontColour(lightTextColour);
-            reportBtn.setFontSize(20);
-            reportBtn.removeBorder();
-            reportBtn.setOnAction(events.getActionEvent("reportPage"));
-
-            ButtonWrapper partBtn = new ButtonWrapper();
-            partBtn.setCornerRadius(5);
-            partBtn.setButtonWidth(160);
-            partBtn.setButtonHeight(60);
-            partBtn.setFontName(fontName);
-            partBtn.setText("Part Search");
-            partBtn.setBackgroundColour(btnColour);
-            partBtn.setClickcolour(btnClickColour);
-            partBtn.setHoverColour(btnHoverColour);
-            partBtn.setFontColour(lightTextColour);
-            partBtn.setFontSize(20);
-            partBtn.removeBorder();
-            partBtn.setDisable(true);
-            menuBar.getChildren().addAll(reportBtn, partBtn);
-        }
-
-        if (user.getRole().equals("ADMIN")) {
-
-            ButtonWrapper settingsBtn = new ButtonWrapper();
-            settingsBtn.setCornerRadius(5);
-            settingsBtn.setButtonWidth(120);
-            settingsBtn.setButtonHeight(60);
-            settingsBtn.setFontName(fontName);
-            settingsBtn.setText("Settings");
-            settingsBtn.setBackgroundColour(btnColour);
-            settingsBtn.setClickcolour(btnClickColour);
-            settingsBtn.setHoverColour(btnHoverColour);
-            settingsBtn.setFontColour(lightTextColour);
-            settingsBtn.setFontSize(20);
-            settingsBtn.removeBorder();
-            menuBar.getChildren().add(settingsBtn);
-        }
-        Pane spacer = new Pane();
-        spacer.setPrefWidth(1000);
-
-        menuBar.getChildren().addAll(spacer, logOutBtn);
-
-        return menuBar;
-
+    private ButtonWrapper getButtonWrapper(int width, String Settings) {
+        ButtonWrapper settingsBtn = new ButtonWrapper();
+        settingsBtn.setCornerRadius(5);
+        settingsBtn.setButtonWidth(width);
+        settingsBtn.setButtonHeight(60);
+        settingsBtn.setFontName(fontName);
+        settingsBtn.setText(Settings);
+        settingsBtn.setBackgroundColour(btnColour);
+        settingsBtn.setClickcolour(btnClickColour);
+        settingsBtn.setHoverColour(btnHoverColour);
+        settingsBtn.setFontColour(lightTextColour);
+        settingsBtn.setFontSize(20);
+        settingsBtn.removeBorder();
+        return settingsBtn;
     }
 
 }

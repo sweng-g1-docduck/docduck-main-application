@@ -8,7 +8,7 @@ import org.xml.sax.SAXParseException;
 
 public class DOMErrorHandler implements ErrorHandler {
 
-    private PrintWriter out;
+    private final PrintWriter out;
 
     DOMErrorHandler(PrintWriter out) {
         this.out = out;
@@ -21,13 +21,11 @@ public class DOMErrorHandler implements ErrorHandler {
             systemId = "null";
         }
 
-        String info = "URI=" + systemId + " Line=" + spe.getLineNumber() + ": " + spe.getMessage();
-
-        return info;
+        return "URI=" + systemId + " Line=" + spe.getLineNumber() + ": " + spe.getMessage();
     }
 
     @Override
-    public void warning(SAXParseException spe) throws SAXException {
+    public void warning(SAXParseException spe) {
         out.println("Warning: " + getParseExceptionInfo(spe));
     }
 

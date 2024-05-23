@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.jdom2.Element;
 
-import com.docduck.application.utils.InvalidID;
+import com.docduck.application.xmldom.InvalidID;
 
 /**
  * A Class for storing all data related to a machine - The Machine's Name - The
@@ -25,7 +25,7 @@ public class Machine extends BaseData {
     private String dataSheet;
     private String purchaseLocation;
     private Report currentReport;
-    private ArrayList<Report> oldReports = new ArrayList<Report>();
+    private final ArrayList<Report> oldReports = new ArrayList<>();
 
     public Machine(String name, String room, String status, String serialNumber, String dataSheet,
             String purchaseLocation) {
@@ -45,12 +45,12 @@ public class Machine extends BaseData {
      * Constructor to create a new Machine and populate the data from the xml files
      * 
      * @param id - The ID of the machine to get out of the xml database
-     * @throws InvalidID
+     * @throws InvalidID The provided id of the machine doesn't exist in the data
      * @author William-A-B
      */
     public Machine(int id) throws InvalidID {
 
-        if (domDataHandler.checkIfIDExists(id) == false) {
+        if (!domDataHandler.checkIfIDExists(id)) {
             throw new InvalidID(
                     "ID does not exist in database, please provide an existing ID, or create a new machine.");
         }

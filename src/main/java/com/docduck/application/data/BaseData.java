@@ -1,6 +1,6 @@
 package com.docduck.application.data;
 
-import com.docduck.application.utils.JDOMDataHandlerNotInitialised;
+import com.docduck.application.xmldom.JDOMDataHandlerNotInitialised;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
 
 public class BaseData {
@@ -14,7 +14,7 @@ public class BaseData {
 
         }
         catch (JDOMDataHandlerNotInitialised e) {
-            e.printStackTrace();
+            e.printError();
             domDataHandler = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true);
             domDataHandler.setupJDOM();
         }

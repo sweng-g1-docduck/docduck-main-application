@@ -7,11 +7,8 @@ import java.util.Stack;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
-import com.docduck.application.utils.JDOMDataHandlerNotInitialised;
-
 public class XMLJDOMDataHandler extends XMLJDOM {
 
-    private XMLJDOM JDOM = null;
     private static volatile XMLJDOMDataHandler domDataHandlerInstance = null;
 
     /**
@@ -142,7 +139,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @param dataType - The type of data to search for e.g. machine, component,
      *                 user etc.
      * @param id       - The ID of the data you are searching for
-     * @return A string containing the name of the of the data for the ID given
+     * @return A string containing the name of the data for the ID given
      * @author William-A-B
      */
     public String getNameFromID(String dataType, int id) {
@@ -277,8 +274,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
                 return dataValue;
             }
         }
-
-        return dataValue;
+        return null;
     }
 
     public boolean checkIfIDExists(int id) {
@@ -291,12 +287,12 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
         elementStack.push(currentElement);
 
-        while (elementStack.isEmpty() == false) {
+        while (!elementStack.isEmpty()) {
             currentElement = elementStack.pop();
 
             int currentElementID = -1;
 
-            if (currentElement.hasAttributes() == true) {
+            if (currentElement.hasAttributes()) {
 
                 try {
                     currentElementID = currentElement.getAttribute("id").getIntValue();
@@ -307,16 +303,15 @@ public class XMLJDOMDataHandler extends XMLJDOM {
             }
 
             if (currentElementID == id) {
-                idExists = true;
-                return idExists;
+                return true;
             }
 
-            if (currentElement.getChildren().isEmpty() == false) {
+            if (!currentElement.getChildren().isEmpty()) {
                 elementStack.addAll(currentElement.getChildren());
             }
         }
 
-        return idExists;
+        return false;
     }
 
 }
