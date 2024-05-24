@@ -36,7 +36,6 @@ public class AdminPage extends Page {
     private VBox machineListVBox;
     private List<User> allUsersList;
     private List<User> filteredUserList;
-    private List<Machine> machines;
     private List<Machine> filteredMachineList;
     private String currentName = "";
     private String currentRole = "All Users";
@@ -52,9 +51,8 @@ public class AdminPage extends Page {
         MANAGER
     }
 
-    public AdminPage() {
-        super(null, null);
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN", "password");
+    public AdminPage(ArrayList<Machine> machines, User user) {
+        super(machines, user);
         setTop(drawMenuBar());
         buildPage();
     }
@@ -72,8 +70,7 @@ public class AdminPage extends Page {
 
     private VBox createLeftSection() {
         VBox leftSection = new VBox(25);
-        leftSection.setBackground(
-                new Background(new BackgroundFill(Color.web("#1f5398"), new CornerRadii(5), new Insets(5))));
+        leftSection.setBackground(new Background(new BackgroundFill(barColour, new CornerRadii(5), new Insets(5))));
         leftSection.setPadding(new Insets(5));
 
         leftSection.getChildren().addAll(createManagerBox("User Manager", "Edit User", "Add User", "Remove User"),
@@ -120,10 +117,10 @@ public class AdminPage extends Page {
         button.setButtonHeight(18);
         button.setFontName("Arial");
         button.setText(text);
-        button.setBackgroundColour("#fbb12eff");
-        button.setClickcolour(Color.WHITE);
-        button.setHoverColour("#ff8c00ff");
-        button.setFontColour(Color.WHITE);
+        button.setBackgroundColour(btnColour);
+        button.setClickcolour(btnClickColour);
+        button.setHoverColour(btnHoverColour);
+        button.setFontColour(lightTextColour);
         button.setFontSize(10);
         button.removeBorder();
 
@@ -131,18 +128,18 @@ public class AdminPage extends Page {
 
             switch (text) {
             case "Edit User":
-                case "Remove User":
-                    editingUsers = true;
+            case "Remove User":
+                editingUsers = true;
                 editingMachines = false;
                 createRightSection(); // Clear and refresh right section
                 break;
             case "Edit Machine":
-                case "Remove Machine":
-                    editingMachines = true;
+            case "Remove Machine":
+                editingMachines = true;
                 editingUsers = false;
                 createRightSection(); // Clear and refresh right section
                 break;
-                case "Add User":
+            case "Add User":
                 editingUsers = true;
                 editingMachines = false;
                 createRightSection(); // Clear and refresh right section
@@ -217,7 +214,8 @@ public class AdminPage extends Page {
             if (user != null) {
                 gridPane.add(createLabel("Role"), 0, row);
                 gridPane.add(createUserComboBox(user.getRole()), 1, row++);
-            } else {
+            }
+            else {
                 gridPane.add(createLabel("Role"), 0, row);
                 gridPane.add(createUserComboBox(""), 1, row++);
             }
@@ -328,11 +326,11 @@ public class AdminPage extends Page {
         saveButton.setCornerRadius(5);
         saveButton.setButtonWidth(100);
         saveButton.setButtonHeight(24);
-        saveButton.setFontName("Arial");
-        saveButton.setBackgroundColour("#fbb12eff");
-        saveButton.setClickcolour(Color.WHITE);
-        saveButton.setHoverColour("#ff8c00ff");
-        saveButton.setFontColour(Color.WHITE);
+        saveButton.setFontName(fontName);
+        saveButton.setBackgroundColour(btnColour);
+        saveButton.setClickcolour(btnClickColour);
+        saveButton.setHoverColour(btnHoverColour);
+        saveButton.setFontColour(lightTextColour);
         saveButton.setFontSize(12);
         saveButton.removeBorder();
 
@@ -341,11 +339,11 @@ public class AdminPage extends Page {
         cancelButton.setCornerRadius(5);
         cancelButton.setButtonWidth(100);
         cancelButton.setButtonHeight(24);
-        cancelButton.setFontName("Arial");
-        cancelButton.setBackgroundColour("#fbb12eff");
-        cancelButton.setClickcolour(Color.WHITE);
-        cancelButton.setHoverColour("#ff8c00ff");
-        cancelButton.setFontColour(Color.WHITE);
+        cancelButton.setFontName(fontName);
+        cancelButton.setBackgroundColour(btnColour);
+        cancelButton.setClickcolour(btnClickColour);
+        cancelButton.setHoverColour(btnHoverColour);
+        cancelButton.setFontColour(lightTextColour);
         cancelButton.setFontSize(12);
         cancelButton.removeBorder();
 
@@ -412,7 +410,7 @@ public class AdminPage extends Page {
                     new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
             userListVBox.setPadding(new Insets(5));
 
-            allUsersList = generateUserList();
+            allUsersList = getAllUsers();
             filteredUserList = new ArrayList<>(allUsersList);
 
             updateDisplayedUserList(filteredUserList);
@@ -458,7 +456,6 @@ public class AdminPage extends Page {
                     new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
             machineListVBox.setPadding(new Insets(5));
 
-            machines = generateMachineList();
             filteredMachineList = new ArrayList<>(machines);
 
             updateDisplayedMachineList(filteredMachineList);
@@ -569,12 +566,13 @@ public class AdminPage extends Page {
         double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
         userButton.setButtonHeight(height);
         userButton.setFont(Font.font("System", 80));
+
         userButton.setText(
                 user.getName() + " - " + user.getUsername() + " - " + user.getEmail() + " (" + user.getRole() + ")");
-        userButton.setBackgroundColour("#fbb12eff");
-        userButton.setClickcolour(Color.WHITE);
-        userButton.setHoverColour("#ff8c00ff");
-        userButton.setFontColour(Color.WHITE);
+        userButton.setBackgroundColour(btnColour);
+        userButton.setClickcolour(btnClickColour);
+        userButton.setHoverColour(btnHoverColour);
+        userButton.setFontColour(lightTextColour);
         userButton.setFontSize(18);
         userButton.removeBorder();
 
@@ -597,10 +595,10 @@ public class AdminPage extends Page {
         machineButton.setButtonHeight(height);
         machineButton.setFont(Font.font("System", 80));
         machineButton.setText(machine.getName() + " - " + machine.getLocation() + " - " + machine.getStatus());
-        machineButton.setBackgroundColour("#fbb12eff");
-        machineButton.setClickcolour(Color.WHITE);
-        machineButton.setHoverColour("#ff8c00ff");
-        machineButton.setFontColour(Color.WHITE);
+        machineButton.setBackgroundColour(btnColour);
+        machineButton.setClickcolour(btnClickColour);
+        machineButton.setHoverColour(btnHoverColour);
+        machineButton.setFontColour(lightTextColour);
         machineButton.setFontSize(18);
         machineButton.removeBorder();
 
@@ -619,12 +617,12 @@ public class AdminPage extends Page {
         button.setCornerRadius(5);
         button.setButtonWidth(100);
         button.setButtonHeight(24);
-        button.setFontName("Arial");
+        button.setFontName(fontName);
         button.setText(userType);
-        button.setBackgroundColour("#fbb12eff");
-        button.setClickcolour(Color.WHITE);
-        button.setHoverColour("#ff8c00ff");
-        button.setFontColour(Color.WHITE);
+        button.setBackgroundColour(btnColour);
+        button.setClickcolour(btnClickColour);
+        button.setHoverColour(btnHoverColour);
+        button.setFontColour(lightTextColour);
         button.setFontSize(12);
         button.removeBorder();
 
@@ -663,12 +661,12 @@ public class AdminPage extends Page {
         button.setCornerRadius(5);
         button.setButtonWidth(100);
         button.setButtonHeight(24);
-        button.setFontName("Arial");
+        button.setFontName(fontName);
         button.setText(machineStatus);
-        button.setBackgroundColour("#fbb12eff");
-        button.setClickcolour(Color.WHITE);
-        button.setHoverColour("#ff8c00ff");
-        button.setFontColour(Color.WHITE);
+        button.setBackgroundColour(btnColour);
+        button.setClickcolour(btnClickColour);
+        button.setHoverColour(btnHoverColour);
+        button.setFontColour(lightTextColour);
         button.setFontSize(12);
         button.removeBorder();
 
@@ -695,22 +693,22 @@ public class AdminPage extends Page {
         return button;
     }
 
-    private List<User> generateUserList() {
-        userList.add(new User("John Doe", "john@docduck.com", "Admin", "password123"));
-        userList.add(new User("Jane Smith", "jane@docduck.com", "Operator", "password123"));
-        userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer", "password123"));
-        userList.add(new User("Emily Brown", "emily@docduck.com", "Admin", "password123"));
-        userList.add(new User("Michael Clark", "michael@docduck.com", "Operator", "password123"));
-        userList.add(new User("Alice Green", "alice@docduck.com", "Engineer", "password123"));
-        userList.add(new User("Kelvin Zacharias", "KZ@docduck.com", "Engineer", "password123"));
+    private List<User> getAllUsers() {
+//        userList.add(new User("John Doe", "john@docduck.com", "Admin", "password123"));
+//        userList.add(new User("Jane Smith", "jane@docduck.com", "Operator", "password123"));
+//        userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer", "password123"));
+//        userList.add(new User("Emily Brown", "emily@docduck.com", "Admin", "password123"));
+//        userList.add(new User("Michael Clark", "michael@docduck.com", "Operator", "password123"));
+//        userList.add(new User("Alice Green", "alice@docduck.com", "Engineer", "password123"));
+//        userList.add(new User("Kelvin Zacharias", "KZ@docduck.com", "Engineer", "password123"));
 
         for (int i = 0; i < 20; i++) {
             String[] names = { "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack" };
             String[] roles = { "Admin", "Operator", "Engineer" };
             String name = names[(int) (Math.random() * names.length)];
             String role = roles[(int) (Math.random() * roles.length)];
-            userList.add(
-                    new User(name + " " + (i + 1), name.toLowerCase() + (i + 1) + "@docduck.com", role, "password123"));
+            userList.add(new User(1, name + " " + (i + 1), "Username", "password123",
+                    name.toLowerCase() + (i + 1) + "@docduck.com", role));
         }
 
         return userList;

@@ -306,7 +306,7 @@ public class StatusPage extends Page {
                 // Submit report to XML
                 machine.setStatus("OFFLINE");
                 setRight(null);
-                Report report = new Report(user, descriptionBox.getText());
+                Report report = new Report(machineBoxWidth, user, descriptionBox.getText(), fontName, fontName);
                 machine.addReport(report);
                 drawMachineButtons();
 

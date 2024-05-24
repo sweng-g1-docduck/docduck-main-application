@@ -12,23 +12,58 @@ import java.util.Base64;
  */
 public class User extends BaseData {
 
-    private final String name;
-    private final String email;
-    private final String role;
-    private String passwordHash;
 
-    public User(String name, String email, String role, String password) {
-        super();
+    private final int id;
+    private String name;
+    private String username;
+    private String passwordHash;
+    private String email;
+    private String role;
+    
+    public User(int id, String name, String username, String passwordHash, String email, String role) {
+        this.id = id; 
         this.name = name;
+        this.username = username;
+        this.passwordHash = passwordHash;
         this.email = email;
         this.role = role;
-        setPassword(password);
+    }
+    
+    public User (int id) {
+        this.id = 0;
+        
+        // Populate from XML
+        
+//        List l = getUserData(id);
+//        
+//        name = jdomData.getDataValue(id, "name", DataType.USER);
+//        for (Element target : l) {
+//            if (target.getName().equals("name")) {
+//                name = target.getValue();
+//            }
+//        }
     }
 
+    private void updateXMLData() {
+//        jdomData.setuserdata(this);
+    }
+
+    public int getId() {
+        return id;
+    }
+    
     public String getName() {
         return name;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+    
     public String getEmail() {
         return email;
     }
@@ -37,20 +72,23 @@ public class User extends BaseData {
         return role;
     }
 
-    public String getUsername() {
-        // First part of the email before the '@' symbol
-        int atIndex = email.indexOf('@');
-
-        if (atIndex != -1) {
-            return email.substring(0, atIndex);
-        }
-        else {
-            // If email format is invalid, return the entire email
-            return email;
-        }
+    public void setName(String name) {
+        this.name = name;
     }
 
-    private void setPassword(String password) {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
+    public void setPassword(String password) {
         this.passwordHash = hashPassword(password);
     }
 

@@ -72,7 +72,8 @@ public class GUIBuilder {
     public void StartPage() {
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #1f5398");
-        ImageView logo = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
+        ImageView logo = new ImageView(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
         logo.setLayoutX(390);
         logo.setLayoutY(80);
         logo.setFitWidth(500);
@@ -114,7 +115,8 @@ public class GUIBuilder {
     public void LoadFromXMLPage() {
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #1f5398");
-        ImageView logo = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
+        ImageView logo = new ImageView(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
         logo.setLayoutX(390);
         logo.setLayoutY(80);
         logo.setFitWidth(500);
@@ -288,20 +290,21 @@ public class GUIBuilder {
         populateMachineData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-        adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
+
+        adminPage = new AdminPage(machines, user); // needs integrating (move user and machines out of admin page and use below)
     }
 
     private void populateMachineData() {
         machines = new ArrayList<>();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN", "password");
+        user = new User(24, "Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
 
         Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1", "1", "");
-        Report report = new Report(user, "Broken");
-        report.setPathToFile("/docducklogo.png");
+        Report report = new Report(0, user, "Broken", null, null);
+
         machine1.addReport(report);
         machines.add(machine1);
         Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2", "");
-        machine2.addReport(new Report(user, "It not work now"));
+        machine2.addReport(new Report(0, user, "It not work now", null, null));
         machines.add(machine2);
         machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2", ""));
         machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2", ""));

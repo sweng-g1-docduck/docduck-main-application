@@ -397,7 +397,7 @@ public class ReportPage extends Page {
         if (extension.equals("png") || extension.equals("jpeg")) {
             Image img = new Image(filePath);
             ImageView view1 = new ImageView(img);
-            view1.setFitWidth(reportDescWidth - 35); //Offset to fit the bar 
+            view1.setFitWidth(reportDescWidth - 35); // Offset to fit the bar
             view1.setPreserveRatio(true);
             return view1;
         }

@@ -8,23 +8,26 @@ package com.docduck.application.data;
  */
 public class Report extends BaseData {
 
-    private final User user;
-    private final String description;
-    private String pathToFile;
 
-    public Report(User user, String description) {
+    private final int id;
+    private final User user;
+    private final String title;
+    private final String description;
+    private final String pathToFile;
+
+    public Report(int id, User user, String title, String description, String pathToFile) {
         super();
+        this.id = id;        
         this.user = user;
+        this.title = title;
         this.description = description;
+        this.pathToFile = pathToFile;
     }
 
     public String getPathToFile() {
         return pathToFile;
     }
 
-    public void setPathToFile(String pathToFile) {
-        this.pathToFile = pathToFile;
-    }
 
     public User getUser() {
         return this.user;

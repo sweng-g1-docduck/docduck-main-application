@@ -128,7 +128,7 @@ public class EventManager {
 
         case "reportPage":
             return e -> guiBuilder.displayPage("REPORT");
-
+   
         default:
             return e -> System.out.println("ERROR: Event not attached, check eventID");
         }

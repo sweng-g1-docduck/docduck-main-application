@@ -15,7 +15,7 @@ public class BaseData {
         }
         catch (JDOMDataHandlerNotInitialised e) {
             e.printError();
-            domDataHandler = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true);
+            domDataHandler = XMLJDOMDataHandler.createNewInstance("/DocDuckData.xml", "/DocDuckSchema.xsd", true, true);
             domDataHandler.setupJDOM();
         }
     }
