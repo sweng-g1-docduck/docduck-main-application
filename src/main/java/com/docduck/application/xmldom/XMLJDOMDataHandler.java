@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import org.jdom2.Attribute;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
@@ -315,11 +316,15 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
             if (currentElement.hasAttributes()) {
 
-                try {
-                    currentElementID = currentElement.getAttribute("id").getIntValue();
-                }
-                catch (DataConversionException e) {
-                    e.printStackTrace();
+                List<Attribute> attributes = currentElement.getAttributes();
+                
+                if (attributes.get(0).getName().equals("id")) {
+                    try {
+                        currentElementID = currentElement.getAttribute("id").getIntValue();
+                    }
+                    catch (DataConversionException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

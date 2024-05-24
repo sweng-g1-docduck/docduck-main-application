@@ -17,29 +17,33 @@ import com.docduck.application.xmldom.InvalidID;
  */
 public class Machine extends BaseData {
 
-    private int id;
+    private final int id;
     private String name;
     private String location;
     private String status;
     private String serialNumber;
-    private String dataSheet;
-    private String purchaseLocation;
+    private String datasheetRef;
+    private String purchaseLocationRef;
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
-    public Machine(String name, String room, String status, String serialNumber, String dataSheet,
-            String purchaseLocation) {
+    public Machine(int id, String name, String room, String status, String serialNumber, String dataSheet,
+            String purchaseLocation) throws InvalidID{
         super();
+        if (!domDataHandler.checkIfIDExists(id)) {
+            throw new InvalidID(
+                    "ID does not exist in database, please provide an existing ID, or create a new machine.");
+        }
+        this.id = id;
         this.name = name;
         this.location = room;
         this.serialNumber = serialNumber;
-        this.dataSheet = dataSheet;
-        this.purchaseLocation = purchaseLocation;
+        this.datasheetRef = dataSheet;
+        this.purchaseLocationRef = purchaseLocation;
 
         if (status.equals("ONLINE") || status.equals("MAINTENANCE") || status.equals("OFFLINE")) {
             this.status = status;
         }
-
         addNewDataToXML();
     }
 
@@ -59,6 +63,8 @@ public class Machine extends BaseData {
 
         List<Element> machineData = domDataHandler.getReportData(id);
 
+        this.id = id;
+        
         for (Element target : machineData) {
 
             if (target.getName().equals("name")) {
@@ -72,8 +78,19 @@ public class Machine extends BaseData {
             if (target.getName().equals("status")) {
                 this.status = target.getValue();
             }
+            
+            if (target.getName().equals("serialNumber")) {
+                this.serialNumber = target.getValue();
+            }
+            
+            if (target.getName().equals("datasheetRef")) {
+                this.datasheetRef = target.getValue();
+            }
+            
+            if (target.getName().equals("purchaseLocationRef")) {
+                this.purchaseLocationRef = target.getValue();
+            }
 
-            // TODO Complete data population
         }
     }
 
@@ -87,11 +104,11 @@ public class Machine extends BaseData {
     }
 
     public String getHyperlink() {
-        return this.dataSheet;
+        return this.datasheetRef;
     }
 
     public String getPurchaseLocation() {
-        return this.purchaseLocation;
+        return this.purchaseLocationRef;
     }
 
     public String getStatus() {
@@ -117,7 +134,7 @@ public class Machine extends BaseData {
     @Override
     public String toString() {
         return ("Machine name: " + this.name + ", Room: " + this.location + ", Status: " + this.status
-                + ", Serial Number: " + this.serialNumber + ", Datasheet Ref: " + this.dataSheet);
+                + ", Serial Number: " + this.serialNumber + ", Datasheet Ref: " + this.datasheetRef);
 
     }
 
@@ -126,7 +143,7 @@ public class Machine extends BaseData {
     }
 
     public String getDatasheet() {
-        return this.dataSheet;
+        return this.datasheetRef;
     }
 
     public void addReport(Report report) {

@@ -30,10 +30,10 @@ public class Page extends BorderPane {
     protected User user;
 
     protected Machine machine; // admin (needs integrating)
-    final List<User> userList = new ArrayList<>(); // admin (needs integrating)
-    final List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
+    List<User> userList = new ArrayList<>(); // admin (needs integrating)
+    List<Machine> machineList = new ArrayList<>(); // admin (needs integrating)
 
-    protected final ArrayList<Machine> machines;
+    protected ArrayList<Machine> machines;
 
     protected final Color barColour = Color.web("245494");
     protected final Color backgroundColour = Color.LIGHTSLATEGREY;
@@ -51,7 +51,7 @@ public class Page extends BorderPane {
         this.machines = machines;
         this.user = user;
         this.events = EventManager.getInstance();
-        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
+//        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     // return list of nodes
@@ -109,7 +109,7 @@ public class Page extends BorderPane {
 
         if (user.getRole().equals("ADMIN")) {
 
-            ButtonWrapper settingsBtn = getButtonWrapper(120, "Settings");
+            ButtonWrapper settingsBtn = getButtonWrapper(120, "Admin");
             menuBar.getChildren().add(settingsBtn);
         }
         Pane spacer = new Pane();
@@ -151,8 +151,10 @@ public class Page extends BorderPane {
         settingsBtn.setHoverColour(btnHoverColour);
         settingsBtn.setFontColour(lightTextColour);
         settingsBtn.setFontSize(20);
+        settingsBtn.setOnAction(events.getActionEvent("adminPage"));
         settingsBtn.removeBorder();
         return settingsBtn;
+
     }
 
 }

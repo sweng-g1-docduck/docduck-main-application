@@ -5,8 +5,11 @@ import org.jdom2.Element;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import org.jdom2.Element;
+import com.docduck.application.xmldom.InvalidID;
 
 /**
  * A Class for storing the non-secure data related to a user - The User's name -
@@ -16,34 +19,44 @@ import java.util.List;
  */
 public class User extends BaseData {
 
+    private final int id;
     private String name;
+    private String username;
+    private String passwordHash;
     private String email;
     private String role;
-    private String passwordHash;
 
-    public User(String name, String email, String role, String password) {
+    public User(String name, String username, String passwordHash, String email, String role) {
         super();
+          
+        ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
+        
+
+        this.id = 0;
         this.name = name;
+        this.username = username;
+        this.passwordHash = passwordHash;
         this.email = email;
         this.role = role;
-        setPassword(password);
     }
 
     /**
      * Constructor to create a new User and populate the data from the xml files
-     *
+     * 
      * @param id - The ID of the user to get out of the xml database
      * @throws InvalidID The provided id of the user doesn't exist in the data
      * @author William-A-B
      */
     public User(int id) throws InvalidID {
-
+        super();
         if (!domDataHandler.checkIfIDExists(id)) {
             throw new InvalidID(
-                    "ID does not exist in database, please provide an existing ID, or create a new User.");
+                    "ID does not exist in database, please provide an existing ID, or create a new user.");
         }
 
-        List<Element> userData = domDataHandler.getReportData(id);
+        List<Element> userData = domDataHandler.getUserData(id);
+
+        this.id = id;
 
         for (Element target : userData) {
 
@@ -51,12 +64,44 @@ public class User extends BaseData {
                 this.name = target.getValue();
             }
 
-            // TODO Complete data population
+            if (target.getName().equals("username")) {
+                this.username = target.getValue();
+            }
+
+            if (target.getName().equals("password")) {
+                this.passwordHash = target.getValue();
+            }
+
+            if (target.getName().equals("email")) {
+                this.email = target.getValue();
+            }
+
+            if (target.getName().equals("role")) {
+                this.role = target.getValue();
+            }
+
         }
     }
 
+    private void updateXMLData() {
+//        jdomData.setuserdata(this);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+
     public String getName() {
         return name;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
     public String getEmail() {
@@ -67,20 +112,23 @@ public class User extends BaseData {
         return role;
     }
 
-    public String getUsername() {
-        // First part of the email before the '@' symbol
-        int atIndex = email.indexOf('@');
-
-        if (atIndex != -1) {
-            return email.substring(0, atIndex);
-        }
-        else {
-            // If email format is invalid, return the entire email
-            return email;
-        }
+    public void setName(String name) {
+        this.name = name;
     }
 
-    private void setPassword(String password) {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setPassword(String password) {
         this.passwordHash = hashPassword(password);
     }
 

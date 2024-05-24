@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Objects;
 
+import com.docduck.application.data.BaseData;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
@@ -12,6 +13,7 @@ import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.Page;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.application.gui.pages.StatusPage;
+import com.docduck.application.xmldom.InvalidID;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.collections.ObservableList;
@@ -41,6 +43,7 @@ public class GUIBuilder {
     private User user;
 
     private AdminPage adminPage;
+    private ArrayList<User> allUsers;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -72,7 +75,8 @@ public class GUIBuilder {
     public void StartPage() {
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #1f5398");
-        ImageView logo = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
+        ImageView logo = new ImageView(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
         logo.setLayoutX(390);
         logo.setLayoutY(80);
         logo.setFitWidth(500);
@@ -114,7 +118,8 @@ public class GUIBuilder {
     public void LoadFromXMLPage() {
         root.getChildren().clear();
         root.setStyle("-fx-background-color: #1f5398");
-        ImageView logo = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
+        ImageView logo = new ImageView(
+                new Image(Objects.requireNonNull(getClass().getResourceAsStream("/docducklogo.png"))));
         logo.setLayoutX(390);
         logo.setLayoutY(80);
         logo.setFitWidth(500);
@@ -285,30 +290,21 @@ public class GUIBuilder {
      * Builds all the pages
      */
     public void buildPages() {
-        populateMachineData();
+        populateData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-        adminPage = new AdminPage(); // needs integrating (move user and machines out of admin page and use below)
+
+        adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin page and use below)
     }
 
-    private void populateMachineData() {
-        machines = new ArrayList<>();
-        user = new User("Bob", "bob@york.ac.uk", "ADMIN", "password");
+    private void populateData() {
 
-        Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1", "1", "");
-        Report report = new Report(user, "Broken");
-        report.setPathToFile("/docducklogo.png");
-        machine1.addReport(report);
-        machines.add(machine1);
-        Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2", "");
-        machine2.addReport(new Report(user, "It not work now"));
-        machines.add(machine2);
-        machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2", ""));
-        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2", ""));
-        machines.add(new Machine("Machine Five", "Room 1", "ONLINE", "5", "2", ""));
-        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2", ""));
-        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2", ""));
-        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2", ""));
-        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2", ""));
+        user = new User("Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
+        
+        BaseData bd = new BaseData();
+        machines = bd.setupMachineDataFromXML();
+        allUsers = bd.setupUserDataFromXML();
+        
     }
+    
 }

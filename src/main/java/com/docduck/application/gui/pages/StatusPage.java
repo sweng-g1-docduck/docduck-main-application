@@ -154,7 +154,7 @@ public class StatusPage extends Page {
             if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ImageView view1 = new ImageView(img);
-                double buttonWidth = (double) (machineBoxWidth - 75) / 3;
+                double buttonWidth = (machineBoxWidth - 75) / 3;
                 view1.setFitWidth(buttonWidth);
                 view1.setPreserveRatio(true);
 
@@ -306,7 +306,7 @@ public class StatusPage extends Page {
                 // Submit report to XML
                 machine.setStatus("OFFLINE");
                 setRight(null);
-                Report report = new Report(user, descriptionBox.getText());
+                Report report = new Report(machineBoxWidth, user, descriptionBox.getText(), fontName, fontName);
                 machine.addReport(report);
                 drawMachineButtons();
 
@@ -381,14 +381,14 @@ public class StatusPage extends Page {
         location.setTextFill(infoTextColour);
 
         Hyperlink datasheet = new Hyperlink("Datasheet");
-        datasheet.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
+        datasheet.setOnAction(events.getHyperlinkEvent(machine.getDatasheet()));
         datasheet.setTextFill(infoTextColour);
         datasheet.setFont(new Font(fontName, smallFontSize));
         datasheet.setTranslateX(-4);
         datasheet.setTranslateY(-2);
 
         Hyperlink purchaseLink = new Hyperlink("Purchase Link");
-        purchaseLink.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
+        purchaseLink.setOnAction(events.getHyperlinkEvent(machine.getPurchaseLocation()));
         purchaseLink.setFont(new Font(fontName, smallFontSize));
         purchaseLink.setTextFill(infoTextColour);
         purchaseLink.setTranslateX(-4);
