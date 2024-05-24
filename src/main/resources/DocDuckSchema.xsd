@@ -748,14 +748,14 @@
         <xs:complexType>
           <xs:sequence>
             <xs:element name="name" type="xs:string"/>
-            <xs:element name="stockNumber" type="xs:int"/>
+            <xs:element name="status" type="machineStatus"/>
             <xs:element name="serialNumber" type="xs:string"/>
             <xs:element name="location" type="xs:string"/>
+            <xs:element name="imageRef" type="xs:string"/>
             <xs:element name="datasheetRef" type="xs:string"/>
             <xs:element name="purchaseLocationRef" type="xs:string"/>
             <xs:element name="components" type="componentInfo"/>
             <xs:element name="parts" type="partInfo"/>
-            <xs:element name="status" type="machineStatus"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
         </xs:complexType>

@@ -22,17 +22,19 @@ public class Machine extends BaseData {
     private String location;
     private String status;
     private String serialNumber;
+    private String imageRef;
     private String datasheetRef;
     private String purchaseLocationRef;
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
-    public Machine(int id, String name, String room, String status, String serialNumber, String dataSheet,
+
+    public Machine(int id, String name, String room, String status, String serialNumber, String imageRef, String dataSheet,
             String purchaseLocation) throws InvalidID{
         super();
-        if (!domDataHandler.checkIfIDExists(id)) {
+        if (domDataHandler.checkIfIDExists(id)) {
             throw new InvalidID(
-                    "ID does not exist in database, please provide an existing ID, or create a new machine.");
+                    "ID already exists in database, please provide a new ID.");
         }
         this.id = id;
         this.name = name;
@@ -159,4 +161,7 @@ public class Machine extends BaseData {
         this.currentReport = null;
     }
 
+    public String getImageRef() {
+        return this.imageRef;
+    }
 }

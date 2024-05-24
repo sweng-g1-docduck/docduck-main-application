@@ -32,7 +32,7 @@ public class User extends BaseData {
         ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
         
 
-        this.id = 0;
+        this.id = 2002;
         this.name = name;
         this.username = username;
         this.passwordHash = passwordHash;

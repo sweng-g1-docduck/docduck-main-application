@@ -20,6 +20,7 @@ public class Report extends BaseData {
     private String title;
     private String description;
     private String pathToFile;
+    private Report machine;
 
     public Report(int id, User user, String title, String description, String pathToFile) {
         super();
@@ -75,4 +76,15 @@ public class Report extends BaseData {
         return this.description;
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public int getMachineId() {
+        return this.machine.getId();
+    }
 }

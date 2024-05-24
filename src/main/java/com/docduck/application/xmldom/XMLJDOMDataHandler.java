@@ -295,8 +295,73 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
     public void addNewMachine(Machine machine) {
 
-        Element newMachine = new Element("machine");
+        Element newMachineParent = new Element("machine");
+        newMachineParent.setAttribute(new Attribute("id", String.valueOf(machine.getId())));
 
+        ArrayList<Element> machineChildren = new ArrayList<>();
+        machineChildren.clear();
+
+        machineChildren.add(createNewElement("name", machine.getName()));
+        machineChildren.add(createNewElement("status", machine.getStatus()));
+        machineChildren.add(createNewElement("serialNumber", machine.getSerialNumber()));
+        machineChildren.add(createNewElement("location", machine.getLocation()));
+        machineChildren.add(createNewElement("imageRef", machine.getImageRef()));
+        machineChildren.add(createNewElement("datasheetRef", machine.getDatasheet()));
+        machineChildren.add(createNewElement("purchaseLocationRef", machine.getPurchaseLocation()));
+
+        for (Element target : machineChildren) {
+            newMachineParent.addContent(target);
+        }
+
+        // Adds the new machine into the machines database
+        addElement("machineData", -1, newMachineParent);
+        outputDocumentToXML();
+    }
+
+    public void addNewUser(User user) {
+
+        Element newUserParent = new Element("user");
+        newUserParent.setAttribute(new Attribute("id", String.valueOf(user.getId())));
+
+        ArrayList<Element> userChildren = new ArrayList<>();
+        userChildren.clear();
+
+        userChildren.add(createNewElement("name", user.getName()));
+        userChildren.add(createNewElement("username", user.getUsername()));
+        userChildren.add(createNewElement("password", user.getPasswordHash()));
+        userChildren.add(createNewElement("email", user.getEmail()));
+        userChildren.add(createNewElement("role", user.getRole()));
+
+        for (Element target : userChildren) {
+            newUserParent.addContent(target);
+        }
+
+        // Adds the new machine into the machines database
+        addElement("userData", -1, newUserParent);
+        outputDocumentToXML();
+    }
+
+    public void addNewReport(Report report) {
+
+        Element newReportParent = new Element("report");
+        newReportParent.setAttribute(new Attribute("id", String.valueOf(report.getId())));
+
+        ArrayList<Element> reportChildren = new ArrayList<>();
+        reportChildren.clear();
+
+        reportChildren.add(createNewElement("title", report.getTitle()));
+        reportChildren.add(createNewElement("description", report.getDescription()));
+        reportChildren.add(createNewElement("media", report.getPathToFile()));
+        reportChildren.add(createNewElement("machineID", String.valueOf(report.getMachineId())));
+        reportChildren.add(createNewElement("userID", String.valueOf(report.getUser().getId())));
+
+        for (Element target : reportChildren) {
+            newReportParent.addContent(target);
+        }
+
+        // Adds the new machine into the machines database
+        addElement("machineReport", -1, newReportParent);
+        outputDocumentToXML();
     }
 
     public boolean checkIfIDExists(int id) {

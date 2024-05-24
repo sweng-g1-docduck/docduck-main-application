@@ -1,9 +1,6 @@
 package com.docduck.application.xmldom;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.List;
@@ -18,6 +15,8 @@ import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.DOMBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.jdom2.util.IteratorIterable;
 import org.xml.sax.SAXException;
 
@@ -212,8 +211,53 @@ public class XMLJDOM {
         return attributeIDs;
     }
 
-    public void addElement(Element parentElement, Element desiredELement, String value) {
+    protected void addElement(String parentElementName, int id, Element desiredELement) {
+        Element parentElement = getElement(parentElementName, id, true, null);
+        parentElement.addContent(desiredELement);
 
+        if (desiredELement.getAttributes().contains("id")) {
+            int prefixedID = -1;
+            try {
+                prefixedID = desiredELement.getAttribute("id").getIntValue();
+            } catch (DataConversionException e) {
+                throw new RuntimeException(e);
+            }
+            String prefixedID_s = String.valueOf(prefixedID);
+            int attID = -1;
+            try {
+                attID = Integer.parseInt(prefixedID_s.substring(3));
+            }
+            catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+//            parentElement.addContent(attID, desiredELement);
+        }
+
+        XMLOutputter xmlOutputter = new XMLOutputter();
+
+        // pretty print
+        xmlOutputter.setFormat(Format.getPrettyFormat());
+        try {
+            xmlOutputter.output(document, System.out);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Creates a new element with the given name and value
+     *
+     * @param elementName - The name of the element tag
+     * @param elementValue - The value to set the element to
+     * @return The newly created element
+     * @author William-A-B
+     */
+    protected Element createNewElement(String elementName, String elementValue) {
+
+        Element newElement = new Element(elementName);
+        newElement.setText(elementValue);
+
+        return newElement;
     }
 
     /**
@@ -229,6 +273,33 @@ public class XMLJDOM {
         Attribute att = element.getAttribute(attributeName);
 
         return att.getValue();
+    }
+
+    public void outputDocumentToXML() {
+        XMLOutputter xmlOutputter = new XMLOutputter();
+
+        OutputStream xmlOutputStream;
+        try {
+            xmlOutputStream = new FileOutputStream(xmlFilename);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        // pretty print
+        xmlOutputter.setFormat(Format.getPrettyFormat());
+
+        try {
+            xmlOutputter.output(document, xmlOutputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        try {
+            xmlOutputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
