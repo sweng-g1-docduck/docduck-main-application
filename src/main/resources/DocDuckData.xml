@@ -3,9 +3,10 @@
   <machineData>
     <machine id="1">
       <name>3D Printer</name>
-      <stockNumber>2</stockNumber>
+      <status>ONLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>Labs_4th_Floor</location>
+      <imageRef>https://wabetteridge.co.uk/assets/icons/favicon.jpg</imageRef>
       <datasheetRef>https://bbc.co.uk</datasheetRef>
       <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
       <components>
@@ -50,10 +51,8 @@
           <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
         </part>
       </parts>
-      <status>ONLINE</status>
     </machine>
   </machineData>
-  
   <userData>
     <user id="1">
       <name>James Stevenson</name>
@@ -69,8 +68,21 @@
       <email>wab513@york.ac.uk</email>
       <role>ADMIN</role>
     </user>
+    <user id="2001">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+    <user id="2002">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
   </userData>
-  
   <machineReport>
     <report id="1">
       <title>3D Printer Not Responding</title>

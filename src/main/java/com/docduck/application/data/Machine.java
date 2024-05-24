@@ -22,10 +22,12 @@ public class Machine extends BaseData {
     private String location;
     private String status;
     private String serialNumber;
+    private String imageRef;
     private String datasheetRef;
     private String purchaseLocationRef;
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
+
 
     public Machine(String name, String room, String status, String serialNumber, String dataSheet,
             String purchaseLocation) {
@@ -166,4 +168,7 @@ public class Machine extends BaseData {
         this.currentReport = null;
     }
 
+    public String getImageRef() {
+        return this.imageRef;
+    }
 }
