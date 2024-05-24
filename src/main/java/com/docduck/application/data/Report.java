@@ -13,11 +13,13 @@ import java.util.List;
  */
 public class Report extends BaseData {
 
+
+
     private final int id;
     private final User user;
-    private final String title;
-    private final String description;
-    private final String pathToFile;
+    private String title;
+    private String description;
+    private String pathToFile;
 
     public Report(int id, User user, String title, String description, String pathToFile) {
         super();
@@ -44,14 +46,20 @@ public class Report extends BaseData {
 
         List<Element> reportData = domDataHandler.getReportData(id);
 
+        this.id = id;
         for (Element target : reportData) {
 
             if (target.getName().equals("title")) {
                 this.title = target.getValue();
             }
-
-            // TODO Complete data population
+            if (target.getName().equals("description")) {
+                this.description = target.getValue();
+            } 
+            if (target.getName().equals("pathToFile")) {
+                this.pathToFile = target.getValue();
+            } 
         }
+        this.user = null;
     }
 
     public String getPathToFile() {

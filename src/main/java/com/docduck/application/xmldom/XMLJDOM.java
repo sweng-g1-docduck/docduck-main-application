@@ -193,10 +193,20 @@ public class XMLJDOM {
         List<Element> listOfElements = dataTypeElement.getChildren();
 
         for (Element target : listOfElements) {
-            try {
-                attributeIDs.add(target.getAttribute("id").getIntValue());
-            } catch (DataConversionException e) {
-                throw new RuntimeException(e);
+            
+            if (target.hasAttributes()) {
+
+                List<Attribute> attributes = target.getAttributes();
+                
+                if (attributes.get(0).getName().equals("id")) {
+            
+                    try {
+                        attributeIDs.add(target.getAttribute("id").getIntValue());
+                    }
+                    catch (DataConversionException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
         return attributeIDs;

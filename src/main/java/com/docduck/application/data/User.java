@@ -5,6 +5,7 @@ import org.jdom2.Element;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import org.jdom2.Element;
@@ -25,13 +26,13 @@ public class User extends BaseData {
     private String email;
     private String role;
 
-    public User(int id, String name, String username, String passwordHash, String email, String role) throws InvalidID {
+    public User(String name, String username, String passwordHash, String email, String role) {
         super();
-        if (!domDataHandler.checkIfIDExists(id)) {
-            throw new InvalidID(
-                    "ID does not exist in database, please provide an existing ID, or create a new user.");
-        }
-        this.id = id;
+          
+        ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
+        
+
+        this.id = 0;
         this.name = name;
         this.username = username;
         this.passwordHash = passwordHash;
@@ -90,31 +91,6 @@ public class User extends BaseData {
         return id;
     }
 
-    /**
-     * Constructor to create a new User and populate the data from the xml files
-     *
-     * @param id - The ID of the user to get out of the xml database
-     * @throws InvalidID The provided id of the user doesn't exist in the data
-     * @author William-A-B
-     */
-    public User(int id) throws InvalidID {
-
-        if (!domDataHandler.checkIfIDExists(id)) {
-            throw new InvalidID(
-                    "ID does not exist in database, please provide an existing ID, or create a new User.");
-        }
-
-        List<Element> userData = domDataHandler.getReportData(id);
-
-        for (Element target : userData) {
-
-            if (target.getName().equals("name")) {
-                this.name = target.getValue();
-            }
-
-            // TODO Complete data population
-        }
-    }
 
     public String getName() {
         return name;

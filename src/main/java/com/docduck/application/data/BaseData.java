@@ -46,10 +46,10 @@ public class BaseData {
     }
     public ArrayList<Report> setupReportDataFromXML() {
 
-        ArrayList<Integer> machineIDs = domDataHandler.getListOfReportIDs();
+        ArrayList<Integer> reportIDs = domDataHandler.getListOfReportIDs();
         ArrayList<Report> reportList = new ArrayList<>();
 
-        for (int currentID : machineIDs) {
+        for (int currentID : reportIDs) {
             try {
                 reportList.add(new Report(currentID));
             } catch (InvalidID e) {
@@ -60,10 +60,10 @@ public class BaseData {
     }
     public ArrayList<User> setupUserDataFromXML() {
 
-        ArrayList<Integer> machineIDs = domDataHandler.getListOfUserIDs();
+        ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
         ArrayList<User> userList = new ArrayList<>();
 
-        for (int currentID : machineIDs) {
+        for (int currentID : userIDs) {
             try {
                 userList.add(new User(currentID));
             } catch (InvalidID e) {

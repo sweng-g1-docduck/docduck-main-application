@@ -381,14 +381,14 @@ public class StatusPage extends Page {
         location.setTextFill(infoTextColour);
 
         Hyperlink datasheet = new Hyperlink("Datasheet");
-        datasheet.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
+        datasheet.setOnAction(events.getHyperlinkEvent(machine.getDatasheet()));
         datasheet.setTextFill(infoTextColour);
         datasheet.setFont(new Font(fontName, smallFontSize));
         datasheet.setTranslateX(-4);
         datasheet.setTranslateY(-2);
 
         Hyperlink purchaseLink = new Hyperlink("Purchase Link");
-        purchaseLink.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
+        purchaseLink.setOnAction(events.getHyperlinkEvent(machine.getPurchaseLocation()));
         purchaseLink.setFont(new Font(fontName, smallFontSize));
         purchaseLink.setTextFill(infoTextColour);
         purchaseLink.setTranslateX(-4);

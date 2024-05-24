@@ -52,10 +52,11 @@ public class AdminPage extends Page {
         MANAGER
     }
 
-    public AdminPage(ArrayList<Machine> machines, User user) {
+    public AdminPage(ArrayList<Machine> machines, User user, ArrayList<User> allUsers) {
         super(machines, user);
         setTop(drawMenuBar());
         buildPage();
+        allUsersList = allUsers;
     }
 
     @Override
@@ -420,7 +421,7 @@ public class AdminPage extends Page {
                     new Background(new BackgroundFill(Color.web("#FFFFFF"), new CornerRadii(5), new Insets(10))));
             userListVBox.setPadding(new Insets(5));
 
-            allUsersList = getAllUsers();
+//            allUsersList = getAllUsers();
             filteredUserList = new ArrayList<>(allUsersList);
 
             updateDisplayedUserList(filteredUserList);
