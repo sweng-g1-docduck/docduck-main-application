@@ -12,9 +12,7 @@ public class BaseData {
 
     protected XMLJDOMDataHandler domDataHandler;
     
-    private List<Machine> machineList = new ArrayList<>(); 
-    private List<Report> reportList = new ArrayList<>(); 
-    private List<User> userList = new ArrayList<>(); 
+
 
     public BaseData() {
 

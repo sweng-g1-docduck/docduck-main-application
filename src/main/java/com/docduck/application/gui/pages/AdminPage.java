@@ -705,23 +705,8 @@ public class AdminPage extends Page {
         return button;
     }
 
-    private List<User> getAllUsers() {
-
-//        for (int i = 0; i < 20; i++) {
-//            String[] names = { "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack" };
-//            String[] roles = { "Admin", "Operator", "Engineer" };
-//            String name = names[(int) (Math.random() * names.length)];
-//            String role = roles[(int) (Math.random() * roles.length)];
-//
-//            userList.add(new User(1, name + " " + (i + 1), "Username", "password123",
-//                    name.toLowerCase() + (i + 1) + "@docduck.com", role));
-//        }
-
-        return userList;
-    }
-
     private void updateHeader(String text) {
         headerLabel.setText(text);
     }
-    
+
 }
