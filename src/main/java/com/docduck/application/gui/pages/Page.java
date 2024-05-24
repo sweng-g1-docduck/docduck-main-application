@@ -109,7 +109,7 @@ public class Page extends BorderPane {
 
         if (user.getRole().equals("ADMIN")) {
 
-            ButtonWrapper settingsBtn = getButtonWrapper(120, "Settings");
+            ButtonWrapper settingsBtn = getButtonWrapper(120, "Admin");
             menuBar.getChildren().add(settingsBtn);
         }
         Pane spacer = new Pane();
@@ -151,6 +151,7 @@ public class Page extends BorderPane {
         settingsBtn.setHoverColour(btnHoverColour);
         settingsBtn.setFontColour(lightTextColour);
         settingsBtn.setFontSize(20);
+        settingsBtn.setOnAction(events.getActionEvent("adminPage"));
         settingsBtn.removeBorder();
         return settingsBtn;
 

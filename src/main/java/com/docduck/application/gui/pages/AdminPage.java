@@ -46,6 +46,7 @@ public class AdminPage extends Page {
     private boolean editingUsers = false;
     private boolean editingMachines = false;
     private Label headerLabel;
+    private Stage newStage;
 
     private enum ButtonType {
         MANAGER
@@ -161,7 +162,10 @@ public class AdminPage extends Page {
     }
 
     private void openWindow(String managerType, String actionType, User user, Machine machine) {
-        Stage newStage = new Stage();
+        if (newStage != null) {
+            newStage.close();
+        }
+        newStage = new Stage();
         VBox formLayout = createManagerForm(managerType, actionType, user, machine);
         formLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), new Insets(50))));
 
@@ -349,12 +353,18 @@ public class AdminPage extends Page {
 
         saveButton.setOnAction(event -> {
             // Handle save action
-            System.out.println("Save button pressed");
+            if (editingUsers) {
+                System.out.println("User Save button pressed");
+            }
+            else if (editingMachines) {
+                System.out.println("Machine Save button pressed");
+            }
         });
 
         cancelButton.setOnAction(event -> {
             // Handle cancel action
             System.out.println("Cancel button pressed");
+            newStage.close();
         });
 
         buttonBox.getChildren().addAll(saveButton, cancelButton);
@@ -594,6 +604,7 @@ public class AdminPage extends Page {
         double height = Math.max(50, Math.min(70, 500 / machines.size()));
         machineButton.setButtonHeight(height);
         machineButton.setFont(Font.font("System", 80));
+
         machineButton.setText(machine.getName() + " - " + machine.getLocation() + " - " + machine.getStatus());
         machineButton.setBackgroundColour(btnColour);
         machineButton.setClickcolour(btnClickColour);
@@ -694,50 +705,22 @@ public class AdminPage extends Page {
     }
 
     private List<User> getAllUsers() {
-//        userList.add(new User("John Doe", "john@docduck.com", "Admin", "password123"));
-//        userList.add(new User("Jane Smith", "jane@docduck.com", "Operator", "password123"));
-//        userList.add(new User("Bob Johnson", "bob@docduck.com", "Engineer", "password123"));
-//        userList.add(new User("Emily Brown", "emily@docduck.com", "Admin", "password123"));
-//        userList.add(new User("Michael Clark", "michael@docduck.com", "Operator", "password123"));
-//        userList.add(new User("Alice Green", "alice@docduck.com", "Engineer", "password123"));
-//        userList.add(new User("Kelvin Zacharias", "KZ@docduck.com", "Engineer", "password123"));
 
-        for (int i = 0; i < 20; i++) {
-            String[] names = { "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack" };
-            String[] roles = { "Admin", "Operator", "Engineer" };
-            String name = names[(int) (Math.random() * names.length)];
-            String role = roles[(int) (Math.random() * roles.length)];
-            userList.add(new User(1, name + " " + (i + 1), "Username", "password123",
-                    name.toLowerCase() + (i + 1) + "@docduck.com", role));
-        }
+//        for (int i = 0; i < 20; i++) {
+//            String[] names = { "Alice", "Bob", "Charlie", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack" };
+//            String[] roles = { "Admin", "Operator", "Engineer" };
+//            String name = names[(int) (Math.random() * names.length)];
+//            String role = roles[(int) (Math.random() * roles.length)];
+//
+//            userList.add(new User(1, name + " " + (i + 1), "Username", "password123",
+//                    name.toLowerCase() + (i + 1) + "@docduck.com", role));
+//        }
 
         return userList;
-    }
-
-    private List<Machine> generateMachineList() {
-        machineList.add(new Machine("Machine One", "Room 1", "ONLINE", "1", "1", ""));
-        machineList.add(new Machine("Machine Two", "Room 2", "ONLINE", "2", "2", ""));
-        machineList.add(new Machine("Machine Three", "Room 1", "MAINTENANCE", "3", "2", ""));
-        machineList.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2", ""));
-        machineList.add(new Machine("Machine Five", "Room 1", "OFFLINE", "5", "2", ""));
-        machineList.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2", ""));
-        machineList.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2", ""));
-        machineList.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2", ""));
-        machineList.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2", ""));
-
-        for (int i = 0; i < 20; i++) {
-            String[] names = { "Machine", "Generator", "Compressor", "Pump", "Boiler", "Engine" };
-            String[] statuses = { "ONLINE", "OFFLINE", "MAINTENANCE" };
-            String name = names[(int) (Math.random() * names.length)];
-            String status = statuses[(int) (Math.random() * statuses.length)];
-            machineList.add(new Machine(name + " " + (i + 1), "Room " + ((i % 3) + 1), status, String.valueOf(i + 10),
-                    "2", ""));
-        }
-
-        return machineList;
     }
 
     private void updateHeader(String text) {
         headerLabel.setText(text);
     }
+    
 }

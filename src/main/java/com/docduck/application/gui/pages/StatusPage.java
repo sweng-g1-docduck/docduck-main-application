@@ -154,7 +154,7 @@ public class StatusPage extends Page {
             if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ImageView view1 = new ImageView(img);
-                double buttonWidth = (double) (machineBoxWidth - 75) / 3;
+                double buttonWidth = (machineBoxWidth - 75) / 3;
                 view1.setFitWidth(buttonWidth);
                 view1.setPreserveRatio(true);
 

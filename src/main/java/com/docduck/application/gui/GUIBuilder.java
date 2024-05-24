@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Objects;
 
+import com.docduck.application.data.BaseData;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
@@ -296,22 +297,26 @@ public class GUIBuilder {
 
     private void populateMachineData() {
         machines = new ArrayList<>();
-        user = new User(24, "Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
-
-        Machine machine1 = new Machine("Machine One", "Room 1", "OFFLINE", "1", "1", "");
-        Report report = new Report(0, user, "Broken", null, null);
-
-        machine1.addReport(report);
-        machines.add(machine1);
-        Machine machine2 = new Machine("Machine Two", "Room 2", "OFFLINE", "2", "2", "");
-        machine2.addReport(new Report(0, user, "It not work now", null, null));
-        machines.add(machine2);
-        machines.add(new Machine("Machine Three", "Room 1", "ONLINE", "3", "2", ""));
-        machines.add(new Machine("Machine Four", "Room 2", "ONLINE", "4", "2", ""));
-        machines.add(new Machine("Machine Five", "Room 1", "ONLINE", "5", "2", ""));
-        machines.add(new Machine("Machine Six", "Room 2", "ONLINE", "6", "2", ""));
-        machines.add(new Machine("Machine Seven", "Room 1", "ONLINE", "7", "2", ""));
-        machines.add(new Machine("Machine Eight", "Room 2", "ONLINE", "8", "2", ""));
-        machines.add(new Machine("Machine Nine", "Room 1", "ONLINE", "9", "2", ""));
+//        user = new User(24, "Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
+//
+//        Machine machine1 = new Machine(0, "Machine One", "Room 1", "OFFLINE", "1", "1", "");
+//        Report report = new Report(0, user, "Broken", null, null);
+//
+//        machine1.addReport(report);
+//        machines.add(machine1);
+//        Machine machine2 = new Machine(0, "Machine Two", "Room 2", "OFFLINE", "2", "2", "");
+//        machine2.addReport(new Report(0, user, "It not work now", null, null));
+//        machines.add(machine2);
+//        machines.add(new Machine(0, "Machine Three", "Room 1", "ONLINE", "3", "2", ""));
+//        machines.add(new Machine(0, "Machine Four", "Room 2", "ONLINE", "4", "2", ""));
+//        machines.add(new Machine(0, "Machine Five", "Room 1", "ONLINE", "5", "2", ""));
+//        machines.add(new Machine(0, "Machine Six", "Room 2", "ONLINE", "6", "2", ""));
+//        machines.add(new Machine(0, "Machine Seven", "Room 1", "ONLINE", "7", "2", ""));
+//        machines.add(new Machine(0, "Machine Eight", "Room 2", "ONLINE", "8", "2", ""));
+//        machines.add(new Machine(0, "Machine Nine", "Room 1", "ONLINE", "9", "2", ""));
+        
+        BaseData bd = new BaseData();
+        machines = bd.setupMachineDataFromXML();
+        
     }
 }

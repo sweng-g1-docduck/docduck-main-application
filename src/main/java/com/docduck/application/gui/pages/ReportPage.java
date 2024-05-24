@@ -401,6 +401,14 @@ public class ReportPage extends Page {
             view1.setPreserveRatio(true);
             return view1;
         }
+        
+        int i = 1;
+        switch (i) {
+        case 2:
+        case 1:
+            System.out.println("1");
+            break;
+        }
         return null;
     }
 
