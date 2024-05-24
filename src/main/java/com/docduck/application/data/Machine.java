@@ -39,6 +39,8 @@ public class Machine extends BaseData {
         if (status.equals("ONLINE") || status.equals("MAINTENANCE") || status.equals("OFFLINE")) {
             this.status = status;
         }
+
+        addNewDataToXML();
     }
 
     /**
@@ -55,7 +57,7 @@ public class Machine extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new machine.");
         }
 
-        List<Element> machineData = domDataHandler.getMachineData(id);
+        List<Element> machineData = domDataHandler.getReportData(id);
 
         for (Element target : machineData) {
 
@@ -74,6 +76,11 @@ public class Machine extends BaseData {
             // TODO Complete data population
         }
     }
+
+    private void addNewDataToXML() {
+        domDataHandler.addNewMachine(this);
+    }
+
 
     public int getId() {
         return id;

@@ -7,9 +7,7 @@ public class InvalidID extends Throwable {
     public InvalidID(String message) {
         this.errorMessage = message;
     }
-
-    @Override
-    public void printStackTrace() {
+    public void printErrorMessage() {
         System.err.println(errorMessage);
     }
 }
