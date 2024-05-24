@@ -17,6 +17,7 @@ import com.docduck.application.xmldom.InvalidID;
  */
 public class Machine extends BaseData {
 
+    private static final int MACHINE_ID_PREFIX = 100;
     private final int id;
     private String name;
     private String location;
@@ -28,13 +29,17 @@ public class Machine extends BaseData {
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
     public Machine(int id, String name, String room, String status, String serialNumber, String dataSheet,
-            String purchaseLocation) throws InvalidID{
+            String purchaseLocation){
         super();
-        if (!domDataHandler.checkIfIDExists(id)) {
-            throw new InvalidID(
-                    "ID does not exist in database, please provide an existing ID, or create a new machine.");
+
+        ArrayList<Integer> machineIDs = domDataHandler.getListOfMachineIDs();
+        int counter = 1;
+        
+        while (machineIDs.contains(addPrefix(counter,MACHINE_ID_PREFIX))) {
+            counter++;
         }
-        this.id = id;
+
+        this.id = addPrefix(counter,MACHINE_ID_PREFIX);
         this.name = name;
         this.location = room;
         this.serialNumber = serialNumber;
@@ -97,7 +102,6 @@ public class Machine extends BaseData {
     private void addNewDataToXML() {
         domDataHandler.addNewMachine(this);
     }
-
 
     public int getId() {
         return id;

@@ -19,6 +19,7 @@ import com.docduck.application.xmldom.InvalidID;
  */
 public class User extends BaseData {
 
+    private static final int USER_ID_PREFIX = 200;
     private final int id;
     private String name;
     private String username;
@@ -28,11 +29,15 @@ public class User extends BaseData {
 
     public User(String name, String username, String passwordHash, String email, String role) {
         super();
-          
-        ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
-        
 
-        this.id = 0;
+        ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
+        int counter = 1;
+        
+        while (userIDs.contains(addPrefix(counter,USER_ID_PREFIX))) {
+            counter++;
+        }
+
+        this.id = addPrefix(counter,USER_ID_PREFIX);
         this.name = name;
         this.username = username;
         this.passwordHash = passwordHash;
@@ -50,8 +55,7 @@ public class User extends BaseData {
     public User(int id) throws InvalidID {
         super();
         if (!domDataHandler.checkIfIDExists(id)) {
-            throw new InvalidID(
-                    "ID does not exist in database, please provide an existing ID, or create a new user.");
+            throw new InvalidID("ID does not exist in database, please provide an existing ID, or create a new user.");
         }
 
         List<Element> userData = domDataHandler.getUserData(id);
@@ -90,7 +94,6 @@ public class User extends BaseData {
     public int getId() {
         return id;
     }
-
 
     public String getName() {
         return name;

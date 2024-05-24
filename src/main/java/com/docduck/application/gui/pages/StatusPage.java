@@ -96,10 +96,22 @@ public class StatusPage extends Page {
      * @author jrb617
      */
     private void setupRoomSelect() {
+        
+        ArrayList<String> allLocations= new ArrayList<>();
+        for (Machine machine: machines) {
+            if (!allLocations.contains(machine.getLocation())){
+                allLocations.add(machine.getLocation());
+            }
+        }
+
+        allLocations.sort(String::compareToIgnoreCase);
+        
         roomSelectBox = new ComboBox<>();
-        roomSelectBox.getItems().addAll("All", "Room 1", "Room 2", "Room 3");
+        roomSelectBox.getItems().add("All");
+        roomSelectBox.getItems().addAll(allLocations);
         roomSelectBox.setValue("All");
         roomSelectBox.valueProperty().addListener((ov, t, t1) -> drawMachineButtons());
+        
     }
 
     /**

@@ -70,4 +70,24 @@ public class BaseData {
         }
         return userList;
     }
+    
+
+    
+    protected int addPrefix(int id, int prefix) {
+        
+        String idString = Integer.toString(id);
+        String prefixString = Integer.toString(prefix);
+
+
+        int prefixedID = -1;
+        try {
+            prefixedID = Integer.parseInt(prefixString + idString);
+        }
+        catch (NumberFormatException e) {
+            System.err.println("Error caused by adding prefix to non-prefixed ID");
+            e.printStackTrace();
+        }
+        
+        return prefixedID;
+    }
 }
