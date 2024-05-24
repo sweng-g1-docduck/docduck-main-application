@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Stack;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -173,6 +175,31 @@ public class XMLJDOM {
         }
 
         return null;
+    }
+
+    /**
+     * Gets all the IDs of the elements within a parent data type element
+     *
+     * @param dataType The type of data to get the IDs for, e.g. machines
+     * @return A list of integers containing all the ids within the datatype element
+     * @author William-A-B
+     */
+    protected ArrayList<Integer> getAttributeIDValues(String dataType) {
+
+        ArrayList<Integer> attributeIDs = new ArrayList<>();
+
+        Element dataTypeElement = getElement(dataType, -1, true, null);
+        // search all sub elements and get their ids
+        List<Element> listOfElements = dataTypeElement.getChildren();
+
+        for (Element target : listOfElements) {
+            try {
+                attributeIDs.add(target.getAttribute("id").getIntValue());
+            } catch (DataConversionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return attributeIDs;
     }
 
     public void addElement(Element parentElement, Element desiredELement, String value) {

@@ -7,6 +7,8 @@ import java.util.Stack;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
+import com.docduck.application.data.*;
+
 public class XMLJDOMDataHandler extends XMLJDOM {
 
     private static volatile XMLJDOMDataHandler domDataHandlerInstance = null;
@@ -71,7 +73,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @return A list of the elements contained within the machine parent element
      * @author William-A-B
      */
-    public List<Element> getMachineData(int machineID) {
+    public List<Element> getReportData(int machineID) {
 
         return getElement("machine", machineID, true, null).getChildren();
     }
@@ -248,7 +250,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         switch (typeOfData) {
 
         case MACHINE:
-            dataList = getMachineData(id);
+            dataList = getReportData(id);
             break;
         case COMPONENT:
             dataList = getComponentData(id);
@@ -275,6 +277,25 @@ public class XMLJDOMDataHandler extends XMLJDOM {
             }
         }
         return null;
+    }
+
+    public ArrayList<Integer> getListOfMachineIDs() {
+        return getAttributeIDValues("machineData");
+    }
+
+    public ArrayList<Integer> getListOfReportIDs() {
+        return getAttributeIDValues("machineReport");
+    }
+
+    public ArrayList<Integer> getListOfUserIDs() {
+
+        return getAttributeIDValues("userData");
+    }
+
+    public void addNewMachine(Machine machine) {
+
+        Element newMachine = new Element("machine");
+
     }
 
     public boolean checkIfIDExists(int id) {
@@ -313,5 +334,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
         return false;
     }
+
+
 
 }
