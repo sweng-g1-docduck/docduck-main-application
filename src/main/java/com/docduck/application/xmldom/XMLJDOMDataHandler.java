@@ -280,19 +280,40 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         return null;
     }
 
+    /**
+     * Gets a list of all the machine IDs within the XML
+     * @return An arraylist of integers containing all the IDs for the machines
+     * @author William-A-B
+     */
     public ArrayList<Integer> getListOfMachineIDs() {
         return getAttributeIDValues("machineData");
     }
 
+    /**
+     * Gets a list of all the report IDs within the XML
+     * @return An arraylist of integers containing all the IDs for the reports
+     * @author William-A-B
+     */
     public ArrayList<Integer> getListOfReportIDs() {
         return getAttributeIDValues("machineReport");
     }
 
+    /**
+     * Gets a list of all the user IDs within the XML
+     * @return An arraylist of integers containing all the IDs for the users
+     * @author William-A-B
+     */
     public ArrayList<Integer> getListOfUserIDs() {
 
         return getAttributeIDValues("userData");
     }
 
+    /**
+     * Adds a new machine into the xml database
+     *
+     * @param machine - The machine to add into the xml database
+     * @author Willia-A-B
+     */
     public void addNewMachine(Machine machine) {
 
         Element newMachineParent = new Element("machine");
@@ -318,6 +339,12 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         outputDocumentToXML();
     }
 
+    /**
+     * Adds a new user into the xml database
+     *
+     * @param user - The user to add into the xml database
+     * @author William-A-B
+     */
     public void addNewUser(User user) {
 
         Element newUserParent = new Element("user");
@@ -341,6 +368,12 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         outputDocumentToXML();
     }
 
+    /**
+     * Adds a new report into the xml database
+     *
+     * @param report - The report to add into the xml database
+     * @author William-A-B
+     */
     public void addNewReport(Report report) {
 
         Element newReportParent = new Element("report");
@@ -364,6 +397,13 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         outputDocumentToXML();
     }
 
+    /**
+     * Checks if an ID already exists in the XML
+     *
+     * @param id - The ID to check for within the XML
+     * @return boolean, true or false if the ID exists
+     * @author William-A-B
+     */
     public boolean checkIfIDExists(int id) {
 
         boolean idExists = false;

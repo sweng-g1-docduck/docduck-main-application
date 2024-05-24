@@ -211,6 +211,13 @@ public class XMLJDOM {
         return attributeIDs;
     }
 
+    /**
+     * Adds a new element (and all it's child elements if it has any) into the DOM Document.
+     * @param parentElementName - The name of the parent element to add the element into.
+     * @param id - The ID of the parent element
+     * @param desiredELement - The element being added into the document
+     * @author William-A-B
+     */
     protected void addElement(String parentElementName, int id, Element desiredELement) {
         Element parentElement = getElement(parentElementName, id, true, null);
         parentElement.addContent(desiredELement);
@@ -275,6 +282,11 @@ public class XMLJDOM {
         return att.getValue();
     }
 
+    /**
+     * Outputs the current DOM Document to the xml file that is currently being stored.
+     * @apiNote Currently outputs to the {$Project.BaseDir}, needs to solve the output folder
+     * @author William-A-B
+     */
     public void outputDocumentToXML() {
         XMLOutputter xmlOutputter = new XMLOutputter();
 
