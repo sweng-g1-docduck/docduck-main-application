@@ -303,7 +303,7 @@ public class GUIBuilder {
         machines = bd.setupMachineDataFromXML();
         allUsers = bd.setupUserDataFromXML();
         ArrayList<Report>allReports = bd.setupReportDataFromXML();
-        
+
         for (Machine machine :  machines) {
             for (Report report : allReports) {
                 for (User user :  allUsers) {
