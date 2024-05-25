@@ -16,11 +16,12 @@ public class Report extends BaseData {
 
 
     private final int id;
-    private final User user;
+    private User user;
     private String title;
     private String description;
     private String pathToFile;
-    private Report machine;
+    private int machineID;
+    private int userID;
 
     public Report(int id, User user, String title, String description, String pathToFile) {
         super();
@@ -29,6 +30,7 @@ public class Report extends BaseData {
         this.title = title;
         this.description = description;
         this.pathToFile = pathToFile;
+        this.userID = user.getId();
     }
 
     /**
@@ -45,7 +47,12 @@ public class Report extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new Report.");
         }
 
-        List<Element> reportData = domDataHandler.getReportData(id);
+        List<Element> reportData = domDataHandler.get
+          
+          
+          
+          
+          ReportData(id);
 
         this.id = id;
         for (Element target : reportData) {
@@ -56,11 +63,22 @@ public class Report extends BaseData {
             if (target.getName().equals("description")) {
                 this.description = target.getValue();
             } 
-            if (target.getName().equals("pathToFile")) {
+            if (target.getName().equals("media")) {
                 this.pathToFile = target.getValue();
-            } 
+            }
+            if (target.getName().equals("machineID")) {
+                this.machineID = Integer.parseInt(target.getValue());
+            }
+            if (target.getName().equals("userID")) {
+                this.userID = Integer.parseInt(target.getValue());
+            }
+
         }
         this.user = null;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 
     public String getPathToFile() {
@@ -76,6 +94,14 @@ public class Report extends BaseData {
         return this.description;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getMachineID() {
+        return machineID;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -84,7 +110,4 @@ public class Report extends BaseData {
         return this.id;
     }
 
-    public int getMachineId() {
-        return this.machine.getId();
-    }
 }

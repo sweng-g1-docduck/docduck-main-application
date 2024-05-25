@@ -60,7 +60,7 @@ public class DocDuckApplication extends Application {
         guiBuilder.buildPages();
 
         guiBuilder.displayPage("STATUS");
-//        guiBuilder.StartPage();
+//        guiBuilder.LoginPage();
 //        ftpHandler.startApp();
         System.out.println(stage.getWidth());
         System.out.println(stage.getHeight());

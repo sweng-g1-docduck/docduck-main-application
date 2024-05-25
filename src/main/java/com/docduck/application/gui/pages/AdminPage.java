@@ -360,6 +360,8 @@ public class AdminPage extends Page {
             gridPane.add(idField, 1, row++);
 
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
+            gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : ""), 1,
+                    row++);
             TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheet() : "");
             gridPane.add(datasheetField, 1, row++);
 

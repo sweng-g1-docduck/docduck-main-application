@@ -10,13 +10,17 @@ import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 public class Page extends BorderPane {
 
@@ -77,84 +81,100 @@ public class Page extends BorderPane {
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
 
-        ButtonWrapper overviewBtn = new ButtonWrapper();
-        overviewBtn.setCornerRadius(5);
-        overviewBtn.setButtonWidth(200);
-        overviewBtn.setButtonHeight(60);
-        overviewBtn.setFontName(fontName);
-        overviewBtn.setText("Machine Overview");
-        overviewBtn.setBackgroundColour(btnColour);
-        overviewBtn.setClickcolour(btnClickColour);
-        overviewBtn.setHoverColour(btnHoverColour);
-        overviewBtn.setPositionX(150);
-        overviewBtn.setPositionY(30);
-        overviewBtn.setFontColour(lightTextColour);
-        overviewBtn.setFontSize(20);
-        overviewBtn.removeBorder();
+        ButtonWrapper overviewBtn = drawButtonWrapper(200,60,"Machine Overview");
         overviewBtn.setOnAction(events.getActionEvent("statusPage"));
-
-        ButtonWrapper logOutBtn = getButtonWrapper();
-
+        
         menuBar.getChildren().addAll(overviewBtn);
+        
+
+        
 
         if (user.getRole().equals("ENGINEER") || user.getRole().equals("ADMIN")) {
 
-            ButtonWrapper reportBtn = getButtonWrapper(240, "Maintainance Reports");
+            ButtonWrapper reportBtn = drawButtonWrapper(240, 60,"Maintainance Reports");
             reportBtn.setOnAction(events.getActionEvent("reportPage"));
 
-            ButtonWrapper partBtn = getButtonWrapper(160, "Part Search");
+            ButtonWrapper partBtn = drawButtonWrapper(160, 60,"Part Search");
             partBtn.setDisable(true);
             menuBar.getChildren().addAll(reportBtn, partBtn);
         }
 
         if (user.getRole().equals("ADMIN")) {
 
-            ButtonWrapper settingsBtn = getButtonWrapper(120, "Admin");
+            ButtonWrapper settingsBtn = drawButtonWrapper(120, 60, "Admin");
             menuBar.getChildren().add(settingsBtn);
         }
+        
         Pane spacer = new Pane();
         spacer.setPrefWidth(1000);
-
+        
+        ButtonWrapper logOutBtn = drawButtonWrapper(120,60,"Log Out");
         menuBar.getChildren().addAll(spacer, logOutBtn);
 
         return menuBar;
 
     }
+    
+    protected VBox drawMachineInfoBox(Machine machine) {
+        
+        Color textColour = lightTextColour;
+        
+        VBox genInfoBox = new VBox();
+        genInfoBox.setAlignment(Pos.TOP_LEFT);
+        genInfoBox.setSpacing(10);
+        genInfoBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
+        genInfoBox.setPadding(new Insets(8));
+        
+        Label serialNum = new Label("Serial Number: " + machine.getSerialNumber());
+        serialNum.setFont(new Font(fontName, smallFontSize));
+        serialNum.setTextFill(textColour);
 
-    private ButtonWrapper getButtonWrapper() {
-        ButtonWrapper logOutBtn = new ButtonWrapper();
-        logOutBtn.setCornerRadius(5);
-        logOutBtn.setButtonWidth(120);
-        logOutBtn.setButtonHeight(60);
-        logOutBtn.setFontName(fontName);
-        logOutBtn.setText("Log Out");
-        logOutBtn.setBackgroundColour(btnColour);
-        logOutBtn.setClickcolour(btnClickColour);
-        logOutBtn.setHoverColour(btnHoverColour);
-        logOutBtn.setPositionX(150);
-        logOutBtn.setPositionY(30);
-        logOutBtn.setFontColour(lightTextColour);
-        logOutBtn.setFontSize(20);
-        logOutBtn.removeBorder();
-        return logOutBtn;
+        Label location = new Label("Location: " + machine.getLocation());
+        location.setFont(new Font(fontName, smallFontSize));
+        location.setTextFill(textColour);
+
+        Hyperlink datasheet = new Hyperlink("Datasheet");
+        datasheet.setOnAction(events.getHyperlinkEvent(machine.getDatasheetRef()));
+        datasheet.setTextFill(textColour);
+        datasheet.setFont(new Font(fontName, smallFontSize));
+        datasheet.setTranslateX(-4);
+        datasheet.setTranslateY(-2);
+
+        Hyperlink purchaseLink = new Hyperlink("Purchase Link");
+        purchaseLink.setOnAction(events.getHyperlinkEvent(machine.getPurchaseLocationRef()));
+        purchaseLink.setFont(new Font(fontName, smallFontSize));
+        purchaseLink.setTextFill(textColour);
+        purchaseLink.setTranslateX(-4);
+        purchaseLink.setTranslateY(-6);
+
+        genInfoBox.getChildren().addAll(serialNum, location, datasheet, purchaseLink);
+        
+        return genInfoBox;
     }
 
-    private ButtonWrapper getButtonWrapper(int width, String Settings) {
-        ButtonWrapper settingsBtn = new ButtonWrapper();
-        settingsBtn.setCornerRadius(5);
-        settingsBtn.setButtonWidth(width);
-        settingsBtn.setButtonHeight(60);
-        settingsBtn.setFontName(fontName);
-        settingsBtn.setText(Settings);
-        settingsBtn.setBackgroundColour(btnColour);
-        settingsBtn.setClickcolour(btnClickColour);
-        settingsBtn.setHoverColour(btnHoverColour);
-        settingsBtn.setFontColour(lightTextColour);
-        settingsBtn.setFontSize(20);
-        settingsBtn.setOnAction(events.getActionEvent("adminPage"));
-        settingsBtn.removeBorder();
-        return settingsBtn;
+    protected ButtonWrapper drawButtonWrapper(int width, int height, String text) {
+        ButtonWrapper button = new ButtonWrapper();
+        button.setCornerRadius(5);
+        button.setButtonWidth(width);
+        button.setButtonHeight(height);
+        button.setFontName(fontName);
+        button.setText(text);
+        button.setBackgroundColour(btnColour);
+        button.setClickcolour(btnClickColour);
+        button.setHoverColour(btnHoverColour);
+        button.setFontColour(lightTextColour);
+        button.setFontSize(20);
+        button.setOnAction(events.getActionEvent("adminPage"));
+        button.removeBorder();
+        return button;
 
+    }
+    
+    protected Label drawSubText(String title, Color textColour) {
+        Label subTitle = new Label(title);
+        subTitle.setFont(new Font(fontName, smallFontSize));
+        subTitle.setTextFill(textColour);
+        return subTitle;
     }
 
 }
