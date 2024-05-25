@@ -74,7 +74,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @return A list of the elements contained within the machine parent element
      * @author William-A-B
      */
-    public List<Element> getReportData(int machineID) {
+    public List<Element> getMachineData(int machineID) {
 
         return getElement("machine", machineID, true, null).getChildren();
     }
@@ -251,7 +251,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         switch (typeOfData) {
 
         case MACHINE:
-            dataList = getReportData(id);
+            dataList = getMachineData(id);
             break;
         case COMPONENT:
             dataList = getComponentData(id);

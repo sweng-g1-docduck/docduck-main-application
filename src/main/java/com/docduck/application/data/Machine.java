@@ -72,7 +72,7 @@ public class Machine extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new machine.");
         }
 
-        List<Element> machineData = domDataHandler.getReportData(id);
+        List<Element> machineData = domDataHandler.getMachineData(id);
 
         this.id = id;
 

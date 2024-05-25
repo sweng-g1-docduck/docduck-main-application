@@ -90,7 +90,7 @@ public class DocDuckApplication extends Application {
             dom = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true);
             dom.setupJDOM();
         }
-        dom.addNewUser(new User("Billy", "bob321", "password", "bob321@york.ac.uk", "OPERATOR"));
+        dom.addNewUser(new User("Billy", "billy", "password", "bob321@york.ac.uk", "OPERATOR"));
     }
 
     @Override

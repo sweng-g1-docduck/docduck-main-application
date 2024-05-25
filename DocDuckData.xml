@@ -3,7 +3,7 @@
   <machineData>
     <machine id="1001">
       <name>3D Printer</name>
-      <status>ONLINE</status>
+      <status>OFFLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>Labs_4th_Floor</location>
       <imageRef>\Role Hierarchy Updated.png</imageRef>
@@ -52,6 +52,57 @@
         </part>
       </parts>
     </machine>
+    <machine id="1002">
+      <name>CNC Mill</name>
+      <status>ONLINE</status>
+      <serialNumber>ABC7jkbsv0571001</serialNumber>
+      <location>Engineering Manufacturing Facility</location>
+      <imageRef>\docducklogo.png</imageRef>
+      <datasheetRef>https://bbc.co.uk</datasheetRef>
+      <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+      <components>
+        <component id="1102">
+          <name>Control Panel</name>
+          <stockNumber>2</stockNumber>
+          <serialNumber>ABC999284858259</serialNumber>
+          <quantity>2</quantity>
+          <location>Labs_4th_Floor_Office</location>
+          <datasheetRef>https://bbc.co.uk</datasheetRef>
+          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+          <parts>
+            <part id="1113">
+              <name>LCD Screen</name>
+              <stockNumber>10</stockNumber>
+              <serialNumber>ABC694374858259</serialNumber>
+              <quantity>5</quantity>
+              <location>Labs_4th_Floor_Office</location>
+              <datasheetRef>https://bbc.co.uk</datasheetRef>
+              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+            </part>
+            <part id="1114">
+              <name>LCD Screen Case</name>
+              <stockNumber>32</stockNumber>
+              <serialNumber>ABC378454858259</serialNumber>
+              <quantity>20</quantity>
+              <location>Labs_4th_Floor_Office</location>
+              <datasheetRef>https://bbc.co.uk</datasheetRef>
+              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+            </part>
+          </parts>
+        </component>
+      </components>
+      <parts>
+        <part id="1202">
+          <name>Green material</name>
+          <stockNumber>10</stockNumber>
+          <serialNumber>ABC694164548259</serialNumber>
+          <quantity>100</quantity>
+          <location>Labs_4th_Floor_Office</location>
+          <datasheetRef>https://bbc.co.uk</datasheetRef>
+          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+        </part>
+      </parts>
+    </machine>
   </machineData>
   <userData>
     <user id="2001">
@@ -59,7 +110,7 @@
       <username>js2140</username>
       <password>js12345</password>
       <email>js2140@york.ac.uk</email>
-      <role>ADMIN</role>
+      <role>OPERATOR</role>
     </user>
     <user id="2002">
       <name>William Betteridge</name>
@@ -68,9 +119,23 @@
       <email>wab513@york.ac.uk</email>
       <role>ADMIN</role>
     </user>
+    <user id="2001">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
     <user id="2002">
       <name>Billy</name>
       <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+    <user id="2003">
+      <name>Billy</name>
+      <username>billy</username>
       <password>password</password>
       <email>bob321@york.ac.uk</email>
       <role>OPERATOR</role>
@@ -80,7 +145,7 @@
     <report id="3001">
       <title>3D Printer Not Responding</title>
       <description>The touchscreen on the 3D printer doesn't respond</description>
-      <media>src/main/resources/data/machines/reports/image.jpg</media>
+      <media>/clock.mp4</media>
       <machineID>1001</machineID>
       <userID>2002</userID>
     </report>
