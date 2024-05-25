@@ -47,7 +47,12 @@ public class Report extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new Report.");
         }
 
-        List<Element> reportData = domDataHandler.getMachineReportData(id);
+        List<Element> reportData = domDataHandler.get
+          
+          
+          
+          
+          ReportData(id);
 
         this.id = id;
         for (Element target : reportData) {
@@ -96,7 +101,13 @@ public class Report extends BaseData {
     public int getMachineID() {
         return machineID;
     }
-    
-    
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public int getId() {
+        return this.id;
+    }
 
 }

@@ -29,8 +29,8 @@ public class Machine extends BaseData {
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
-    public Machine(int id, String name, String room, String status, String serialNumber, String dataSheet,
-            String purchaseLocation) {
+
+    public Machine(String name, String room, String status, String serialNumber, String dataSheet, String purchaseLocation) {
         super();
 
         ArrayList<Integer> machineIDs = domDataHandler.getListOfMachineIDs();
@@ -50,6 +50,10 @@ public class Machine extends BaseData {
         if (status.equals("ONLINE") || status.equals("MAINTENANCE") || status.equals("OFFLINE")) {
             this.status = status;
         }
+
+        else {
+            this.status = "OFFLINE";
+        }
         addNewDataToXML();
     }
 
@@ -61,6 +65,7 @@ public class Machine extends BaseData {
      * @author William-A-B
      */
     public Machine(int id) throws InvalidID {
+
 
         if (!domDataHandler.checkIfIDExists(id)) {
             throw new InvalidID(
@@ -168,4 +173,7 @@ public class Machine extends BaseData {
         return currentReport;
     }
 
+    public String getImageRef() {
+        return this.imageRef;
+    }
 }
