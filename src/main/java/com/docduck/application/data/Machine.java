@@ -173,7 +173,4 @@ public class Machine extends BaseData {
         return currentReport;
     }
 
-    public String getImageRef() {
-        return this.imageRef;
-    }
 }
