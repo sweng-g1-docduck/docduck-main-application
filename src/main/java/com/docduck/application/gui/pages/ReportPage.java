@@ -299,13 +299,20 @@ public class ReportPage extends Page {
 
         // Attached Media
 
-        Label mediaTitle = new Label("Attached Media: ");
-        mediaTitle.setFont(new Font(fontName, smallFontSize));
-        mediaTitle.setTextFill(reportTextColour);
 
-        if (machine.getCurrentReport().getPathToFile() != null) {
-            infoBox.getChildren().addAll(new Label(), mediaTitle, new Label(),
-                    drawAttachedMedia(machine.getCurrentReport().getPathToFile()));
+
+        try {
+            if (machine.getCurrentReport().getPathToFile() != null) {
+                
+                Label mediaTitle = new Label("Attached Media: ");
+                mediaTitle.setFont(new Font(fontName, smallFontSize));
+                mediaTitle.setTextFill(reportTextColour);
+                
+                infoBox.getChildren().addAll(new Label(), mediaTitle, new Label(),
+                        drawAttachedMedia(machine.getCurrentReport().getPathToFile()));
+            }
+        }
+        catch (Exception e) {
         }
 
         ///////////////////////////////
@@ -339,7 +346,8 @@ public class ReportPage extends Page {
             if (solution.getText().isEmpty()) {
                 solution.setPromptText("A description of the performed repairs is required");
 
-            } else {
+            }
+            else {
                 machine.archiveReport();
                 machine.setStatus("ONLINE");
                 drawReportButtons();
@@ -401,7 +409,7 @@ public class ReportPage extends Page {
             view1.setPreserveRatio(true);
             return view1;
         }
-        
+
         return null;
     }
 

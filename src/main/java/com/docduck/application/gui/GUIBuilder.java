@@ -307,7 +307,17 @@ public class GUIBuilder {
         
         for (Machine machine :  machines) {
             for (Report report : allReports) {
-//                if (report.get)
+                for (User user :  allUsers) {
+                    if (user.getId() == report.getUserID()) {
+                        report.setUser(user);
+                        break;
+                    }
+                }
+                
+                if (report.getMachineID() == machine.getId()) {
+                    machine.addReport(report);
+                    break;
+                }
             }
         }
     }

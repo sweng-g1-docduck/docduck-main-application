@@ -16,7 +16,7 @@ public class Report extends BaseData {
 
 
     private final int id;
-    private final User user;
+    private User user;
     private String title;
     private String description;
     private String pathToFile;
@@ -47,7 +47,7 @@ public class Report extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new Report.");
         }
 
-        List<Element> reportData = domDataHandler.getReportData(id);
+        List<Element> reportData = domDataHandler.getMachineReportData(id);
 
         this.id = id;
         for (Element target : reportData) {
@@ -62,14 +62,18 @@ public class Report extends BaseData {
                 this.pathToFile = target.getValue();
             }
             if (target.getName().equals("machineID")) {
-                this.machineID = target.getValue();
-            } 
+                this.machineID = Integer.parseInt(target.getValue());
+            }
             if (target.getName().equals("userID")) {
-                this.userID = target.getValue();
-            } 
-            
+                this.userID = Integer.parseInt(target.getValue());
+            }
+
         }
         this.user = null;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 
     public String getPathToFile() {
@@ -84,5 +88,15 @@ public class Report extends BaseData {
     public String getDescription() {
         return this.description;
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public int getMachineID() {
+        return machineID;
+    }
+    
+    
 
 }
