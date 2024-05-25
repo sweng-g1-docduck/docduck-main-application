@@ -327,8 +327,8 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         machineChildren.add(createNewElement("serialNumber", machine.getSerialNumber()));
         machineChildren.add(createNewElement("location", machine.getLocation()));
         machineChildren.add(createNewElement("imageRef", machine.getImageRef()));
-        machineChildren.add(createNewElement("datasheetRef", machine.getDatasheet()));
-        machineChildren.add(createNewElement("purchaseLocationRef", machine.getPurchaseLocation()));
+        machineChildren.add(createNewElement("datasheetRef", machine.getDatasheetRef()));
+        machineChildren.add(createNewElement("purchaseLocationRef", machine.getPurchaseLocationRef()));
 
         for (Element target : machineChildren) {
             newMachineParent.addContent(target);
@@ -385,7 +385,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         reportChildren.add(createNewElement("title", report.getTitle()));
         reportChildren.add(createNewElement("description", report.getDescription()));
         reportChildren.add(createNewElement("media", report.getPathToFile()));
-        reportChildren.add(createNewElement("machineID", String.valueOf(report.getMachineId())));
+        reportChildren.add(createNewElement("machineID", String.valueOf(report.getMachineID())));
         reportChildren.add(createNewElement("userID", String.valueOf(report.getUser().getId())));
 
         for (Element target : reportChildren) {
