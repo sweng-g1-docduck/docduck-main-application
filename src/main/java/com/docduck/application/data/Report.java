@@ -3,6 +3,7 @@ package com.docduck.application.data;
 import com.docduck.application.xmldom.InvalidID;
 import org.jdom2.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class Report extends BaseData {
 
-
+    private final int REPORT_ID_PREFIX = 300;
 
     private final int id;
     private User user;
@@ -23,9 +24,17 @@ public class Report extends BaseData {
     private int machineID;
     private int userID;
 
-    public Report(int id, User user, String title, String description, String pathToFile) {
+    public Report(User user, String title, String description, String pathToFile) {
         super();
-        this.id = id;        
+        
+        ArrayList<Integer> reportIDs = domDataHandler.getListOfReportIDs();
+        int counter = 1;
+
+        while (reportIDs.contains(addPrefix(counter, REPORT_ID_PREFIX))) {
+            counter++;
+        }
+
+        this.id = addPrefix(counter, REPORT_ID_PREFIX);       
         this.user = user;
         this.title = title;
         this.description = description;
@@ -95,6 +104,10 @@ public class Report extends BaseData {
 
     public int getMachineID() {
         return machineID;
+    }
+
+    public String getTitle() {
+        return title;
     }
     
     
