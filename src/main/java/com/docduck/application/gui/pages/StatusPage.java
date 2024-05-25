@@ -1,13 +1,12 @@
 package com.docduck.application.gui.pages;
 
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -63,7 +62,7 @@ public class StatusPage extends Page {
     private HBox drawMachineBar() {
         HBox contents = new HBox();
         int machineBoxHeight = 45;
-        
+
         contents.setPadding(new Insets(10, 10, 10, 15));
         contents.setBackground(
                 new Background(new BackgroundFill(barColour, new CornerRadii(10, 10, 0, 0, false), new Insets(0))));
@@ -91,22 +90,22 @@ public class StatusPage extends Page {
      * @author jrb617
      */
     private void setupRoomSelect() {
-        
-        ArrayList<String> allLocations= new ArrayList<>();
-        for (Machine machine: machines) {
-            if (!allLocations.contains(machine.getLocation())){
+
+        ArrayList<String> allLocations = new ArrayList<>();
+        for (Machine machine : machines) {
+            if (!allLocations.contains(machine.getLocation())) {
                 allLocations.add(machine.getLocation());
             }
         }
 
         allLocations.sort(String::compareToIgnoreCase);
-        
+
         roomSelectBox = new ComboBox<>();
         roomSelectBox.getItems().add("All");
         roomSelectBox.getItems().addAll(allLocations);
         roomSelectBox.setValue("All");
         roomSelectBox.valueProperty().addListener((ov, t, t1) -> drawMachineButtons());
-        
+
     }
 
     /**
@@ -153,23 +152,30 @@ public class StatusPage extends Page {
         machineGrid.setVgap(15);
         machineGrid.setHgap(15);
 
-
-
         ArrayList<ButtonWrapper> buttons = new ArrayList<>();
         for (Machine machine : machines) {
-            Image img = new Image(machine.getImageRef());
+            
             if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
-                ImageView view1 = new ImageView(img);
-                double buttonWidth = (machineBoxWidth - 75) / 3;
-                view1.setFitWidth(buttonWidth-40);
-                view1.setFitHeight(160);
-                view1.setPreserveRatio(true);
-
                 ButtonWrapper button = new ButtonWrapper();
+                double buttonWidth = (machineBoxWidth - 75) / 3;
+                try {
+                    Image img = new Image(machine.getImageRef());
+                    ImageView view1 = new ImageView(img);
+                    view1.setFitWidth(buttonWidth - 40);
+                    view1.setFitHeight(160);
+                    view1.setPreserveRatio(true);
+                    button.setGraphic(view1);
+                }
+                catch (NullPointerException | IllegalArgumentException e) {
+                    e.printStackTrace();
+                    System.err.println("The path to the machine image could not be found");
+                }
+
+                
                 button.setButtonHeight(200);
                 button.setButtonWidth(buttonWidth);
-                button.setGraphic(view1);
+                
 
                 button.setCornerRadius(20);
                 button.setFontColour(lightTextColour);
@@ -270,6 +276,12 @@ public class StatusPage extends Page {
         machineName.removeBackground();
         machineName.removeBorder();
 
+        TextArea titleBox = new TextArea();
+        titleBox.setMaxWidth(reportWidth - 20);
+        titleBox.setMaxHeight(20);
+        titleBox.setWrapText(true);
+        titleBox.setPromptText("Report Title");
+
         TextArea descriptionBox = new TextArea();
         descriptionBox.setMaxWidth(reportWidth - 20);
         descriptionBox.setMaxHeight(reportWidth - 20);
@@ -279,26 +291,37 @@ public class StatusPage extends Page {
         ButtonWrapper mediaBtn = drawButtonWrapper(reportWidth - 120, 40, "Attach media");
         mediaBtn.setOnAction(events.getActionEvent("chooseMedia"));
 
-        ButtonWrapper submitBtn = drawButtonWrapper(reportWidth - 120, 40, "SubmitBtn");
+        ButtonWrapper submitBtn = drawButtonWrapper(reportWidth - 120, 40, "Submit Report");
         submitBtn.setOnAction((event -> {
-            if (descriptionBox.getText().isEmpty()) {
-                descriptionBox.setPromptText("A description of the fault is required");
+
+            boolean canSubmit = true;
+
+            if (titleBox.getText().strip().isEmpty()) {
+                titleBox.setText("");
+                titleBox.setPromptText("A title is required");
+                canSubmit = false;
             }
-            else {
+
+            if (descriptionBox.getText().strip().isEmpty()) {
+                descriptionBox.setText("");
+                descriptionBox.setPromptText("A description of the fault is required");
+                canSubmit = false;
+            }
+
+            if (canSubmit) {
                 // Submit report to XML
                 machine.setStatus("OFFLINE");
                 setRight(null);
-                Report report = new Report(machineBoxWidth, user, descriptionBox.getText(), fontName, fontName);
+                Report report = new Report(user, titleBox.getText(), descriptionBox.getText(), "FilePath");
                 machine.addReport(report);
                 drawMachineButtons();
-
             }
         }));
 
-        ButtonWrapper cancelBtn = drawButtonWrapper(reportWidth - 120, 40, "SubmitBtn");
+        ButtonWrapper cancelBtn = drawButtonWrapper(reportWidth - 120, 40, "Cancel");
         cancelBtn.setOnAction((event -> setRight(null)));
 
-        reportBox.getChildren().addAll(machineName, descriptionBox, mediaBtn, submitBtn, cancelBtn);
+        reportBox.getChildren().addAll(machineName, titleBox, descriptionBox, mediaBtn, submitBtn, cancelBtn);
         setRight(reportBox);
 
     }
@@ -352,7 +375,7 @@ public class StatusPage extends Page {
 
         ButtonWrapper cancelBtn = drawButtonWrapper(reportWidth - 120, 40, "Close");
         cancelBtn.setOnAction((event -> setRight(null)));
-        
+
 //        dataBox.getChildren().addAll(serialNum, location, datasheet, purchaseLink);
         dataPane.setTop(machineInfo);
         btnBox.getChildren().addAll(reportBtn, cancelBtn);
@@ -370,7 +393,7 @@ public class StatusPage extends Page {
      */
     @Override
     public void buildPage() {
-      
+
         setupRoomSelect();
         drawRoomSelect();
         setTop(drawMenuBar());

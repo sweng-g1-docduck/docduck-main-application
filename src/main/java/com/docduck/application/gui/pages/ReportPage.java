@@ -1,5 +1,6 @@
 package com.docduck.application.gui.pages;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import com.docduck.application.data.Machine;
@@ -26,6 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import uk.co.bookcook.BCMediaControls;
+import uk.co.bookcook.BCMediaPlayer;
 
 public class ReportPage extends Page {
 
@@ -118,15 +121,15 @@ public class ReportPage extends Page {
 
             BorderPane pane = new BorderPane();
             HBox infoBox = new HBox(10);
-            Label machineName = new Label(machine.getName());
-            machineName.setFont(new Font(fontName, smallFontSize));
-            machineName.setTextFill(btnTextColour);
 
-            Label location = drawSubText(machine.getLocation(),btnTextColour);
+            Label machineName = drawSubText(machine.getName(), btnTextColour);
+            machineName.setFont(new Font(fontName, 20));
 
-            Label userName = drawSubText(machine.getCurrentReport().getUser().getName(),btnTextColour);
+            Label location = drawSubText(machine.getLocation(), btnTextColour);
 
-            Label faultDescription = drawSubText(machine.getCurrentReport().getDescription(), btnTextColour);
+            Label userName = drawSubText(machine.getCurrentReport().getUser().getName(), btnTextColour);
+
+            Label faultDescription = drawSubText(machine.getCurrentReport().getTitle(), btnTextColour);
 
             Label spacer = drawSubText("|", btnTextColour);
 
@@ -215,16 +218,28 @@ public class ReportPage extends Page {
 
         Label descTitle = drawSubText("Description: ", reportTextColour);
 
+        TextArea title = new TextArea();
+        title.setMaxWidth(reportDescWidth - 35);
+        title.setPrefHeight(30);
+        title.setMinHeight(30);
+        title.setMaxHeight(30);
+        title.setWrapText(true);
+        title.setText(machine.getCurrentReport().getTitle());
+        title.setEditable(false);
+        title.setFont(new Font(fontName, smallFontSize));
+
         TextArea desc = new TextArea();
         desc.setMaxWidth(reportDescWidth - 35);
-        desc.setPrefHeight(10);
+        desc.setPrefHeight(60);
+        desc.setMinHeight(60);
+        desc.setMaxHeight(60);
         desc.setWrapText(true);
         desc.setText(machine.getCurrentReport().getDescription());
         desc.setEditable(false);
         desc.setFont(new Font(fontName, smallFontSize));
 
         infoBox.getChildren().addAll(machineName, new Label(), genTitle, genInfoBox, new Label(), userTitle,
-                userInfoBox, new Label(), descTitle, desc);
+                userInfoBox, new Label(), descTitle, title, desc);
 
         ///////////////////////////////
 
@@ -241,7 +256,8 @@ public class ReportPage extends Page {
                         drawAttachedMedia(machine.getCurrentReport().getPathToFile()));
             }
         }
-        catch (Exception e) {
+        catch (FileNotFoundException e) {
+            System.err.println("Attached file could not be found");
         }
 
         ///////////////////////////////
@@ -316,7 +332,7 @@ public class ReportPage extends Page {
      * @param filePath The path to the file
      * @return Node of the correct type to display the data
      */
-    private Node drawAttachedMedia(String filePath) {
+    private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
         String extension = getExtension(filePath);
         if (extension.equals("png") || extension.equals("jpeg")) {
             Image img = new Image(filePath);
@@ -324,6 +340,17 @@ public class ReportPage extends Page {
             view1.setFitWidth(reportDescWidth - 35); // Offset to fit the bar
             view1.setPreserveRatio(true);
             return view1;
+        }
+        else if (extension.equals("mp4") || extension.equals("mp3")) {
+            BCMediaPlayer BCMP = new BCMediaPlayer("src/main/resources/clock.mp4");
+            BCMP.setWidth(250);
+            BCMediaControls BCMC = new BCMediaControls(BCMP);
+            BCMC.setWidth(250);
+            BCMC.setIconSpacing(5);
+
+            VBox box = new VBox(BCMP, BCMC);
+            box.setAlignment(Pos.CENTER);
+            return box;
         }
 
         return null;
