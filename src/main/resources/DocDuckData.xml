@@ -3,7 +3,7 @@
   <machineData>
     <machine id="1001">
       <name>3D Printer</name>
-	  <status>OFFLINE</status>
+	    <status>OFFLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>Labs_4th_Floor</location>
       <imageRef>\Role Hierarchy Updated.png</imageRef>
@@ -104,7 +104,6 @@
       </parts>
     </machine>
   </machineData>
-  
   <userData>
     <user id="2001">
       <name>James Stevenson</name>
@@ -120,8 +119,21 @@
       <email>wab513@york.ac.uk</email>
       <role>ADMIN</role>
     </user>
+    <user id="2001">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+    <user id="2002">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
   </userData>
-  
   <machineReport>
     <report id="3001">
       <title>3D Printer Not Responding</title>

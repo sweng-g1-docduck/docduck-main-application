@@ -280,25 +280,130 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         return null;
     }
 
+    /**
+     * Gets a list of all the machine IDs within the XML
+     * @return An arraylist of integers containing all the IDs for the machines
+     * @author William-A-B
+     */
     public ArrayList<Integer> getListOfMachineIDs() {
         return getAttributeIDValues("machineData");
     }
 
+    /**
+     * Gets a list of all the report IDs within the XML
+     * @return An arraylist of integers containing all the IDs for the reports
+     * @author William-A-B
+     */
     public ArrayList<Integer> getListOfReportIDs() {
         return getAttributeIDValues("machineReport");
     }
 
+    /**
+     * Gets a list of all the user IDs within the XML
+     * @return An arraylist of integers containing all the IDs for the users
+     * @author William-A-B
+     */
     public ArrayList<Integer> getListOfUserIDs() {
 
         return getAttributeIDValues("userData");
     }
 
+    /**
+     * Adds a new machine into the xml database
+     *
+     * @param machine - The machine to add into the xml database
+     * @author Willia-A-B
+     */
     public void addNewMachine(Machine machine) {
 
-        Element newMachine = new Element("machine");
+        Element newMachineParent = new Element("machine");
+        newMachineParent.setAttribute(new Attribute("id", String.valueOf(machine.getId())));
 
+        ArrayList<Element> machineChildren = new ArrayList<>();
+        machineChildren.clear();
+
+        machineChildren.add(createNewElement("name", machine.getName()));
+        machineChildren.add(createNewElement("status", machine.getStatus()));
+        machineChildren.add(createNewElement("serialNumber", machine.getSerialNumber()));
+        machineChildren.add(createNewElement("location", machine.getLocation()));
+        machineChildren.add(createNewElement("imageRef", machine.getImageRef()));
+        machineChildren.add(createNewElement("datasheetRef", machine.getDatasheet()));
+        machineChildren.add(createNewElement("purchaseLocationRef", machine.getPurchaseLocation()));
+
+        for (Element target : machineChildren) {
+            newMachineParent.addContent(target);
+        }
+
+        // Adds the new machine into the machines database
+        addElement("machineData", -1, newMachineParent);
+        outputDocumentToXML();
     }
 
+    /**
+     * Adds a new user into the xml database
+     *
+     * @param user - The user to add into the xml database
+     * @author William-A-B
+     */
+    public void addNewUser(User user) {
+
+        Element newUserParent = new Element("user");
+        newUserParent.setAttribute(new Attribute("id", String.valueOf(user.getId())));
+
+        ArrayList<Element> userChildren = new ArrayList<>();
+        userChildren.clear();
+
+        userChildren.add(createNewElement("name", user.getName()));
+        userChildren.add(createNewElement("username", user.getUsername()));
+        userChildren.add(createNewElement("password", user.getPasswordHash()));
+        userChildren.add(createNewElement("email", user.getEmail()));
+        userChildren.add(createNewElement("role", user.getRole()));
+
+        for (Element target : userChildren) {
+            newUserParent.addContent(target);
+        }
+
+        // Adds the new machine into the machines database
+        addElement("userData", -1, newUserParent);
+        outputDocumentToXML();
+    }
+
+    /**
+     * Adds a new report into the xml database
+     *
+     * @param report - The report to add into the xml database
+     * @author William-A-B
+     */
+    public void addNewReport(Report report) {
+
+        Element newReportParent = new Element("report");
+        newReportParent.setAttribute(new Attribute("id", String.valueOf(report.getId())));
+
+        ArrayList<Element> reportChildren = new ArrayList<>();
+        reportChildren.clear();
+
+        reportChildren.add(createNewElement("title", report.getTitle()));
+        reportChildren.add(createNewElement("description", report.getDescription()));
+        reportChildren.add(createNewElement("media", report.getPathToFile()));
+        reportChildren.add(createNewElement("machineID", String.valueOf(report.getMachineId())));
+        reportChildren.add(createNewElement("userID", String.valueOf(report.getUser().getId())));
+
+        for (Element target : reportChildren) {
+            newReportParent.addContent(target);
+        }
+
+        // Adds the new machine into the machines database
+        addElement("machineReport", -1, newReportParent);
+        outputDocumentToXML();
+    }
+
+    /**
+     * Checks if an ID already exists in the XML
+     *
+     * @param id - The ID to check for within the XML
+     * @return boolean, true or false if the ID exists
+     * @author William-A-B
+     */
     public boolean checkIfIDExists(int id) {
 
         boolean idExists = false;
