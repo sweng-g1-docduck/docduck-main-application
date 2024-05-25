@@ -134,14 +134,14 @@ public class Page extends BorderPane {
         location.setTextFill(textColour);
 
         Hyperlink datasheet = new Hyperlink("Datasheet");
-        datasheet.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
+        datasheet.setOnAction(events.getHyperlinkEvent(machine.getDatasheetRef()));
         datasheet.setTextFill(textColour);
         datasheet.setFont(new Font(fontName, smallFontSize));
         datasheet.setTranslateX(-4);
         datasheet.setTranslateY(-2);
 
         Hyperlink purchaseLink = new Hyperlink("Purchase Link");
-        purchaseLink.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
+        purchaseLink.setOnAction(events.getHyperlinkEvent(machine.getPurchaseLocationRef()));
         purchaseLink.setFont(new Font(fontName, smallFontSize));
         purchaseLink.setTextFill(textColour);
         purchaseLink.setTranslateX(-4);
