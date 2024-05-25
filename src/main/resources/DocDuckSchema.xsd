@@ -788,7 +788,7 @@
             <xs:element name="title" type="xs:string"/>
             <xs:element name="description" type="xs:string"/>
             <xs:element name="media" type="xs:string"/>
-            <xs:element name="machineID" type="xs:string"/>
+            <xs:element name="machineID" type="xs:int"/>
             <xs:element name="userID" type="xs:int"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
