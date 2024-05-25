@@ -158,16 +158,17 @@ public class StatusPage extends Page {
         machineGrid.setVgap(15);
         machineGrid.setHgap(15);
 
-        Image img = new Image("/docducklogo.png");
+
 
         ArrayList<ButtonWrapper> buttons = new ArrayList<>();
         for (Machine machine : machines) {
-
+            Image img = new Image(machine.getImageRef());
             if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ImageView view1 = new ImageView(img);
                 double buttonWidth = (machineBoxWidth - 75) / 3;
-                view1.setFitWidth(buttonWidth);
+                view1.setFitWidth(buttonWidth-40);
+                view1.setFitHeight(160);
                 view1.setPreserveRatio(true);
 
                 ButtonWrapper button = new ButtonWrapper();
@@ -393,14 +394,14 @@ public class StatusPage extends Page {
         location.setTextFill(infoTextColour);
 
         Hyperlink datasheet = new Hyperlink("Datasheet");
-        datasheet.setOnAction(events.getHyperlinkEvent(machine.getDatasheet()));
+        datasheet.setOnAction(events.getHyperlinkEvent(machine.getDatasheetRef()));
         datasheet.setTextFill(infoTextColour);
         datasheet.setFont(new Font(fontName, smallFontSize));
         datasheet.setTranslateX(-4);
         datasheet.setTranslateY(-2);
 
         Hyperlink purchaseLink = new Hyperlink("Purchase Link");
-        purchaseLink.setOnAction(events.getHyperlinkEvent(machine.getPurchaseLocation()));
+        purchaseLink.setOnAction(events.getHyperlinkEvent(machine.getPurchaseLocationRef()));
         purchaseLink.setFont(new Font(fontName, smallFontSize));
         purchaseLink.setTextFill(infoTextColour);
         purchaseLink.setTranslateX(-4);

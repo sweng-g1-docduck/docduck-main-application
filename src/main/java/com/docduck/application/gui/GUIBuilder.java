@@ -293,7 +293,6 @@ public class GUIBuilder {
         populateData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-
         adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin page and use below)
     }
 
@@ -304,7 +303,13 @@ public class GUIBuilder {
         BaseData bd = new BaseData();
         machines = bd.setupMachineDataFromXML();
         allUsers = bd.setupUserDataFromXML();
+        ArrayList<Report>allReports = bd.setupReportDataFromXML();
         
+        for (Machine machine :  machines) {
+            for (Report report : allReports) {
+//                if (report.get)
+            }
+        }
     }
     
 }

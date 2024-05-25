@@ -268,7 +268,7 @@ public class AdminPage extends Page {
             gridPane.add(createFormField("Id", machine != null ? machine.getSerialNumber() : ""), 1, row++);
 
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
-            gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheet() : ""), 1,
+            gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : ""), 1,
                     row++);
         }
 

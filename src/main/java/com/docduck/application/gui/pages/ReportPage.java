@@ -101,7 +101,7 @@ public class ReportPage extends Page {
         machineGrid.setHgap(15);
 
         for (Machine machine : machines) {
-            if (machine.getReport() != null) {
+            if (machine.getCurrentReport() != null) {
                 reportMachines.add(machine);
             }
         }
@@ -131,11 +131,11 @@ public class ReportPage extends Page {
             location.setFont(new Font(fontName, smallFontSize));
             location.setTextFill(btnTextColour);
 
-            Label userName = new Label(machine.getReport().getUser().getName());
+            Label userName = new Label(machine.getCurrentReport().getUser().getName());
             userName.setFont(new Font(fontName, smallFontSize));
             userName.setTextFill(btnTextColour);
 
-            Label faultDescription = new Label(machine.getReport().getDescription());
+            Label faultDescription = new Label(machine.getCurrentReport().getDescription());
             faultDescription.setFont(new Font(fontName, smallFontSize));
             faultDescription.setTextFill(btnTextColour);
 
@@ -264,13 +264,13 @@ public class ReportPage extends Page {
         userTitle.setFont(new Font(fontName, smallFontSize));
         userTitle.setTextFill(reportTextColour);
 
-        Label userName = new Label("User Name: " + machine.getReport().getUser().getName());
+        Label userName = new Label("User Name: " + machine.getCurrentReport().getUser().getName());
         userName.setFont(new Font(fontName, smallFontSize));
         userName.setTextFill(reportTextColour);
-        Label email = new Label("Email: " + machine.getReport().getUser().getEmail());
+        Label email = new Label("Email: " + machine.getCurrentReport().getUser().getEmail());
         email.setFont(new Font(fontName, smallFontSize));
         email.setTextFill(reportTextColour);
-        Label role = new Label("Role: " + machine.getReport().getUser().getRole());
+        Label role = new Label("Role: " + machine.getCurrentReport().getUser().getRole());
         role.setFont(new Font(fontName, smallFontSize));
         role.setTextFill(reportTextColour);
 
@@ -288,7 +288,7 @@ public class ReportPage extends Page {
         desc.setMaxWidth(reportDescWidth - 35);
         desc.setPrefHeight(10);
         desc.setWrapText(true);
-        desc.setText(machine.getReport().getDescription());
+        desc.setText(machine.getCurrentReport().getDescription());
         desc.setEditable(false);
         desc.setFont(new Font(fontName, smallFontSize));
 
@@ -303,9 +303,9 @@ public class ReportPage extends Page {
         mediaTitle.setFont(new Font(fontName, smallFontSize));
         mediaTitle.setTextFill(reportTextColour);
 
-        if (machine.getReport().getPathToFile() != null) {
+        if (machine.getCurrentReport().getPathToFile() != null) {
             infoBox.getChildren().addAll(new Label(), mediaTitle, new Label(),
-                    drawAttachedMedia(machine.getReport().getPathToFile()));
+                    drawAttachedMedia(machine.getCurrentReport().getPathToFile()));
         }
 
         ///////////////////////////////

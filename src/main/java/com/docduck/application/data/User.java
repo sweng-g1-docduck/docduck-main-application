@@ -8,8 +8,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import org.jdom2.Element;
-import com.docduck.application.xmldom.InvalidID;
 
 /**
  * A Class for storing the non-secure data related to a user - The User's name -

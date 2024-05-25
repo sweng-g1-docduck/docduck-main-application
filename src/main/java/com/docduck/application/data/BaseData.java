@@ -6,7 +6,6 @@ import com.docduck.application.xmldom.JDOMDataHandlerNotInitialised;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BaseData {
 

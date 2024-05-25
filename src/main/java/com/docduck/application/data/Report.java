@@ -20,6 +20,8 @@ public class Report extends BaseData {
     private String title;
     private String description;
     private String pathToFile;
+    private int machineID;
+    private int userID;
 
     public Report(int id, User user, String title, String description, String pathToFile) {
         super();
@@ -28,6 +30,7 @@ public class Report extends BaseData {
         this.title = title;
         this.description = description;
         this.pathToFile = pathToFile;
+        this.userID = user.getId();
     }
 
     /**
@@ -55,9 +58,16 @@ public class Report extends BaseData {
             if (target.getName().equals("description")) {
                 this.description = target.getValue();
             } 
-            if (target.getName().equals("pathToFile")) {
+            if (target.getName().equals("media")) {
                 this.pathToFile = target.getValue();
+            }
+            if (target.getName().equals("machineID")) {
+                this.machineID = target.getValue();
             } 
+            if (target.getName().equals("userID")) {
+                this.userID = target.getValue();
+            } 
+            
         }
         this.user = null;
     }
