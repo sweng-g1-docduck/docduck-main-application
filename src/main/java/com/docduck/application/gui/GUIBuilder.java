@@ -36,7 +36,6 @@ public class GUIBuilder {
     public double CURRENT_WINDOW_HEIGHT = 759;
     private final Scale scale;
     protected Hashtable<String, Hashtable<String, Object>> xmlData = new Hashtable<>();
-    private final ArrayList<Page> pageList = new ArrayList<>();
     private StatusPage statusPage;
     private ReportPage reportPage;
     private ArrayList<Machine> machines;
