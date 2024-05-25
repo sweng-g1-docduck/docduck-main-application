@@ -2,12 +2,10 @@ package com.docduck.application.gui.pages;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
-import com.docduck.application.xmldom.InvalidID;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.geometry.Insets;
@@ -55,7 +53,7 @@ public class AdminPage extends Page {
     private boolean editingUsers = false;
     private boolean editingMachines = false;
     private Label headerLabel;
-    private Stage newStage;
+    private Stage managerPopOutStage;
 
     private String usernameFieldValue;
     private String emailFieldValue;
@@ -68,10 +66,18 @@ public class AdminPage extends Page {
     private int machineIdValue;
     private String datasheetValue;
     private String purchaseLocationValue;
+    private String nameFieldValue;
+    private boolean nullUserField = true;
+    private boolean nullUsernameField = true;
+    private boolean nullEmailField = true;
+    private boolean nullRoleField = true;
+    private boolean nullPasswordField = true;
+    private boolean nullMachineField;
+    private boolean nullLocationField;
+    private boolean nullStatusField;
+    private boolean nullDatasheetField;
+    private boolean nullPurchaseLocationField;
 
-    private enum ButtonType {
-        MANAGER
-    }
 
     /**
      * Constructor for AdminPage.
@@ -226,18 +232,18 @@ public class AdminPage extends Page {
      * @param machine The machine object (can be null if managing users).
      */
     private void openWindow(String managerType, String actionType, User user, Machine machine) {
-        if (newStage != null) {
-            newStage.close();
+        if (managerPopOutStage != null) {
+            managerPopOutStage.close();
         }
-        newStage = new Stage();
+        managerPopOutStage = new Stage();
         VBox formLayout = createManagerForm(managerType, actionType, user, machine);
         formLayout.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(10), new Insets(50))));
 
         Scene scene = new Scene(formLayout, 700, 600);
         scene.setFill(Color.web("#1f5398"));
-        newStage.setTitle(managerType + " - " + actionType);
-        newStage.setScene(scene);
-        newStage.show();
+        managerPopOutStage.setTitle(managerType + " - " + actionType);
+        managerPopOutStage.setScene(scene);
+        managerPopOutStage.show();
     }
 
     private VBox createManagerForm(String managerType, String actionType, User user, Machine machine) {
@@ -269,23 +275,33 @@ public class AdminPage extends Page {
         gridPane.setVgap(10);
         gridPane.setHgap(10);
         gridPane.setAlignment(Pos.CENTER);
+        
+        Label nullTextMessage = new Label();;
 
         int row = 0;
-
         if (managerType.equals("User Manager")) {
+
+            gridPane.add(createLabel("Full Name"), 0, row);
+            TextField nameField = createFormField("Full Name", user != null ? user.getName() : "");
+            gridPane.add(nameField, 1, row++);
+            usernameFieldValue = user.getName();
+
             gridPane.add(createLabel("Username"), 0, row);
-            TextField usernameField = createFormField("Username", user != null ? user.getName() : "");
+            TextField usernameField = createFormField("Username", user != null ? user.getUsername() : "");
             gridPane.add(usernameField, 1, row++);
+            usernameFieldValue = user.getUsername();
 
             gridPane.add(createLabel("Email"), 0, row);
             TextField emailField = createFormField("Email", user != null ? user.getEmail() : "");
             gridPane.add(emailField, 1, row++);
+            emailFieldValue = user.getEmail();
 
             ComboBox<String> roleComboBox;
             if (user != null) {
                 gridPane.add(createLabel("Role"), 0, row);
                 roleComboBox = createUserComboBox(user.getRole());
                 gridPane.add(roleComboBox, 1, row++);
+                roleFieldValue = user.getRole();
             } else {
                 gridPane.add(createLabel("Role"), 0, row);
                 roleComboBox = createUserComboBox("");
@@ -297,22 +313,68 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Password"), 0, row);
             gridPane.add(passwordField, 1, row++);
 
+
+
             // Set the instance variables when the form fields are filled out
+            nameField.textProperty().addListener((observable, oldValue, newValue) -> {
+                nameFieldValue = newValue.strip();
+                if (nameFieldValue.equals("")) {
+                    nullTextMessage.setText("Please Fill in First and Second Name");
+                    nullUserField = true;
+                }
+                else {
+                    nullTextMessage.setText("");
+                    nullUserField = false;
+                    System.out.println(nameFieldValue);
+                }
+            });
             usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
-                usernameFieldValue = newValue;
+                usernameFieldValue = newValue.strip();
+                if (usernameFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Username");
+                    nullUsernameField = true;
+                }
+                else {
+                    nullTextMessage.setText("");
+                    nullUsernameField = false;
+                }
             });
             emailField.textProperty().addListener((observable, oldValue, newValue) -> {
-                emailFieldValue = newValue;
+                emailFieldValue = newValue.strip();
+                if (emailFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please Fill in Email");
+                    nullEmailField = true;
+                }
+                else {
+                    nullTextMessage.setText("");
+                    nullEmailField = false;
+                }
             });
             roleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                roleFieldValue = newValue;
+                roleFieldValue = newValue.strip();
+                if (roleFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please Select Role");
+                    nullRoleField = true;
+                }
+                else {
+                    nullTextMessage.setText("");
+                    nullRoleField = false;
+                }
             });
             passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
-                passwordFieldValue = newValue;
+                passwordFieldValue = newValue.strip();
+                if (passwordFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please Set Password");
+                    nullPasswordField = true;
+                }
+                else {
+                    nullTextMessage.setText("");
+                    nullPasswordField = false;
+                }
             });
         }
 
-        formLayout.getChildren().addAll(gridPane, createFormButtons());
+        formLayout.getChildren().addAll(gridPane, nullTextMessage, createFormButtons());
 
         return formLayout;
     }
@@ -334,70 +396,103 @@ public class AdminPage extends Page {
         gridPane.setHgap(10);
         gridPane.setAlignment(Pos.CENTER);
 
+        Label nullTextMessage = new Label();
+
         int row = 0;
 
         if (managerType.equals("Machine Manager")) {
             gridPane.add(createLabel("Machine Name"), 0, row);
             TextField machineNameField = createFormField("Machine Name", machine != null ? machine.getName() : "");
             gridPane.add(machineNameField, 1, row++);
+            machineFieldValue = machine != null ? machine.getName() : "";
 
             gridPane.add(createLabel("Location"), 0, row);
             TextField locationField = createFormField("Location", machine != null ? machine.getLocation() : "");
             gridPane.add(locationField, 1, row++);
+            locationFieldValue = machine != null ? machine.getLocation() : "";
 
             ComboBox<String> statusComboBox;
             if (machine != null) {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox(machine.getStatus());
                 gridPane.add(statusComboBox, 1, row++);
+                statusValue = machine.getStatus();
             } else {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox("");
                 gridPane.add(statusComboBox, 1, row++);
             }
-            gridPane.add(createLabel("Id"), 0, row);
-            TextField idField = createFormField("Id", machine != null ? machine.getSerialNumber() : "");
-            gridPane.add(idField, 1, row++);
 
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
             TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheet() : "");
             gridPane.add(datasheetField, 1, row++);
+            datasheetValue = machine != null ? machine.getDatasheet() : "";
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocation() : "");
             gridPane.add(purchaseLocationField, 1, row++);
+            purchaseLocationValue = machine != null ? machine.getPurchaseLocation() : "";
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-                // Update the value of the instance variable
-                machineFieldValue = newValue;
+                machineFieldValue = newValue.strip();
+                if (machineFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Machine Name");
+                    nullMachineField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullMachineField = false;
+                }
             });
             locationField.textProperty().addListener((observable, oldValue, newValue) -> {
-                // Update the value of the instance variable
-                locationFieldValue = newValue;
+                locationFieldValue = newValue.strip();
+                if (locationFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Location");
+                    nullLocationField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullLocationField = false;
+                }
             });
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-                // Update the value of the instance variable
-                statusValue = newValue.toUpperCase();
+                statusValue = newValue.strip();
+                if (statusValue.isEmpty()) {
+                    nullTextMessage.setText("Please select Status");
+                    nullStatusField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullStatusField = false;
+                }
             });
-            idField.textProperty().addListener((observable, oldValue, newValue) -> {
-                // Update the value of the instance variable
-                machineIdValue = Integer.parseInt(newValue);
-            });
+
             datasheetField.textProperty().addListener((observable, oldValue, newValue) -> {
-                // Update the value of the instance variable
-                datasheetValue = newValue;
+                datasheetValue = newValue.strip();
+                if (datasheetValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Datasheet Hyperlink");
+                    nullDatasheetField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullDatasheetField = false;
+                }
             });
             purchaseLocationField.textProperty().addListener((observable, oldValue, newValue) -> {
-                // Update the value of the instance variable
-                purchaseLocationValue = newValue;
+                purchaseLocationValue = newValue.strip();
+                if (purchaseLocationValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Purchase Location Hyperlink");
+                    nullPurchaseLocationField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullPurchaseLocationField = false;
+                }
+
             });
         }
 
-        formLayout.getChildren().addAll(gridPane, createFormButtons());
+        formLayout.getChildren().addAll(gridPane, nullTextMessage, createFormButtons());
 
         return formLayout;
     }
+
 
 
     private TextField createFormField(String label, String value) {
@@ -414,10 +509,10 @@ public class AdminPage extends Page {
         comboBox.getItems().addAll("Operator", "Engineer", "Admin");
 
         switch (selectedItem) {
-        case "Admin":
+        case "ADMIN":
             comboBox.setValue("Admin");
             break;
-        case "Engineer":
+        case "ENGINEER":
             comboBox.setValue("Engineer");
             break;
         default:
@@ -483,24 +578,56 @@ public class AdminPage extends Page {
                 // if user does not exist from user list, then add user to list.
                 // if we are adding a user with real details (e.g. username, email) then deny it
                 // if we are editing a user then the above is okay, but it should change the existing user in array (and save to xml)
-                User user = new User( usernameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue); //placeholder
-                allUsersList.add(user);
-                createRightSection();
+                boolean userExists = false;
+
+                for (User user: allUsersList) {
+                    if (user.getEmail().equals(emailFieldValue) || user.getUsername().equals(usernameFieldValue)){
+                        userExists=true;
+                        break;
+                    }
+
+                }
+
+                if (!userExists && !nullUserField && !nullUsernameField && !nullRoleField && !nullEmailField && !nullPasswordField) {
+                    User user = new User(nameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue);
+                    allUsersList.add(user);
+                    createRightSection();
+                } else {
+                    System.out.println("lol");
+                }
+
+
             }
+
             else if (editingMachines) {
                 System.out.println("Machine Save button pressed");
 
-                Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, locationFieldValue);
-                System.out.println(statusValue);
-                machineList.add(machine);
-                createRightSection();
+                boolean machineExists = false;
+
+                for (Machine machine: machines) {
+                    if (machine.getName().equals(machineFieldValue)){
+                        machineExists = true;
+                        break;
+                    }
+
+                }
+                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField){
+                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, locationFieldValue);
+                    System.out.println(statusValue);
+                    machineList.add(machine);
+                    createRightSection();
+                    managerPopOutStage.close();
+                }
+                else {
+                    System.out.println("lol");
+                }
             }
         });
 
         cancelButton.setOnAction(event -> {
             // Handle cancel action
             System.out.println("Cancel button pressed");
-            newStage.close();
+            managerPopOutStage.close();
         });
 
         buttonBox.getChildren().addAll(saveButton, cancelButton);
@@ -707,7 +834,7 @@ public class AdminPage extends Page {
     private ButtonWrapper createUserButton(User user) {
         ButtonWrapper userButton = new ButtonWrapper();
         userButton.setCornerRadius(5);
-        userButton.setButtonWidth(900);
+        userButton.setButtonWidth(800);
         // Calculate the height dynamically based on the number of users
         double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
         userButton.setButtonHeight(height);

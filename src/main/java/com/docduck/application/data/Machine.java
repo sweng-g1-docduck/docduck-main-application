@@ -38,7 +38,7 @@ public class Machine extends BaseData {
 
 
 
-        //this.id = id;
+        this.id = id;
         this.name = name;
         this.location = room;
         this.serialNumber = serialNumber;
