@@ -276,7 +276,8 @@ public class AdminPage extends Page {
         gridPane.setHgap(10);
         gridPane.setAlignment(Pos.CENTER);
         
-        Label nullTextMessage = new Label();;
+        Label nullTextMessage = new Label();
+        nullTextMessage.setTextFill(Color.RED);
 
         int row = 0;
         if (managerType.equals("User Manager")) {
@@ -319,7 +320,7 @@ public class AdminPage extends Page {
             nameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 nameFieldValue = newValue.strip();
                 if (nameFieldValue.equals("")) {
-                    nullTextMessage.setText("Please Fill in First and Second Name");
+                    nullTextMessage.setText("Please fill in First and Second Name");
                     nullUserField = true;
                 }
                 else {
@@ -342,7 +343,7 @@ public class AdminPage extends Page {
             emailField.textProperty().addListener((observable, oldValue, newValue) -> {
                 emailFieldValue = newValue.strip();
                 if (emailFieldValue.isEmpty()) {
-                    nullTextMessage.setText("Please Fill in Email");
+                    nullTextMessage.setText("Please fill in Email");
                     nullEmailField = true;
                 }
                 else {
@@ -353,7 +354,7 @@ public class AdminPage extends Page {
             roleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 roleFieldValue = newValue.strip();
                 if (roleFieldValue.isEmpty()) {
-                    nullTextMessage.setText("Please Select Role");
+                    nullTextMessage.setText("Please select Role");
                     nullRoleField = true;
                 }
                 else {
@@ -364,7 +365,7 @@ public class AdminPage extends Page {
             passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
                 passwordFieldValue = newValue.strip();
                 if (passwordFieldValue.isEmpty()) {
-                    nullTextMessage.setText("Please Set Password");
+                    nullTextMessage.setText("Please set Password");
                     nullPasswordField = true;
                 }
                 else {
@@ -397,6 +398,7 @@ public class AdminPage extends Page {
         gridPane.setAlignment(Pos.CENTER);
 
         Label nullTextMessage = new Label();
+        nullTextMessage.setTextFill(Color.RED);
 
         int row = 0;
 
@@ -506,17 +508,17 @@ public class AdminPage extends Page {
 
     private ComboBox<String> createUserComboBox(String selectedItem) {
         ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.getItems().addAll("Operator", "Engineer", "Admin");
+        comboBox.getItems().addAll("OPERATOR", "ENGINEER", "ADMIN");
 
         switch (selectedItem) {
         case "ADMIN":
-            comboBox.setValue("Admin");
+            comboBox.setValue("ADMIN");
             break;
         case "ENGINEER":
-            comboBox.setValue("Engineer");
+            comboBox.setValue("ENGINEER");
             break;
         default:
-            comboBox.setValue("Operator");
+            comboBox.setValue("OPERATOR");
             break;
         }
         return comboBox;
@@ -524,17 +526,17 @@ public class AdminPage extends Page {
 
     private ComboBox<String> createStatusComboBox(String selectedItem) {
         ComboBox<String> comboBox = new ComboBox<>();
-        comboBox.getItems().addAll("Online", "Maintenance", "Offline");
+        comboBox.getItems().addAll("ONLINE", "MAINTENANCE", "OFFLINE");
 
         switch (selectedItem) {
         case "MAINTENANCE":
-            comboBox.setValue("Maintenance");
+            comboBox.setValue("MAINTENANCE");
             break;
         case "OFFLINE":
-            comboBox.setValue("Offline");
+            comboBox.setValue("OFFLINE");
             break;
         default:
-            comboBox.setValue("Online");
+            comboBox.setValue("ONLINE");
             break;
         }
         return comboBox;
@@ -575,51 +577,71 @@ public class AdminPage extends Page {
             if (editingUsers) {
                 System.out.println("User Save button pressed");
 
-                // if user does not exist from user list, then add user to list.
-                // if we are adding a user with real details (e.g. username, email) then deny it
-                // if we are editing a user then the above is okay, but it should change the existing user in array (and save to xml)
                 boolean userExists = false;
 
-                for (User user: allUsersList) {
-                    if (user.getEmail().equals(emailFieldValue) || user.getUsername().equals(usernameFieldValue)){
-                        userExists=true;
+                for (User user : allUsersList) {
+                    if (user.getEmail().equals(emailFieldValue) || user.getUsername().equals(usernameFieldValue)) {
+                        userExists = true;
+                        // Update user details if fields are not null
+                        if (nameFieldValue != null) {
+                            user.setName(nameFieldValue);
+                        }
+                        if (passwordFieldValue != null) {
+                            user.setPassword(passwordFieldValue);
+                        }
+                        if (roleFieldValue != null) {
+                            user.setRole(roleFieldValue);
+                        }
                         break;
                     }
-
                 }
 
                 if (!userExists && !nullUserField && !nullUsernameField && !nullRoleField && !nullEmailField && !nullPasswordField) {
                     User user = new User(nameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue);
                     allUsersList.add(user);
                     createRightSection();
+                } else if (userExists) {
+                    createRightSection();
+                    System.out.println("User updated successfully");
                 } else {
-                    System.out.println("lol");
+                    System.out.println("Please fill in all required fields.");
                 }
-
-
-            }
-
-            else if (editingMachines) {
+            } else if (editingMachines) {
                 System.out.println("Machine Save button pressed");
 
                 boolean machineExists = false;
 
-                for (Machine machine: machines) {
-                    if (machine.getName().equals(machineFieldValue)){
+                for (Machine machine : machines) {
+                    if (machine.getName().equals(machineFieldValue)) {
                         machineExists = true;
+                        // Update machine details if fields are not null
+                        if (locationFieldValue != null) {
+                            machine.setLocation(locationFieldValue);
+                        }
+                        if (statusValue != null) {
+                            machine.setStatus(statusValue);
+                        }
+                        if (datasheetValue != null) {
+                            machine.setDatasheet(datasheetValue);
+                        }
+                        if (purchaseLocationValue != null) {
+                            machine.setPurchaseLocation(purchaseLocationValue);
+                        }
                         break;
                     }
-
                 }
-                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField){
-                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, locationFieldValue);
-                    System.out.println(statusValue);
-                    machineList.add(machine);
+
+                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
+                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, purchaseLocationValue);
+                    machines.add(machine);
                     createRightSection();
                     managerPopOutStage.close();
-                }
-                else {
-                    System.out.println("lol");
+                } else if (machineExists) {
+                    createRightSection();
+                    System.out.println("Machine updated successfully");
+                    managerPopOutStage.close();
+                } else {
+                    System.out.println("Please fill in all required fields.");
                 }
             }
         });
@@ -633,6 +655,7 @@ public class AdminPage extends Page {
         buttonBox.getChildren().addAll(saveButton, cancelButton);
         return buttonBox;
     }
+
 
     private void setLastPressedButton(ButtonWrapper currentButton, ButtonWrapper lastPressedButton) {
 
@@ -834,7 +857,7 @@ public class AdminPage extends Page {
     private ButtonWrapper createUserButton(User user) {
         ButtonWrapper userButton = new ButtonWrapper();
         userButton.setCornerRadius(5);
-        userButton.setButtonWidth(800);
+        userButton.setButtonWidth(960);
         // Calculate the height dynamically based on the number of users
         double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
         userButton.setButtonHeight(height);
@@ -862,7 +885,7 @@ public class AdminPage extends Page {
     private ButtonWrapper createMachineButton(Machine machine) {
         ButtonWrapper machineButton = new ButtonWrapper();
         machineButton.setCornerRadius(5);
-        machineButton.setButtonWidth(900);
+        machineButton.setButtonWidth(960);
         // Calculate the height dynamically based on the number of machines
         double height = Math.max(50, Math.min(70, 500 / machines.size()));
         machineButton.setButtonHeight(height);
