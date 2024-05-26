@@ -2,12 +2,10 @@ package com.docduck.application.gui.pages;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
-import com.docduck.application.xmldom.InvalidID;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.geometry.Insets;
@@ -31,10 +29,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
-
 /**
- * Represents the admin page of the application, where administrators can manage users, machines, components, and parts.
- * Inherits from the Page class.
+ * Represents the admin page of the application, where administrators can manage
+ * users, machines, components, and parts. Inherits from the Page class.
  *
  * @author lw2380
  */
@@ -62,7 +59,7 @@ public class AdminPage extends Page {
     private String roleFieldValue;
     private String passwordFieldValue;
     private String machineFieldValue;
-    private String  locationFieldValue;
+    private String locationFieldValue;
     private String statusValue;
     private int userIdValue;
     private int machineIdValue;
@@ -101,7 +98,8 @@ public class AdminPage extends Page {
     }
 
     /**
-     * Creates the left section of the admin page, containing various manager boxes for managing users, machines, components, and parts.
+     * Creates the left section of the admin page, containing various manager boxes
+     * for managing users, machines, components, and parts.
      *
      * @return The VBox representing the left section of the admin page.
      */
@@ -184,30 +182,30 @@ public class AdminPage extends Page {
         button.setOnAction(event -> {
 
             switch (text) {
-                case "Edit User":
-                case "Remove User":
-                    editingUsers = true;
-                    editingMachines = false;
-                    createRightSection(); // Clear and refresh right section
-                    break;
-                case "Edit Machine":
-                case "Remove Machine":
-                    editingMachines = true;
-                    editingUsers = false;
-                    createRightSection(); // Clear and refresh right section
-                    break;
-                case "Add User":
-                    editingUsers = true;
-                    editingMachines = false;
-                    createRightSection(); // Clear and refresh right section
-                    openWindow(managerType, text, user, null);
-                    break;
-                case "Add Machine":
-                    editingUsers = false;
-                    editingMachines = true;
-                    createRightSection(); // Clear and refresh right section
-                    openWindow(managerType, text, null, machine);
-                    break;
+            case "Edit User":
+            case "Remove User":
+                editingUsers = true;
+                editingMachines = false;
+                createRightSection(); // Clear and refresh right section
+                break;
+            case "Edit Machine":
+            case "Remove Machine":
+                editingMachines = true;
+                editingUsers = false;
+                createRightSection(); // Clear and refresh right section
+                break;
+            case "Add User":
+                editingUsers = true;
+                editingMachines = false;
+                createRightSection(); // Clear and refresh right section
+                openWindow(managerType, text, user, null);
+                break;
+            case "Add Machine":
+                editingUsers = false;
+                editingMachines = true;
+                createRightSection(); // Clear and refresh right section
+                openWindow(managerType, text, null, machine);
+                break;
             }
 
             setLastPressedButton(button, lastPressedUserTypeButton);
@@ -218,12 +216,14 @@ public class AdminPage extends Page {
     }
 
     /**
-     * Opens a new window for managing users or machines, depending on the specified manager type and action type.
+     * Opens a new window for managing users or machines, depending on the specified
+     * manager type and action type.
      *
-     * @param managerType The type of manager (e.g., "User Manager", "Machine Manager").
-     * @param actionType The action type (e.g., "Edit User", "Edit Machine").
-     * @param user The user object (can be null if managing machines).
-     * @param machine The machine object (can be null if managing users).
+     * @param managerType The type of manager (e.g., "User Manager", "Machine
+     *                    Manager").
+     * @param actionType  The action type (e.g., "Edit User", "Edit Machine").
+     * @param user        The user object (can be null if managing machines).
+     * @param machine     The machine object (can be null if managing users).
      */
     private void openWindow(String managerType, String actionType, User user, Machine machine) {
         if (newStage != null) {
@@ -286,7 +286,8 @@ public class AdminPage extends Page {
                 gridPane.add(createLabel("Role"), 0, row);
                 roleComboBox = createUserComboBox(user.getRole());
                 gridPane.add(roleComboBox, 1, row++);
-            } else {
+            }
+            else {
                 gridPane.add(createLabel("Role"), 0, row);
                 roleComboBox = createUserComboBox("");
                 gridPane.add(roleComboBox, 1, row++);
@@ -316,7 +317,6 @@ public class AdminPage extends Page {
 
         return formLayout;
     }
-
 
     private Label createLabel(String text) {
         Label label = new Label(text);
@@ -350,7 +350,8 @@ public class AdminPage extends Page {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox(machine.getStatus());
                 gridPane.add(statusComboBox, 1, row++);
-            } else {
+            }
+            else {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox("");
                 gridPane.add(statusComboBox, 1, row++);
@@ -362,11 +363,13 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
             gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : ""), 1,
                     row++);
-            TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
+            TextField datasheetField = createFormField("Datasheet Hyperlink",
+                    machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
-            TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocationRef() : "");
+            TextField purchaseLocationField = createFormField("Purchase Location Hyperlink",
+                    machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
 
             // Set the instance variables when the form fields are filled out
@@ -400,7 +403,6 @@ public class AdminPage extends Page {
 
         return formLayout;
     }
-
 
     private TextField createFormField(String label, String value) {
         TextField textField = new TextField();
@@ -484,15 +486,18 @@ public class AdminPage extends Page {
 
                 // if user does not exist from user list, then add user to list.
                 // if we are adding a user with real details (e.g. username, email) then deny it
-                // if we are editing a user then the above is okay, but it should change the existing user in array (and save to xml)
-                User user = new User( usernameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue); //placeholder
+                // if we are editing a user then the above is okay, but it should change the
+                // existing user in array (and save to xml)
+                User user = new User(usernameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue,
+                        roleFieldValue); // placeholder
                 allUsersList.add(user);
                 createRightSection();
             }
             else if (editingMachines) {
                 System.out.println("Machine Save button pressed");
 
-                Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, locationFieldValue);
+                Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue,
+                        locationFieldValue);
                 System.out.println(statusValue);
                 machineList.add(machine);
                 createRightSection();

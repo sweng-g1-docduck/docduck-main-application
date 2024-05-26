@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <docduckData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DocDuckSchema.xsd">
   <machineData>
-    <machine id="1">
+    <machine id="1001">
       <name>3D Printer</name>
       <status>ONLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>Labs_4th_Floor</location>
-      <imageRef>https://wabetteridge.co.uk/assets/icons/favicon.jpg</imageRef>
+      <imageRef>\Role Hierarchy Updated.png</imageRef>
       <datasheetRef>https://bbc.co.uk</datasheetRef>
       <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
       <components>
-        <component id="1">
+        <component id="1101">
           <name>Control Panel</name>
           <stockNumber>2</stockNumber>
           <serialNumber>ABC999284858259</serialNumber>
@@ -19,7 +19,7 @@
           <datasheetRef>https://bbc.co.uk</datasheetRef>
           <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
           <parts>
-            <part id="1">
+            <part id="1111">
               <name>LCD Screen</name>
               <stockNumber>10</stockNumber>
               <serialNumber>ABC694374858259</serialNumber>
@@ -28,7 +28,7 @@
               <datasheetRef>https://bbc.co.uk</datasheetRef>
               <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
             </part>
-            <part id="2">
+            <part id="1112">
               <name>LCD Screen Case</name>
               <stockNumber>32</stockNumber>
               <serialNumber>ABC378454858259</serialNumber>
@@ -41,7 +41,7 @@
         </component>
       </components>
       <parts>
-        <part id="1">
+        <part id="1201">
           <name>Green material</name>
           <stockNumber>10</stockNumber>
           <serialNumber>ABC694164548259</serialNumber>
@@ -54,14 +54,14 @@
     </machine>
   </machineData>
   <userData>
-    <user id="1">
+    <user id="2001">
       <name>James Stevenson</name>
       <username>js2140</username>
       <password>js12345</password>
       <email>js2140@york.ac.uk</email>
       <role>ADMIN</role>
     </user>
-    <user id="2">
+    <user id="2002">
       <name>William Betteridge</name>
       <username>wab513</username>
       <password>wab12345</password>
@@ -82,7 +82,7 @@
       <email>bob321@york.ac.uk</email>
       <role>OPERATOR</role>
     </user>
-    <user id="2002">
+    <user id="2003">
       <name>Billy</name>
       <username>bob321</username>
       <password>password</password>
@@ -91,12 +91,12 @@
     </user>
   </userData>
   <machineReport>
-    <report id="1">
+    <report id="3001">
       <title>3D Printer Not Responding</title>
       <description>The touchscreen on the 3D printer doesn't respond</description>
       <media>src/main/resources/data/machines/reports/image.jpg</media>
-      <machineID>1</machineID>
-      <userID>2</userID>
+      <machineID>1001</machineID>
+      <userID>2002</userID>
     </report>
   </machineReport>
 </docduckData>

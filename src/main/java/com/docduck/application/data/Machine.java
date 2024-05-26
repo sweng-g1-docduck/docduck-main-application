@@ -29,8 +29,8 @@ public class Machine extends BaseData {
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
-
-    public Machine(String name, String room, String status, String serialNumber, String dataSheet, String purchaseLocation) {
+    public Machine(String name, String room, String status, String serialNumber, String dataSheet,
+            String purchaseLocation) {
         super();
 
         ArrayList<Integer> machineIDs = domDataHandler.getListOfMachineIDs();
@@ -65,7 +65,6 @@ public class Machine extends BaseData {
      * @author William-A-B
      */
     public Machine(int id) throws InvalidID {
-
 
         if (!domDataHandler.checkIfIDExists(id)) {
             throw new InvalidID(

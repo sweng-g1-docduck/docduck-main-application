@@ -10,10 +10,8 @@ import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.AdminPage;
-import com.docduck.application.gui.pages.Page;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.application.gui.pages.StatusPage;
-import com.docduck.application.xmldom.InvalidID;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.collections.ObservableList;
@@ -270,6 +268,7 @@ public class GUIBuilder {
             root.getChildren().add(adminPage);
             scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
             break;
+
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
@@ -292,27 +291,29 @@ public class GUIBuilder {
         populateData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-        adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin page and use below)
+        adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin
+                                                             // page and use below)
     }
 
     private void populateData() {
 
         user = new User("Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
-        
+
         BaseData bd = new BaseData();
         machines = bd.setupMachineDataFromXML();
         allUsers = bd.setupUserDataFromXML();
-        ArrayList<Report>allReports = bd.setupReportDataFromXML();
 
-        for (Machine machine :  machines) {
+        ArrayList<Report> allReports = bd.setupReportDataFromXML();
+
+        for (Machine machine : machines) {
             for (Report report : allReports) {
-                for (User user :  allUsers) {
+                for (User user : allUsers) {
                     if (user.getId() == report.getUserID()) {
                         report.setUser(user);
                         break;
                     }
                 }
-                
+
                 if (report.getMachineID() == machine.getId()) {
                     machine.addReport(report);
                     break;
@@ -320,5 +321,5 @@ public class GUIBuilder {
             }
         }
     }
-    
+
 }
