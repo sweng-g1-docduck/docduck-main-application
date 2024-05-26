@@ -202,6 +202,73 @@ public class DocDuckApplicationTest {
         assertTrue(adminPageNode instanceof AdminPage, "The node should be an instance of AdminPage");
     }
     
+    @Test
+    public void testDisplayPageWithMachine() {
+        // Mock ReportPage
+        guiBuilder.reportPage = new ReportPage(new ArrayList<>(), new User());
+        Machine mockMachine = new Machine();
+
+        // Call displayPage method with "REPORT" and a Machine
+        guiBuilder.displayPage("REPORT", mockMachine);
+
+        // Verify that the root pane's children have been cleared and populated correctly
+        assertEquals(1, rootPane.getChildren().size(), "Root pane should contain 1 child");
+
+        Node reportPageNode = rootPane.getChildren().get(0);
+
+        // Verify that the node is an instance of ReportPage
+        assertTrue(reportPageNode instanceof ReportPage, "The node should be an instance of ReportPage");
+    }
+
+    @Test
+    public void testUpdateInstances() {
+        // Call updateInstances method
+        guiBuilder.updateInstances();
+
+        // Verify that the EventManager, XMLBuilder, and FTPHandler instances are updated (assumed to be mocked)
+        assertNotNull(EventManager.getInstance(), "EventManager instance should be updated");
+        assertNotNull(XMLBuilder.getInstance(), "XMLBuilder instance should be updated");
+        assertNotNull(FTPHandler.getInstance(), "FTPHandler instance should be updated");
+    }
+
+    @Test
+    public void testSetData() {
+        // Create mock XML data
+        Hashtable<String, Hashtable<String, Object>> mockXMLData = new Hashtable<>();
+
+        // Call setData method with mock data
+        guiBuilder.setData(mockXMLData);
+
+        // Verify that the XML data is set correctly
+        assertSame(mockXMLData, guiBuilder.xmlData, "XML data should be set correctly");
+    }
+
+    @Test
+    public void testScaleNodes() {
+        // Create some nodes and add them to the root pane
+        Button button1 = new Button();
+        button1.setLayoutX(100);
+        button1.setLayoutY(100);
+        rootPane.getChildren().add(button1);
+
+        // Call scaleNodes method with different window dimensions
+        guiBuilder.scaleNodes(rootPane, 1920, 1080);
+
+        // Verify that nodes are scaled correctly
+        assertEquals(1.481, button1.getScaleX(), 0.001, "Button scaleX should be 1.481");
+        assertEquals(1.481, button1.getScaleY(), 0.001, "Button scaleY should be 1.481");
+    }
+
+    @Test
+    public void testBuildPages() {
+        // Call buildPages method
+        GUIBuilder.buildPages();
+
+        // Verify that the pages are built correctly
+        assertNotNull(guiBuilder.statusPage, "StatusPage should be built");
+        assertNotNull(guiBuilder.reportPage, "ReportPage should be built");
+        assertNotNull(guiBuilder.adminPage, "AdminPage should be built");
+    }
     
     
 }
