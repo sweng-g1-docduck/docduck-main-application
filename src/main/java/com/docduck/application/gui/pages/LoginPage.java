@@ -2,7 +2,6 @@ package com.docduck.application.gui.pages;
 
 import java.util.ArrayList;
 
-import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.buttonlibrary.ButtonWrapper;
@@ -11,8 +10,6 @@ import com.docduck.textlibrary.TextBoxPassword;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -34,7 +31,6 @@ public class LoginPage extends Page {
     private final Color signUpBtnHoverColour = Color.web("#ff8c00ff");
     private final Color signUpBtnClickColour = Color.web("#ffffffff");
     private ArrayList<User> allUsers;
-    
 
     public LoginPage(ArrayList<User> allUsers) {
         super();
@@ -56,57 +52,46 @@ public class LoginPage extends Page {
         ButtonWrapper signInBtn = drawButtonWrapper(80, 40, "Sign In");
         ButtonWrapper signUpBtn = drawButtonWrapper(80, 40, "Sign Up");
 
-        TextBoxField usernameBox = drawTextField(300, 40, "Username");
-        TextBoxField passwordBox = drawTextField(300, 40, "Password");
-        
-//        HBox showAndHide = new HBox();
-//        StackPane pane = new StackPane();
-//        TextBoxPassword passwordField = new TextBoxPassword();
-        
-//        passwordField.setBoxWidth(300);
-//        passwordField.setBoxHeight(40);       
-//        passwordField.setPromptText("Password");
-//        passwordField.setFontName(fontName);
-//        passwordField.setBackgroundColour(Color.WHITE);
-//        passwordField.setFontColour(darkTextColour);
-//        passwordField.setBorderColour(Color.BLACK);
-//        passwordField.setBorderWidth(2);
-//        passwordField.setCornerRadius(10);
-//        passwordField.setFontSize(smallFontSize);
-//        passwordField.setHoverColour(btnHoverColour);
-//        passwordField.setVisible(true);
-//        passwordField.hideText();
-//        passwordField.setLayoutX(0);
-//        passwordField.setLayoutY(0);
-//        
-        
-//        passwordField.createButton();
-//        Button hideBtn = passwordField.returnButton();
-       // passwordField.returnButton();
-//        showAndHide.getChildren().addAll(passwordField, hideBtn);
-        
-//        PasswordField pw = passwordField.returnPasswordField();
-//        pw.setLayoutX(0);
-//        pw.setLayoutY(0);
-        
-//        pane.getChildren().add(pw);
-//        pane.getChildren().add(passwordField);
-        
-        
-        
-        
+        TextBoxField usernameField = drawTextField(300, 40, "Username");
+
+        HBox passwordBox = new HBox();
+        passwordBox.setAlignment(Pos.CENTER);
+        passwordBox.setSpacing(10);
+        StackPane stackedPasswordBox = new StackPane();
+        TextBoxPassword passwordField = new TextBoxPassword();
+
+        passwordField.setBoxWidth(300);
+        passwordField.setBoxHeight(40);
+        passwordField.setPromptText("Password");
+        passwordField.setFontName(fontName);
+        passwordField.setBackgroundColour(Color.WHITE);
+        passwordField.setFontColour(darkTextColour);
+        passwordField.setBorderColour(Color.BLACK);
+        passwordField.setBorderWidth(2);
+        passwordField.setCornerRadius(10);
+        passwordField.setFontSize(smallFontSize);
+        passwordField.setHoverColour(btnHoverColour);
+        passwordField.setVisible(true);
+        passwordField.hideText();
+        passwordField.createButton();
+
+        stackedPasswordBox.getChildren().addAll(passwordField, passwordField.returnPasswordField());
+        passwordBox.getChildren().addAll(stackedPasswordBox, passwordField.returnButton());
+        passwordBox.setTranslateX(25);
+
         signInBtn.setFontSize(14);
         signInBtn.setBackgroundColour(signInBtnColour);
         signInBtn.setHoverColour(signInBtnHoverColour);
         signInBtn.setClickcolour(signInbtnClickColour);
         signInBtn.setOnAction((event -> {
-            
-            for(User user : allUsers) {
-                if(user.getUsername().equals(usernameBox.getText()) && user.getPasswordHash().equals(user.hashPassword(passwordBox.getText()))) {
+
+            for (User user : allUsers) {
+                if (user.getUsername().equals(usernameField.getText())
+                        && user.getPasswordHash().equals(user.hashPassword(passwordField.getText()))) {
                     GUIBuilder.getInstance().buildPages(user);
                     GUIBuilder.getInstance().displayPage("STATUS");
-                    usernameBox.clear();
-                    passwordBox.clear();
+                    usernameField.clear();
+                    passwordField.clear();
                 }
             }
         }));
@@ -116,8 +101,7 @@ public class LoginPage extends Page {
         signUpBtn.setHoverColour(signUpBtnHoverColour);
         signUpBtn.setClickcolour(signUpBtnClickColour);
         signUpBtn.setOnAction(events.getHyperlinkEvent("https://docduck.wabetteridge.co.uk"));
-        
-        
+
         buttons.setSpacing(10);
         buttons.getChildren().addAll(signUpBtn, signInBtn);
 
@@ -128,12 +112,17 @@ public class LoginPage extends Page {
         view.setFitWidth(imageWidth);
         view.setPreserveRatio(true);
 
-      
         contents.setSpacing(15);
-        contents.getChildren().addAll(view, usernameBox, passwordBox, buttons);
+        contents.getChildren().addAll(view, usernameField, passwordBox, buttons);
 
+        ButtonWrapper xmlButton = drawButtonWrapper(250, 40, "Build from PWS XML");
+        xmlButton.setOnAction(events.getActionEvent("chooseXML"));
+        xmlButton.setTranslateY(-20);
+        
         BorderPane.setAlignment(contents, Pos.CENTER);
         setCenter(contents);
+        BorderPane.setAlignment(xmlButton, Pos.CENTER);
+        setBottom(xmlButton);
         setBackground(new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
 
     }
@@ -153,7 +142,5 @@ public class LoginPage extends Page {
         textField.setHoverColour(btnHoverColour);
         return textField;
     }
-      
- 
 
 }
