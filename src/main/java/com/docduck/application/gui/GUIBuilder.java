@@ -268,11 +268,10 @@ public class GUIBuilder {
 
         case "ADMIN":
             root.getChildren().add(adminPage);
-            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
             break;
+            
         case "LOGIN":
             root.getChildren().add(loginPage);
-            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
             break;
 
         }
