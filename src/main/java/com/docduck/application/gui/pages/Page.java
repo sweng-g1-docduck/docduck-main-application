@@ -55,6 +55,9 @@ public class Page extends BorderPane {
         this.machines = machines;
         this.user = user;
         this.events = EventManager.getInstance();
+
+        setMinWidth(1280);
+        setMinHeight(720);
 //        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
@@ -81,20 +84,17 @@ public class Page extends BorderPane {
         menuBar.setPrefSize(1280, 90);
         menuBar.setAlignment(Pos.CENTER_LEFT);
 
-        ButtonWrapper overviewBtn = drawButtonWrapper(200,60,"Machine Overview");
+        ButtonWrapper overviewBtn = drawButtonWrapper(200, 60, "Machine Overview");
         overviewBtn.setOnAction(events.getActionEvent("statusPage"));
-        
-        menuBar.getChildren().addAll(overviewBtn);
-        
 
-        
+        menuBar.getChildren().addAll(overviewBtn);
 
         if (user.getRole().equals("ENGINEER") || user.getRole().equals("ADMIN")) {
 
-            ButtonWrapper reportBtn = drawButtonWrapper(240, 60,"Maintainance Reports");
+            ButtonWrapper reportBtn = drawButtonWrapper(240, 60, "Maintainance Reports");
             reportBtn.setOnAction(events.getActionEvent("reportPage"));
 
-            ButtonWrapper partBtn = drawButtonWrapper(160, 60,"Part Search");
+            ButtonWrapper partBtn = drawButtonWrapper(160, 60, "Part Search");
             partBtn.setDisable(true);
             menuBar.getChildren().addAll(reportBtn, partBtn);
         }
@@ -104,28 +104,28 @@ public class Page extends BorderPane {
             ButtonWrapper settingsBtn = drawButtonWrapper(120, 60, "Admin");
             menuBar.getChildren().add(settingsBtn);
         }
-        
+
         Pane spacer = new Pane();
         spacer.setPrefWidth(1000);
-        
-        ButtonWrapper logOutBtn = drawButtonWrapper(120,60,"Log Out");
+
+        ButtonWrapper logOutBtn = drawButtonWrapper(120, 60, "Log Out");
         logOutBtn.setOnAction(events.getActionEvent("loginPage"));
         menuBar.getChildren().addAll(spacer, logOutBtn);
 
         return menuBar;
 
     }
-    
+
     protected VBox drawMachineInfoBox(Machine machine) {
-        
+
         Color textColour = lightTextColour;
-        
+
         VBox genInfoBox = new VBox();
         genInfoBox.setAlignment(Pos.TOP_LEFT);
         genInfoBox.setSpacing(10);
         genInfoBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
         genInfoBox.setPadding(new Insets(8));
-        
+
         Label serialNum = new Label("Serial Number: " + machine.getSerialNumber());
         serialNum.setFont(new Font(fontName, smallFontSize));
         serialNum.setTextFill(textColour);
@@ -149,7 +149,7 @@ public class Page extends BorderPane {
         purchaseLink.setTranslateY(-6);
 
         genInfoBox.getChildren().addAll(serialNum, location, datasheet, purchaseLink);
-        
+
         return genInfoBox;
     }
 
@@ -170,7 +170,7 @@ public class Page extends BorderPane {
         return button;
 
     }
-    
+
     protected Label drawSubText(String title, Color textColour) {
         Label subTitle = new Label(title);
         subTitle.setFont(new Font(fontName, smallFontSize));
