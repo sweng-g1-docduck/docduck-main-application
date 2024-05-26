@@ -19,6 +19,10 @@ import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
+    public static final int MIN_WINDOW_HEIGHT = 759;
+    public static final int MIN_WINDOW_WIDTH = 1296;
+    public static final int DEFAULT_WINDOW_HEIGHT = 759;
+    public static final int DEFAULT_WINDOW_WIDTH = 1296;
     private static Pane root;
     private static GUIBuilder guiBuilder;
     private static FTPHandler ftpHandler;
@@ -30,9 +34,6 @@ public class DocDuckApplication extends Application {
 
         // XMLJDOM example method
         jdom2Example();
-
-        File f = new File("/DocDuckDataExample.xml");
-        System.out.println(f);
 
         root = new Pane();
         XMLBuilder xmlBuilder = XMLBuilder.createInstance(root);
@@ -46,12 +47,10 @@ public class DocDuckApplication extends Application {
 
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
 
-        stage.setMinHeight(759);
-        stage.setMinWidth(1296);
-        stage.setHeight(759);
-        stage.setWidth(1296);
-
-        System.out.println();
+        stage.setMinHeight(MIN_WINDOW_HEIGHT);
+        stage.setMinWidth(MIN_WINDOW_WIDTH);
+        stage.setHeight(DEFAULT_WINDOW_HEIGHT);
+        stage.setWidth(DEFAULT_WINDOW_WIDTH);
 
         stage.setTitle("DocDuck");
         stage.setScene(scene);
@@ -62,15 +61,12 @@ public class DocDuckApplication extends Application {
         guiBuilder.displayPage("STATUS");
 //        guiBuilder.LoginPage();
 //        ftpHandler.startApp();
-        System.out.println(stage.getWidth());
-        System.out.println(stage.getHeight());
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
                 stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
-
     }
 
     /**
