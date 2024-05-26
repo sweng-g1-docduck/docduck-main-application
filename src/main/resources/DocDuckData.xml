@@ -108,28 +108,21 @@
     <user id="2001">
       <name>James Stevenson</name>
       <username>js2140</username>
-      <password>js12345</password>
+      <password>l3cFIV89usLnuXrV1Q8+hieB10SLV7uxfu8x1LQKO4k=</password>
       <email>js2140@york.ac.uk</email>
       <role>OPERATOR</role>
     </user>
     <user id="2002">
       <name>William Betteridge</name>
       <username>wab513</username>
-      <password>wab12345</password>
+      <password>iRQe4wI419zR7podDJHPgGF4ehxORGETv7Kd3SW/mDU=</password>
       <email>wab513@york.ac.uk</email>
       <role>ADMIN</role>
     </user>
-    <user id="2001">
+    <user id="2003">
       <name>Billy</name>
       <username>bob321</username>
-      <password>password</password>
-      <email>bob321@york.ac.uk</email>
-      <role>OPERATOR</role>
-    </user>
-    <user id="2002">
-      <name>Billy</name>
-      <username>bob321</username>
-      <password>password</password>
+      <password>bobpassword</password>
       <email>bob321@york.ac.uk</email>
       <role>OPERATOR</role>
     </user>

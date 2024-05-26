@@ -29,7 +29,7 @@ public class DocDuckApplication extends Application {
         System.out.println("Starting DocDuck Application");
 
         // XMLJDOM example method
-        jdom2Example();
+//        jdom2Example();
 
         File f = new File("/DocDuckDataExample.xml");
         System.out.println(f);
@@ -57,9 +57,9 @@ public class DocDuckApplication extends Application {
         stage.setScene(scene);
 
         stage.show();
-        guiBuilder.buildPages();
+        guiBuilder.buildLoginPage();
 
-        guiBuilder.displayPage("STATUS");
+        guiBuilder.displayPage("LOGIN");
 //        guiBuilder.StartPage();
 //        ftpHandler.startApp();
         System.out.println(stage.getWidth());

@@ -58,7 +58,14 @@ public class Page extends BorderPane {
 
         setMinWidth(1280);
         setMinHeight(720);
-//        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+    
+    public Page() {
+        super();
+        this.events = EventManager.getInstance();
+
+        setMinWidth(1280);
+        setMinHeight(720);
     }
 
     // return list of nodes
@@ -101,8 +108,9 @@ public class Page extends BorderPane {
 
         if (user.getRole().equals("ADMIN")) {
 
-            ButtonWrapper settingsBtn = drawButtonWrapper(120, 60, "Admin");
-            menuBar.getChildren().add(settingsBtn);
+            ButtonWrapper adminBtn = drawButtonWrapper(120, 60, "Admin");
+            adminBtn.setOnAction(events.getActionEvent("adminPage"));
+            menuBar.getChildren().add(adminBtn);
         }
 
         Pane spacer = new Pane();
@@ -165,7 +173,6 @@ public class Page extends BorderPane {
         button.setHoverColour(btnHoverColour);
         button.setFontColour(lightTextColour);
         button.setFontSize(20);
-        button.setOnAction(events.getActionEvent("adminPage"));
         button.removeBorder();
         return button;
 

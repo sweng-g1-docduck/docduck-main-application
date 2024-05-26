@@ -291,18 +291,24 @@ public class GUIBuilder {
 
     /**
      * Builds all the pages
+     * @param user 
      */
-    public void buildPages() {
-        populateData();
+    public void buildPages(User user) {
+//        populateData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-        adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin
-        loginPage = new LoginPage(machines, user);                                                     // page and use below)
+        adminPage = new AdminPage(machines, user, allUsers); 
+                                                        
+    }
+    
+    public void buildLoginPage() {
+        populateData();
+        loginPage = new LoginPage(allUsers);    
     }
 
     private void populateData() {
 
-        user = new User("Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
+//        user = new User("Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
 
         BaseData bd = new BaseData();
         machines = bd.setupMachineDataFromXML();
