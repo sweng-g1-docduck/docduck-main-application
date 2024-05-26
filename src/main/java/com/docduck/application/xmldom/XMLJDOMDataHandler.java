@@ -1,14 +1,16 @@
 package com.docduck.application.xmldom;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.Report;
+import com.docduck.application.data.User;
 import org.jdom2.Attribute;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
-import com.docduck.application.data.*;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class XMLJDOMDataHandler extends XMLJDOM {
 
@@ -38,15 +40,15 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @param setNamespaceAware - Whether to set the namespace awareness
      * @author William-A-B
      */
-    private XMLJDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware) {
-        super(xmlFilename, schemaFilename, validate, setNamespaceAware);
+    private XMLJDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware, FileWriter outputWriter) {
+        super(xmlFilename, schemaFilename, validate, setNamespaceAware, outputWriter);
     }
 
     public static XMLJDOMDataHandler createNewInstance(String xmlFilename, String schemaFilename, boolean validate,
-            boolean setNamespaceAware) {
+            boolean setNamespaceAware, FileWriter outputWriter) {
 
         synchronized (XMLJDOMDataHandler.class) {
-            domDataHandlerInstance = new XMLJDOMDataHandler(xmlFilename, schemaFilename, validate, setNamespaceAware);
+            domDataHandlerInstance = new XMLJDOMDataHandler(xmlFilename, schemaFilename, validate, setNamespaceAware, outputWriter);
         }
 
         return domDataHandlerInstance;

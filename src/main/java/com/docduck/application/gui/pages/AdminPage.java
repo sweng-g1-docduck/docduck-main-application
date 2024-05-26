@@ -1,33 +1,21 @@
 package com.docduck.application.gui.pages;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -430,12 +418,12 @@ public class AdminPage extends Page {
                     row++);
             TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
-            datasheetValue = machine != null ? machine.getDatasheet() : "";
+            datasheetValue = machine != null ? machine.getDatasheetRef() : "";
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
-            purchaseLocationValue = machine != null ? machine.getPurchaseLocation() : "";
+            purchaseLocationValue = machine != null ? machine.getPurchaseLocationRef() : "";
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {

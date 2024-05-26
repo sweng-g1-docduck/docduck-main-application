@@ -5,12 +5,19 @@ import com.docduck.application.xmldom.InvalidID;
 import com.docduck.application.xmldom.JDOMDataHandlerNotInitialised;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class BaseData {
 
-    protected XMLJDOMDataHandler domDataHandler;
-    
+    public XMLJDOMDataHandler domDataHandler;
+    private String docduckDataFileName;
+    private FileWriter docduckDataOutputWriter;
 
 
     public BaseData() {
@@ -22,8 +29,54 @@ public class BaseData {
         catch (JDOMDataHandlerNotInitialised e) {
             e.printError();
             System.out.println("Creating a new instance");
-            domDataHandler = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true);
+
+            loadDataFiles();
+
+            domDataHandler = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true, docduckDataOutputWriter);
             domDataHandler.setupJDOM();
+        }
+    }
+
+    private void loadDataFiles() {
+
+        String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        String docduckWorkingDirectory = workingDirectory + "/docduck/resources/";
+        Path docduckPath = Paths.get(docduckWorkingDirectory);
+        System.out.println("DocDuck Path = " + docduckPath);
+
+        if (!Files.exists(docduckPath)) {
+            // Directory doesn't exist, create it.
+            if (new File(docduckWorkingDirectory).mkdirs()) {
+                // Directory created
+                System.out.println("Created " + docduckWorkingDirectory);
+                docduckDataFileName = docduckPath.getFileName().toString() + "/DocDuckData.xml";
+                System.out.println("DocDuckFileName = " + docduckDataFileName);
+                try {
+                    Files.createFile(Paths.get(docduckDataFileName));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        else {
+            docduckDataFileName = docduckPath.getFileName().toString() + "/DocDuckData.xml";
+        }
+        System.out.println("DocDuckFileName = " + docduckDataFileName);
+
+        try {
+            docduckDataOutputWriter = new FileWriter(docduckDataFileName);
+            System.out.println("Output Writer = " + docduckDataOutputWriter);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

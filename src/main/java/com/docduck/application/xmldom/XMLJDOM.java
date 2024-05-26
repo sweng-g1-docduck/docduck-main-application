@@ -1,24 +1,19 @@
 package com.docduck.application.xmldom;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.jdom2.Attribute;
-import org.jdom2.Content;
-import org.jdom2.DataConversionException;
-import org.jdom2.Document;
-import org.jdom2.Element;
+import org.jdom2.*;
 import org.jdom2.input.DOMBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.jdom2.util.IteratorIterable;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class XMLJDOM {
 
@@ -26,6 +21,7 @@ public class XMLJDOM {
     private final String schemaFilename;
     private final boolean xsdValidate;
     private final boolean namespaceAware;
+    private final FileWriter xmlOutputWriter;
     static final String outputEncoding = "UTF-8";
     static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
@@ -35,12 +31,13 @@ public class XMLJDOM {
 
     protected Document document;
 
-    public XMLJDOM(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware) {
+    public XMLJDOM(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware, FileWriter outputWriter) {
 
         this.xmlFilename = xmlFilename;
         this.schemaFilename = schemaFilename;
         this.xsdValidate = validate;
         this.namespaceAware = setNamespaceAware;
+        this.xmlOutputWriter = outputWriter;
 
     }
 
@@ -240,15 +237,15 @@ public class XMLJDOM {
 //            parentElement.addContent(attID, desiredELement);
         }
 
-        XMLOutputter xmlOutputter = new XMLOutputter();
-
-        // pretty print
-        xmlOutputter.setFormat(Format.getPrettyFormat());
-        try {
-            xmlOutputter.output(document, System.out);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        XMLOutputter xmlOutputter = new XMLOutputter();
+//
+//        // pretty print
+//        xmlOutputter.setFormat(Format.getPrettyFormat());
+//        try {
+//            xmlOutputter.output(document, System.out);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     /**
@@ -290,25 +287,25 @@ public class XMLJDOM {
     public void outputDocumentToXML() {
         XMLOutputter xmlOutputter = new XMLOutputter();
 
-        OutputStream xmlOutputStream;
-        try {
-            xmlOutputStream = new FileOutputStream(xmlFilename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+//        OutputStream xmlOutputStream;
+//        try {
+//            xmlOutputStream = new FileOutputStream(xmlFilename);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException(e);
+//        }
 
         // pretty print
         xmlOutputter.setFormat(Format.getPrettyFormat());
 
         try {
-            xmlOutputter.output(document, xmlOutputStream);
+            xmlOutputter.output(document, xmlOutputWriter);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
         try {
-            xmlOutputStream.close();
+            xmlOutputWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,21 +1,14 @@
 package com.docduck.application.gui;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Objects;
-
 import com.docduck.application.data.BaseData;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.AdminPage;
-import com.docduck.application.gui.pages.Page;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.application.gui.pages.StatusPage;
-import com.docduck.application.xmldom.InvalidID;
 import com.docduck.buttonlibrary.ButtonWrapper;
-
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -26,6 +19,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Scale;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Objects;
 
 public class GUIBuilder {
 
@@ -298,7 +295,7 @@ public class GUIBuilder {
     private void populateData() {
 
         user = new User("Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
-        
+
         BaseData bd = new BaseData();
         machines = bd.setupMachineDataFromXML();
         allUsers = bd.setupUserDataFromXML();
@@ -319,6 +316,8 @@ public class GUIBuilder {
                 }
             }
         }
+
+        bd.domDataHandler.addNewUser(user);
     }
     
 }
