@@ -17,11 +17,12 @@ import com.docduck.application.xmldom.InvalidID;
  */
 public class Machine extends BaseData {
 
-    int id;
+    private static final int MACHINE_ID_PREFIX = 100;
+    private final int id;
     private String name;
-    private String location;
     private String status;
     private String serialNumber;
+    private String location;
     private String imageRef;
     private String datasheetRef;
     private String purchaseLocationRef;
@@ -29,16 +30,17 @@ public class Machine extends BaseData {
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
 
-    public Machine(String name, String room, String status, String serialNumber, String dataSheet,
-            String purchaseLocation) {
+    public Machine(String name, String room, String status, String serialNumber, String dataSheet, String purchaseLocation) {
         super();
 
         ArrayList<Integer> machineIDs = domDataHandler.getListOfMachineIDs();
+        int counter = 1;
 
+        while (machineIDs.contains(addPrefix(counter, MACHINE_ID_PREFIX))) {
+            counter++;
+        }
 
-
-
-        this.id = id;
+        this.id = addPrefix(counter, MACHINE_ID_PREFIX);
         this.name = name;
         this.location = room;
         this.serialNumber = serialNumber;
@@ -63,32 +65,36 @@ public class Machine extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new machine.");
         }
 
-        List<Element> machineData = domDataHandler.getReportData(id);
+        List<Element> machineData = domDataHandler.getMachineData(id);
 
         this.id = id;
-        
+
         for (Element target : machineData) {
 
             if (target.getName().equals("name")) {
                 this.name = target.getValue();
             }
 
+            if (target.getName().equals("status")) {
+                this.status = target.getValue();
+            }
+
+            if (target.getName().equals("serialNumber")) {
+                this.serialNumber = target.getValue();
+            }
+
             if (target.getName().equals("location")) {
                 this.location = target.getValue();
             }
 
-            if (target.getName().equals("status")) {
-                this.status = target.getValue();
+            if (target.getName().equals("imageRef")) {
+                this.imageRef = target.getValue();
             }
-            
-            if (target.getName().equals("serialNumber")) {
-                this.serialNumber = target.getValue();
-            }
-            
+
             if (target.getName().equals("datasheetRef")) {
                 this.datasheetRef = target.getValue();
             }
-            
+
             if (target.getName().equals("purchaseLocationRef")) {
                 this.purchaseLocationRef = target.getValue();
             }
@@ -100,21 +106,8 @@ public class Machine extends BaseData {
         domDataHandler.addNewMachine(this);
     }
 
-
     public int getId() {
         return id;
-    }
-
-    public String getHyperlink() {
-        return this.datasheetRef;
-    }
-
-    public String getPurchaseLocation() {
-        return this.purchaseLocationRef;
-    }
-
-    public String getStatus() {
-        return this.status;
     }
 
     public ArrayList<Report> getOldReports() {
@@ -125,14 +118,6 @@ public class Machine extends BaseData {
         this.status = status;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
     @Override
     public String toString() {
         return ("Machine name: " + this.name + ", Room: " + this.location + ", Status: " + this.status
@@ -140,20 +125,8 @@ public class Machine extends BaseData {
 
     }
 
-    public String getSerialNumber() {
-        return this.serialNumber;
-    }
-
-    public String getDatasheet() {
-        return this.datasheetRef;
-    }
-
     public void addReport(Report report) {
         this.currentReport = report;
-    }
-
-    public Report getReport() {
-        return this.currentReport;
     }
 
     public void archiveReport() {
@@ -161,8 +134,36 @@ public class Machine extends BaseData {
         this.currentReport = null;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
     public String getImageRef() {
-        return this.imageRef;
+        return imageRef;
+    }
+
+    public String getDatasheetRef() {
+        return datasheetRef;
+    }
+
+    public String getPurchaseLocationRef() {
+        return purchaseLocationRef;
+    }
+
+    public Report getCurrentReport() {
+        return currentReport;
     }
 
     public void setName(String name) {

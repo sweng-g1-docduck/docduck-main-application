@@ -426,12 +426,14 @@ public class AdminPage extends Page {
             }
 
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
-            TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheet() : "");
+            gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : ""), 1,
+                    row++);
+            TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
             datasheetValue = machine != null ? machine.getDatasheet() : "";
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
-            TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocation() : "");
+            TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
             purchaseLocationValue = machine != null ? machine.getPurchaseLocation() : "";
 

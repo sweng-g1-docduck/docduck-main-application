@@ -1,5 +1,6 @@
 package com.docduck.application.gui.pages;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import com.docduck.application.data.Machine;
@@ -7,13 +8,10 @@ import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ContentDisplay;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
@@ -29,6 +27,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import uk.co.bookcook.BCMediaControls;
+import uk.co.bookcook.BCMediaPlayer;
 
 public class ReportPage extends Page {
 
@@ -101,7 +101,7 @@ public class ReportPage extends Page {
         machineGrid.setHgap(15);
 
         for (Machine machine : machines) {
-            if (machine.getReport() != null) {
+            if (machine.getCurrentReport() != null) {
                 reportMachines.add(machine);
             }
         }
@@ -112,10 +112,8 @@ public class ReportPage extends Page {
             ButtonWrapper reportButton = new ButtonWrapper();
             reportButton.setButtonHeight(60);
             reportButton.setButtonWidth(reportBoxWidth - 45);
-
             reportButton.setCornerRadius(10);
             reportButton.setContentDisplay(ContentDisplay.TOP);
-
             reportButton.setBackgroundColour(buttonColour);
             reportButton.setHoverColour(buttonHoverColour);
             reportButton.setClickcolour(buttonClickColour);
@@ -123,30 +121,19 @@ public class ReportPage extends Page {
 
             BorderPane pane = new BorderPane();
             HBox infoBox = new HBox(10);
-            Label machineName = new Label(machine.getName());
-            machineName.setFont(new Font(fontName, smallFontSize));
-            machineName.setTextFill(btnTextColour);
 
-            Label location = new Label(machine.getLocation());
-            location.setFont(new Font(fontName, smallFontSize));
-            location.setTextFill(btnTextColour);
+            Label machineName = drawSubText(machine.getName(), btnTextColour);
+            machineName.setFont(new Font(fontName, 20));
 
-            Label userName = new Label(machine.getReport().getUser().getName());
-            userName.setFont(new Font(fontName, smallFontSize));
-            userName.setTextFill(btnTextColour);
+            Label location = drawSubText(machine.getLocation(), btnTextColour);
 
-            Label faultDescription = new Label(machine.getReport().getDescription());
-            faultDescription.setFont(new Font(fontName, smallFontSize));
-            faultDescription.setTextFill(btnTextColour);
+            Label userName = drawSubText(machine.getCurrentReport().getUser().getName(), btnTextColour);
 
-            Label spacer = new Label("|");
-            spacer.setFont(new Font(fontName, smallFontSize));
-            spacer.setTextFill(btnTextColour);
+            Label faultDescription = drawSubText(machine.getCurrentReport().getTitle(), btnTextColour);
 
-            machineName.setFont(new Font(20));
-            Label spacer2 = new Label("|");
-            spacer2.setFont(new Font(fontName, smallFontSize));
-            spacer2.setTextFill(btnTextColour);
+            Label spacer = drawSubText("|", btnTextColour);
+
+            Label spacer2 = drawSubText("|", btnTextColour);
 
             infoBox.getChildren().addAll(location, spacer, userName, spacer2, faultDescription);
             infoBox.setAlignment(Pos.BOTTOM_LEFT);
@@ -202,7 +189,6 @@ public class ReportPage extends Page {
         infoBox.setBackground(new Background(new BackgroundFill(backgroundColour, new CornerRadii(10), new Insets(5))));
 
         TextBox machineName = new TextBox();
-
         machineName.setFontName(fontName);
         machineName.setBoxWidth(reportDescWidth - 35);
         machineName.setBoxHeight(50);
@@ -216,96 +202,62 @@ public class ReportPage extends Page {
 
         // General information
 
-        VBox genInfoBox = new VBox();
-        genInfoBox.setAlignment(Pos.TOP_LEFT);
-        genInfoBox.setSpacing(10);
-        genInfoBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
-        genInfoBox.setPadding(new Insets(8));
-
-        Label genTitle = new Label("General Information");
-        genTitle.setFont(new Font(fontName, smallFontSize));
-        genTitle.setTextFill(reportTextColour);
-
-        Label serialNum = new Label("Serial Number: " + machine.getSerialNumber());
-        serialNum.setFont(new Font(fontName, smallFontSize));
-        serialNum.setTextFill(reportTextColour);
-
-        Label location = new Label("Location: " + machine.getLocation());
-        location.setFont(new Font(fontName, smallFontSize));
-        location.setTextFill(reportTextColour);
-
-        Hyperlink datasheet = new Hyperlink("Datasheet");
-        datasheet.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
-        datasheet.setTextFill(reportTextColour);
-        datasheet.setFont(new Font(fontName, smallFontSize));
-        datasheet.setTranslateX(-4);
-        datasheet.setTranslateY(-2);
-
-        Hyperlink purchaseLink = new Hyperlink("Purchase Link");
-        purchaseLink.setOnAction(events.getHyperlinkEvent("https://www.google.com/"));
-        purchaseLink.setFont(new Font(fontName, smallFontSize));
-        purchaseLink.setTextFill(reportTextColour);
-        purchaseLink.setTranslateX(-4);
-        purchaseLink.setTranslateY(-6);
-
-        genInfoBox.getChildren().addAll(serialNum, location, datasheet, purchaseLink);
+        Label genTitle = drawSubText("General Information", reportTextColour);
+        VBox genInfoBox = drawMachineInfoBox(machine);
 
         ///////////////////////////////
 
         // User Information
 
-        VBox userInfoBox = new VBox();
-        userInfoBox.setAlignment(Pos.TOP_LEFT);
-        userInfoBox.setSpacing(10);
-        userInfoBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
-        userInfoBox.setPadding(new Insets(8));
-
-        Label userTitle = new Label("Submitted by:");
-        userTitle.setFont(new Font(fontName, smallFontSize));
-        userTitle.setTextFill(reportTextColour);
-
-        Label userName = new Label("User Name: " + machine.getReport().getUser().getName());
-        userName.setFont(new Font(fontName, smallFontSize));
-        userName.setTextFill(reportTextColour);
-        Label email = new Label("Email: " + machine.getReport().getUser().getEmail());
-        email.setFont(new Font(fontName, smallFontSize));
-        email.setTextFill(reportTextColour);
-        Label role = new Label("Role: " + machine.getReport().getUser().getRole());
-        role.setFont(new Font(fontName, smallFontSize));
-        role.setTextFill(reportTextColour);
-
-        userInfoBox.getChildren().addAll(userName, email, role);
+        Label userTitle = drawSubText("Submitted by:", reportTextColour);
+        VBox userInfoBox = drawUserInfo(machine);
 
         ///////////////////////////////
 
         // Fault Description
 
-        Label descTitle = new Label("Description: ");
-        descTitle.setFont(new Font(fontName, smallFontSize));
-        descTitle.setTextFill(reportTextColour);
+        Label descTitle = drawSubText("Description: ", reportTextColour);
+
+        TextArea title = new TextArea();
+        title.setMaxWidth(reportDescWidth - 35);
+        title.setPrefHeight(30);
+        title.setMinHeight(30);
+        title.setMaxHeight(30);
+        title.setWrapText(true);
+        title.setText(machine.getCurrentReport().getTitle());
+        title.setEditable(false);
+        title.setFont(new Font(fontName, smallFontSize));
 
         TextArea desc = new TextArea();
         desc.setMaxWidth(reportDescWidth - 35);
-        desc.setPrefHeight(10);
+        desc.setPrefHeight(60);
+        desc.setMinHeight(60);
+        desc.setMaxHeight(60);
         desc.setWrapText(true);
-        desc.setText(machine.getReport().getDescription());
+        desc.setText(machine.getCurrentReport().getDescription());
         desc.setEditable(false);
         desc.setFont(new Font(fontName, smallFontSize));
 
         infoBox.getChildren().addAll(machineName, new Label(), genTitle, genInfoBox, new Label(), userTitle,
-                userInfoBox, new Label(), descTitle, desc);
+                userInfoBox, new Label(), descTitle, title, desc);
 
         ///////////////////////////////
 
         // Attached Media
 
-        Label mediaTitle = new Label("Attached Media: ");
-        mediaTitle.setFont(new Font(fontName, smallFontSize));
-        mediaTitle.setTextFill(reportTextColour);
+        try {
+            if (machine.getCurrentReport().getPathToFile() != null) {
 
-        if (machine.getReport().getPathToFile() != null) {
-            infoBox.getChildren().addAll(new Label(), mediaTitle, new Label(),
-                    drawAttachedMedia(machine.getReport().getPathToFile()));
+                Label mediaTitle = new Label("Attached Media: ");
+                mediaTitle.setFont(new Font(fontName, smallFontSize));
+                mediaTitle.setTextFill(reportTextColour);
+
+                infoBox.getChildren().addAll(new Label(), mediaTitle, new Label(),
+                        drawAttachedMedia(machine.getCurrentReport().getPathToFile()));
+            }
+        }
+        catch (FileNotFoundException e) {
+            System.err.println("Attached file could not be found");
         }
 
         ///////////////////////////////
@@ -319,27 +271,14 @@ public class ReportPage extends Page {
         solution.setPromptText("Performed repairs");
         solution.setFont(new Font(fontName, smallFontSize));
 
-        ButtonWrapper completeBtn = new ButtonWrapper();
-        completeBtn.setCornerRadius(5);
-        completeBtn.setButtonWidth(reportDescWidth - 35);
-        completeBtn.setButtonHeight(40);
-        completeBtn.setFontName(fontName);
-        completeBtn.setText("Log as Complete");
-        completeBtn.setBackgroundColour(btnColour);
-        completeBtn.setClickcolour(btnClickColour);
-        completeBtn.setHoverColour(btnHoverColour);
-        completeBtn.setPositionX(150);
-        completeBtn.setPositionY(30);
-        completeBtn.setFontColour(lightTextColour);
-        completeBtn.setFontSize(20);
-        completeBtn.removeBorder();
-
+        ButtonWrapper completeBtn = drawButtonWrapper(reportDescWidth - 35, 40, "Log as Complete");
         // Requests a description if not provided, log the machine online if one has
         completeBtn.setOnAction((event -> {
             if (solution.getText().isEmpty()) {
                 solution.setPromptText("A description of the performed repairs is required");
 
-            } else {
+            }
+            else {
                 machine.archiveReport();
                 machine.setStatus("ONLINE");
                 drawReportButtons();
@@ -347,21 +286,7 @@ public class ReportPage extends Page {
             }
         }));
 
-        ButtonWrapper closeBtn = new ButtonWrapper();
-        closeBtn.setCornerRadius(5);
-        closeBtn.setButtonWidth(reportDescWidth - 35);
-        closeBtn.setButtonHeight(40);
-        closeBtn.setFontName(fontName);
-        closeBtn.setText("Close");
-        closeBtn.setBackgroundColour(btnColour);
-        closeBtn.setClickcolour(btnClickColour);
-        closeBtn.setHoverColour(btnHoverColour);
-        closeBtn.setPositionX(150);
-        closeBtn.setPositionY(30);
-        closeBtn.setFontColour(lightTextColour);
-        closeBtn.setFontSize(20);
-        closeBtn.removeBorder();
-
+        ButtonWrapper closeBtn = drawButtonWrapper(reportDescWidth - 35, 40, "Close");
         // Removes the report from the page
         closeBtn.setOnAction((event -> {
             setRight(null);
@@ -372,6 +297,21 @@ public class ReportPage extends Page {
         reportScroll.setContent(infoBox);
         setRight(reportScroll);
 
+    }
+
+    private VBox drawUserInfo(Machine machine) {
+        VBox userInfoBox = new VBox();
+        userInfoBox.setAlignment(Pos.TOP_LEFT);
+        userInfoBox.setSpacing(10);
+        userInfoBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
+        userInfoBox.setPadding(new Insets(8));
+
+        Label userName = drawSubText("User Name: " + machine.getCurrentReport().getUser().getName(), reportTextColour);
+        Label email = drawSubText("Email: " + machine.getCurrentReport().getUser().getEmail(), reportTextColour);
+        Label role = drawSubText("Role: " + machine.getCurrentReport().getUser().getRole(), reportTextColour);
+
+        userInfoBox.getChildren().addAll(userName, email, role);
+        return userInfoBox;
     }
 
     /**
@@ -392,7 +332,7 @@ public class ReportPage extends Page {
      * @param filePath The path to the file
      * @return Node of the correct type to display the data
      */
-    private Node drawAttachedMedia(String filePath) {
+    private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
         String extension = getExtension(filePath);
         if (extension.equals("png") || extension.equals("jpeg")) {
             Image img = new Image(filePath);
@@ -401,7 +341,18 @@ public class ReportPage extends Page {
             view1.setPreserveRatio(true);
             return view1;
         }
-        
+        else if (extension.equals("mp4") || extension.equals("mp3")) {
+            BCMediaPlayer BCMP = new BCMediaPlayer("src/main/resources/clock.mp4");
+            BCMP.setWidth(250);
+            BCMediaControls BCMC = new BCMediaControls(BCMP);
+            BCMC.setWidth(250);
+            BCMC.setIconSpacing(5);
+
+            VBox box = new VBox(BCMP, BCMC);
+            box.setAlignment(Pos.CENTER);
+            return box;
+        }
+
         return null;
     }
 

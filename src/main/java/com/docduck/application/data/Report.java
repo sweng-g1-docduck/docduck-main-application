@@ -3,6 +3,7 @@ package com.docduck.application.data;
 import com.docduck.application.xmldom.InvalidID;
 import org.jdom2.Element;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,22 +14,32 @@ import java.util.List;
  */
 public class Report extends BaseData {
 
-
+    private final int REPORT_ID_PREFIX = 300;
 
     private final int id;
-    private final User user;
+    private User user;
     private String title;
     private String description;
     private String pathToFile;
-    private Report machine;
+    private int machineID;
+    private int userID;
 
-    public Report(int id, User user, String title, String description, String pathToFile) {
+    public Report(User user, String title, String description, String pathToFile) {
         super();
-        this.id = id;        
+        
+        ArrayList<Integer> reportIDs = domDataHandler.getListOfReportIDs();
+        int counter = 1;
+
+        while (reportIDs.contains(addPrefix(counter, REPORT_ID_PREFIX))) {
+            counter++;
+        }
+
+        this.id = addPrefix(counter, REPORT_ID_PREFIX);       
         this.user = user;
         this.title = title;
         this.description = description;
         this.pathToFile = pathToFile;
+        this.userID = user.getId();
     }
 
     /**
@@ -45,7 +56,7 @@ public class Report extends BaseData {
                     "ID does not exist in database, please provide an existing ID, or create a new Report.");
         }
 
-        List<Element> reportData = domDataHandler.getReportData(id);
+        List<Element> reportData = domDataHandler.getMachineReportData(id);
 
         this.id = id;
         for (Element target : reportData) {
@@ -56,11 +67,22 @@ public class Report extends BaseData {
             if (target.getName().equals("description")) {
                 this.description = target.getValue();
             } 
-            if (target.getName().equals("pathToFile")) {
+            if (target.getName().equals("media")) {
                 this.pathToFile = target.getValue();
-            } 
+            }
+            if (target.getName().equals("machineID")) {
+                this.machineID = Integer.parseInt(target.getValue());
+            }
+            if (target.getName().equals("userID")) {
+                this.userID = Integer.parseInt(target.getValue());
+            }
+
         }
         this.user = null;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 
     public String getPathToFile() {
@@ -76,15 +98,22 @@ public class Report extends BaseData {
         return this.description;
     }
 
-    public String getTitle() {
-        return this.title;
+    public void setUser(User user) {
+        this.user = user;
     }
+
+    public int getMachineID() {
+        return machineID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
 
     public int getId() {
         return this.id;
     }
 
-    public int getMachineId() {
-        return this.machine.getId();
-    }
+
 }
