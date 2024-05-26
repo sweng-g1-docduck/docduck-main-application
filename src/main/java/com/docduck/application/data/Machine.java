@@ -46,14 +46,7 @@ public class Machine extends BaseData {
         this.serialNumber = serialNumber;
         this.datasheetRef = dataSheet;
         this.purchaseLocationRef = purchaseLocation;
-
-        if (status.equals("ONLINE") || status.equals("MAINTENANCE") || status.equals("OFFLINE")) {
-            this.status = status;
-        }
-
-        else {
-            this.status = "OFFLINE";
-        }
+        this.status = status;
         addNewDataToXML();
     }
 
@@ -173,4 +166,24 @@ public class Machine extends BaseData {
         return currentReport;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public void setDatasheet(String datasheet) {
+        this.datasheetRef = datasheet;
+    }
+
+    public void setPurchaseLocation(String purchaseLocation) {
+        this.purchaseLocationRef = purchaseLocation;
+    }
 }

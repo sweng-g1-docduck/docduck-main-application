@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docduckData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DocDuckSchema.xsd">
+  <machineData>
+    <machine id="1">
+      <name>3D Printer</name>
+      <status>ONLINE</status>
+      <serialNumber>ABC723370571001</serialNumber>
+      <location>Labs_4th_Floor</location>
+      <imageRef>https://wabetteridge.co.uk/assets/icons/favicon.jpg</imageRef>
+      <datasheetRef>https://bbc.co.uk</datasheetRef>
+      <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+      <components>
+        <component id="1">
+          <name>Control Panel</name>
+          <stockNumber>2</stockNumber>
+          <serialNumber>ABC999284858259</serialNumber>
+          <quantity>2</quantity>
+          <location>Labs_4th_Floor_Office</location>
+          <datasheetRef>https://bbc.co.uk</datasheetRef>
+          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+          <parts>
+            <part id="1">
+              <name>LCD Screen</name>
+              <stockNumber>10</stockNumber>
+              <serialNumber>ABC694374858259</serialNumber>
+              <quantity>5</quantity>
+              <location>Labs_4th_Floor_Office</location>
+              <datasheetRef>https://bbc.co.uk</datasheetRef>
+              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+            </part>
+            <part id="2">
+              <name>LCD Screen Case</name>
+              <stockNumber>32</stockNumber>
+              <serialNumber>ABC378454858259</serialNumber>
+              <quantity>20</quantity>
+              <location>Labs_4th_Floor_Office</location>
+              <datasheetRef>https://bbc.co.uk</datasheetRef>
+              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+            </part>
+          </parts>
+        </component>
+      </components>
+      <parts>
+        <part id="1">
+          <name>Green material</name>
+          <stockNumber>10</stockNumber>
+          <serialNumber>ABC694164548259</serialNumber>
+          <quantity>100</quantity>
+          <location>Labs_4th_Floor_Office</location>
+          <datasheetRef>https://bbc.co.uk</datasheetRef>
+          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+        </part>
+      </parts>
+    </machine>
+    <machine id="0">
+      <name>fg</name>
+      <status>ONLINE</status>
+      <serialNumber>g</serialNumber>
+      <location>f</location>
+      <imageRef />
+      <datasheetRef>https://bbc.co.uk</datasheetRef>
+      <purchaseLocationRef>f</purchaseLocationRef>
+    </machine>
+  </machineData>
+  <userData>
+    <user id="1">
+      <name>James Stevenson</name>
+      <username>js2140</username>
+      <password>js12345</password>
+      <email>js2140@york.ac.uk</email>
+      <role>ADMIN</role>
+    </user>
+    <user id="2">
+      <name>William Betteridge</name>
+      <username>wab513</username>
+      <password>wab12345</password>
+      <email>wab513@york.ac.uk</email>
+      <role>ADMIN</role>
+    </user>
+    <user id="2001">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+    <user id="2002">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+    <user id="2002">
+      <name>Billy</name>
+      <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+  </userData>
+  <machineReport>
+    <report id="1">
+      <title>3D Printer Not Responding</title>
+      <description>The touchscreen on the 3D printer doesn't respond</description>
+      <media>src/main/resources/data/machines/reports/image.jpg</media>
+      <machineID>1</machineID>
+      <userID>2</userID>
+    </report>
+  </machineReport>
+</docduckData>
