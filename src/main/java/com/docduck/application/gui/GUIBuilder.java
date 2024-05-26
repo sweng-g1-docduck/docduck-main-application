@@ -12,6 +12,7 @@ import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.application.gui.pages.StatusPage;
+import com.docduck.application.gui.pages.LoginPage;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.collections.ObservableList;
@@ -41,6 +42,7 @@ public class GUIBuilder {
 
     private AdminPage adminPage;
     private ArrayList<User> allUsers;
+    private LoginPage loginPage;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -268,6 +270,10 @@ public class GUIBuilder {
             root.getChildren().add(adminPage);
             scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
             break;
+        case "LOGIN":
+            root.getChildren().add(loginPage);
+            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
+            break;
 
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
@@ -292,7 +298,7 @@ public class GUIBuilder {
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
         adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin
-                                                             // page and use below)
+        loginPage = new LoginPage(machines, user);                                                     // page and use below)
     }
 
     private void populateData() {

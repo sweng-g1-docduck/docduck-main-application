@@ -109,6 +109,7 @@ public class Page extends BorderPane {
         spacer.setPrefWidth(1000);
         
         ButtonWrapper logOutBtn = drawButtonWrapper(120,60,"Log Out");
+        logOutBtn.setOnAction(events.getActionEvent("loginPage"));
         menuBar.getChildren().addAll(spacer, logOutBtn);
 
         return menuBar;

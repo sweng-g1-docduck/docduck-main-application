@@ -7,6 +7,7 @@ import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBoxField;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -36,7 +37,9 @@ public class LoginPage extends Page {
 
     public void drawLoginComponents() {
         VBox contents = new VBox();
+        contents.setAlignment(Pos.CENTER);
         HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
         ButtonWrapper signInBtn = drawButtonWrapper(80, 40, "Sign In");
         ButtonWrapper signUpBtn = drawButtonWrapper(80, 40, "Sign Up");
 
@@ -63,6 +66,8 @@ public class LoginPage extends Page {
         TextBoxField passwordBox = drawTextField(300, 40, "Sign Up");
 
         contents.getChildren().addAll(view, usernameBox, passwordBox, buttons);
+        setAlignment(contents, Pos.CENTER);
+        setCenter(contents);
 
     }
 
