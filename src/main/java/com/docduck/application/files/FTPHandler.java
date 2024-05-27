@@ -32,6 +32,7 @@ public class FTPHandler {
     private final static String SERVER_IP = "81.101.49.54";
     private final static String USERNAME = "docduck";
     private final static String PASSWORD = "sweng";
+    private final static String FILE_STORE = "%AppData%/Roaming/com.dockduck/resources/";
     
     private FTPHandler() {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -83,7 +84,7 @@ public class FTPHandler {
      * Downloads files from server and starts application onto login page.
      * @author rw1834
      */
-    public void startApp() {
+    public void start() {
 
         try {
 
@@ -111,20 +112,13 @@ public class FTPHandler {
                         System.out.println("File is " + ftpName);
                     }
 
-                    OutputStream output = new FileOutputStream("src/main/resources/" + ftpName);
+                    OutputStream output = new FileOutputStream(FILE_STORE + ftpName);
                     ftp.retrieveFile(ftpName, output);
                     output.close();
-                    File localFile = new File("src/main/resources/" + ftpName);
+                    File localFile = new File(FILE_STORE + ftpName);
                     localFile.setLastModified(ftpTime.getTime());
                 }
             }
-
-            XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
-                    "src/main/resources/DocDuckStandardSchema.xsd", true);
-            myReader.readXML();
-            xmlBuilder.setData(myReader.getData());
-            guiBuilder.setData(myReader.getData());
-            guiBuilder.LoginPage();
             scheduleFileUpdates(5.0);
         }
         catch (Exception ex) {
@@ -181,7 +175,7 @@ public class FTPHandler {
         if (ftp.isAvailable() && ftp.isConnected()) {
 
             try {
-                File local = new File("src/main/resources/");
+                File local = new File("FILE_STORE");
                 FTPFile[] ftpFiles = ftp.listFiles();
                 File[] localFiles = local.listFiles();
 
@@ -272,7 +266,7 @@ public class FTPHandler {
         if (ftp.isAvailable() && ftp.isConnected()) {
 
             try {
-                File localFile = new File("src/main/resources/" + localFilename);
+                File localFile = new File(FILE_STORE + localFilename);
                 InputStream inputStream = new FileInputStream(localFile);
                 ftp.storeFile(localFilename, inputStream);
                 inputStream.close();
@@ -337,10 +331,10 @@ public class FTPHandler {
                         if (ftpFile.getName().equalsIgnoreCase(ftpFilename)) {
                             String stringTime = ftp.getModificationTime(ftpFile.getName());
                             Date ftpTime = df.parse(stringTime);
-                            OutputStream output = new FileOutputStream("src/main/resources/" + ftpFilename);
+                            OutputStream output = new FileOutputStream(FILE_STORE + ftpFilename);
                             ftp.retrieveFile(ftpFilename, output);
                             output.close();
-                            File localFile = new File("src/main/resources/" + ftpFilename);
+                            File localFile = new File(FILE_STORE + ftpFilename);
                             localFile.setLastModified(ftpTime.getTime());
 
                             if (debug) {
