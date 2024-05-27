@@ -1,5 +1,6 @@
 package com.docduck.application.gui.pages;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +9,10 @@ import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,6 +21,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -27,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
@@ -67,16 +75,23 @@ public class AdminPage extends Page {
     private String datasheetValue;
     private String purchaseLocationValue;
     private String nameFieldValue;
+    private String serialNumberValue;
     private boolean nullUserField = true;
     private boolean nullUsernameField = true;
     private boolean nullEmailField = true;
     private boolean nullRoleField = true;
     private boolean nullPasswordField = true;
-    private boolean nullMachineField;
-    private boolean nullLocationField;
-    private boolean nullStatusField;
-    private boolean nullDatasheetField;
-    private boolean nullPurchaseLocationField;
+    private boolean nullMachineField = true;
+    private boolean nullLocationField = true;
+    private boolean nullStatusField = true;
+    private boolean nullDatasheetField = true;
+    private boolean nullPurchaseLocationField = true;
+    private boolean nullSerialNumberField = true;
+
+    private Image tempMachineImage;
+    private ImageView machineImageView;
+    ObjectProperty<Image> imageProperty = new SimpleObjectProperty<>();
+
 
 
     /**
@@ -402,6 +417,15 @@ public class AdminPage extends Page {
 
         int row = 0;
 
+        ImageView machineImageView = new ImageView();
+        machineImageView.setFitWidth(100);
+        machineImageView.setPreserveRatio(true);
+        if (tempMachineImage != null) {
+            machineImageView.setImage(tempMachineImage);
+        }
+
+        formLayout.getChildren().add(machineImageView);
+
         if (managerType.equals("Machine Manager")) {
             gridPane.add(createLabel("Machine Name"), 0, row);
             TextField machineNameField = createFormField("Machine Name", machine != null ? machine.getName() : "");
@@ -424,11 +448,15 @@ public class AdminPage extends Page {
                 statusComboBox = createStatusComboBox("");
                 gridPane.add(statusComboBox, 1, row++);
             }
-
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
             TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
             datasheetValue = machine != null ? machine.getDatasheetRef() : "";
+
+            gridPane.add(createLabel("Serial Number"), 0, row);
+            TextField serialNumberField = createFormField("Serial Number", machine != null ? machine.getSerialNumber() : "");
+            gridPane.add(serialNumberField, 1, row++);
+            serialNumberValue = machine != null ? machine.getSerialNumber() : "";
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocationRef() : "");
@@ -446,16 +474,7 @@ public class AdminPage extends Page {
                     nullMachineField = false;
                 }
             });
-            locationField.textProperty().addListener((observable, oldValue, newValue) -> {
-                locationFieldValue = newValue.strip();
-                if (locationFieldValue.isEmpty()) {
-                    nullTextMessage.setText("Please fill in Location");
-                    nullLocationField = true;
-                } else {
-                    nullTextMessage.setText("");
-                    nullLocationField = false;
-                }
-            });
+
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 statusValue = newValue.strip();
                 if (statusValue.isEmpty()) {
@@ -464,6 +483,17 @@ public class AdminPage extends Page {
                 } else {
                     nullTextMessage.setText("");
                     nullStatusField = false;
+                }
+            });
+
+            serialNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+                serialNumberValue = newValue.strip();
+                if (serialNumberValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in serial Number Value");
+                    nullSerialNumberField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullSerialNumberField = false;
                 }
             });
 
@@ -546,6 +576,33 @@ public class AdminPage extends Page {
         HBox buttonBox = new HBox(20);
         buttonBox.setAlignment(Pos.CENTER);
 
+        // Add Machine Picture button
+        ButtonWrapper addMachinePictureButton = new ButtonWrapper();
+        addMachinePictureButton.setText("Add Machine Picture");
+        addMachinePictureButton.setCornerRadius(5);
+        addMachinePictureButton.setButtonWidth(150);
+        addMachinePictureButton.setButtonHeight(24);
+        addMachinePictureButton.setFontName(fontName);
+        addMachinePictureButton.setBackgroundColour(btnColour);
+        addMachinePictureButton.setClickcolour(btnClickColour);
+        addMachinePictureButton.setHoverColour(btnHoverColour);
+        addMachinePictureButton.setFontColour(lightTextColour);
+        addMachinePictureButton.setFontSize(12);
+        addMachinePictureButton.removeBorder();
+
+        addMachinePictureButton.setOnAction(event -> {
+            // Handle add machine picture action
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            File file = fileChooser.showOpenDialog(managerPopOutStage);
+            if (file != null) {
+                System.out.println(file.getPath());
+                // Update the machine image
+                tempMachineImage = new Image(file.toURI().toString());
+                updateMachineImage();
+            }
+        });
+
         ButtonWrapper saveButton = new ButtonWrapper();
         saveButton.setText("Save");
         saveButton.setCornerRadius(5);
@@ -618,11 +675,15 @@ public class AdminPage extends Page {
                     if (machine.getName().equals(machineFieldValue)) {
                         machineExists = true;
                         // Update machine details if fields are not null
+
                         if (locationFieldValue != null) {
                             machine.setLocation(locationFieldValue);
                         }
                         if (statusValue != null) {
                             machine.setStatus(statusValue);
+                        }
+                        if (serialNumberValue != null) {
+                            machine.setSerialNumber(serialNumberValue);
                         }
                         if (datasheetValue != null) {
                             machine.setDatasheet(datasheetValue);
@@ -630,12 +691,11 @@ public class AdminPage extends Page {
                         if (purchaseLocationValue != null) {
                             machine.setPurchaseLocation(purchaseLocationValue);
                         }
-                        break;
                     }
                 }
 
-                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
-                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, purchaseLocationValue);
+                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField  &&!nullSerialNumberField &&!nullLocationField) {
+                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
                     machines.add(machine);
                     createRightSection();
                     managerPopOutStage.close();
@@ -655,8 +715,18 @@ public class AdminPage extends Page {
             managerPopOutStage.close();
         });
 
-        buttonBox.getChildren().addAll(saveButton, cancelButton);
+        if (editingMachines) {
+            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
+        } else {
+            buttonBox.getChildren().addAll(saveButton, cancelButton);
+        }
         return buttonBox;
+    }
+
+    private void updateMachineImage() {
+        if (tempMachineImage != null && machineImageView != null) {
+            machineImageView.setImage(tempMachineImage);
+        }
     }
 
 
