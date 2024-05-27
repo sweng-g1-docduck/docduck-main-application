@@ -1,13 +1,10 @@
 package com.docduck.application.gui.pages;
 
-import java.util.ArrayList;
-
 import com.docduck.application.data.User;
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -15,14 +12,10 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 
 public class LoginPage extends Page {
 
