@@ -121,6 +121,17 @@ public class AdminPage extends Page {
         allUsersList = allUsers;
     }
 
+
+    /**
+
+     {@inheritDoc}
+     This method builds the page layout by creating and setting up the left and right sections within a VBox layout.
+     The left section is constructed using the method createLeftSection(), while the right section is constructed
+     using the method createRightSection(). These sections are then assigned to the left and center of the layout
+     respectively using the setLeft() and setCenter() methods inherited from the superclass. Finally, the superclass
+     implementation of buildPage() is invoked to complete the page building process.
+     * @author Lw2380
+     */
     @Override
     public void buildPage() {
         VBox leftSection = createLeftSection();
@@ -137,6 +148,8 @@ public class AdminPage extends Page {
      * for managing users, machines, components, and parts.
      *
      * @return The VBox representing the left section of the admin page.
+     *
+     * @author Lw2380
      */
     private VBox createLeftSection() {
         VBox leftSection = new VBox(25);
@@ -157,6 +170,8 @@ public class AdminPage extends Page {
      * @param header  The header text for the manager box.
      * @param buttons The buttons to be included in the manager box.
      * @return The VBox representing the manager box.
+     *
+     * @author Lw2380
      */
     private VBox createManagerBox(String header, String... buttons) {
         VBox managerBox = new VBox(10);
@@ -186,6 +201,8 @@ public class AdminPage extends Page {
      *
      * @param headerText The text for the manager header.
      * @return The Label representing the manager header.
+     *
+     * @author Lw2380
      */
     private Label createManagerHeader(String headerText) {
         Label managerHeader = new Label(headerText);
@@ -199,6 +216,7 @@ public class AdminPage extends Page {
      * @param text        The text for the button.
      * @param managerType The type of manager associated with the button.
      * @return The ButtonWrapper representing the manager button.
+     * @author Lw2380
      */
     private ButtonWrapper createManagerButton(String text, String managerType) {
         ButtonWrapper button = new ButtonWrapper();
@@ -259,6 +277,7 @@ public class AdminPage extends Page {
      * @param actionType  The action type (e.g., "Edit User", "Edit Machine").
      * @param user        The user object (can be null if managing machines).
      * @param machine     The machine object (can be null if managing users).
+     * @author Lw2380
      */
     private void openWindow(String managerType, String actionType, User user, Machine machine) {
         if (managerPopOutStage != null) {
@@ -275,6 +294,20 @@ public class AdminPage extends Page {
         managerPopOutStage.show();
     }
 
+
+    /**
+
+     Creates a VBox layout containing a manager form based on the provided manager type and action type,
+     along with optional user and machine objects.
+
+     @param managerType The type of manager for which the form is being created.
+     @param actionType The type of action (e.g., "Edit", "Create") being performed on the form.
+     @param user The user object (optional) to be included in the form.
+     @param machine The machine object (optional) to be included in the form.
+
+     @return The VBox layout containing the manager form.
+      * @author Lw2380
+     */
     private VBox createManagerForm(String managerType, String actionType, User user, Machine machine) {
         VBox formLayout = new VBox(20);
         formLayout.setPadding(new Insets(20));
@@ -295,6 +328,17 @@ public class AdminPage extends Page {
         return formLayout;
     }
 
+    /**
+
+     Creates a VBox layout for the user manager form, incorporating the provided manager type, action type,
+     and user details.
+     @param managerType The type of manager for which the form is being created.
+     @param actionType The type of action (e.g., "Edit", "Create") being performed on the form.
+     @param user The user object for which the form is being created.
+
+     @return The VBox layout containing the user manager form.
+      * @author Lw2380
+     */
     private VBox createUserManagerForm(String managerType, String actionType, User user) {
         VBox formLayout = new VBox(10);
         formLayout.setPadding(new Insets(20));
@@ -430,12 +474,30 @@ public class AdminPage extends Page {
         return formLayout;
     }
 
+    /**
+
+     Creates a Label with the specified text and applies a bold Arial font with size 14.
+     @param text The text to be displayed on the label.
+     @return The created Label with the specified text and font.
+      * @author Lw2380
+     */
     private Label createLabel(String text) {
         Label label = new Label(text);
         label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         return label;
     }
 
+    /**
+     * Creates a VBox layout for the machine manager form, incorporating the provided manager type, action type,
+     * and machine details.
+     *
+     * @param managerType The type of manager for which the form is being created.
+     * @param actionType The type of action (e.g., "Edit", "Create") being performed on the form.
+     * @param machine The machine object for which the form is being created.
+     * @return The VBox layout containing the machine manager form.
+     *
+     * @author Lw2380
+     */
     private VBox createMachineManagerForm(String managerType, String actionType, Machine machine) {
         VBox formLayout = new VBox(10);
         formLayout.setPadding(new Insets(20));
@@ -612,6 +674,13 @@ public class AdminPage extends Page {
         return formLayout;
     }
 
+    /**
+     Creates a TextField form field with the specified label and default value.
+     @param label The prompt text for the TextField.
+     @param value The default value to be displayed in the TextField.
+     @return The created TextField form field.
+      * @author Lw2380
+     */
     private TextField createFormField(String label, String value) {
         TextField textField = new TextField();
         textField.setPromptText(label);
@@ -620,6 +689,7 @@ public class AdminPage extends Page {
         // textField.setStyle("-fx-background-color: #2E5D68; -fx-text-fill: white;");
         return textField;
     }
+
 
     private ComboBox<String> createUserComboBox(String selectedItem) {
         ComboBox<String> comboBox = new ComboBox<>();
@@ -639,6 +709,12 @@ public class AdminPage extends Page {
         return comboBox;
     }
 
+    /**
+     Creates a ComboBox for selecting user roles, with the specified selected item.
+     @param selectedItem The role item to be selected by default in the ComboBox.
+     @return The created ComboBox for user roles.
+      * @author Lw2380
+     */
     private ComboBox<String> createStatusComboBox(String selectedItem) {
         ComboBox<String> comboBox = new ComboBox<>();
         comboBox.getItems().addAll("ONLINE", "MAINTENANCE", "OFFLINE");
@@ -656,7 +732,13 @@ public class AdminPage extends Page {
         }
         return comboBox;
     }
-
+    /**
+     * Creates an HBox containing buttons for the form, such as adding/editing a machines and users, saving, and canceling.
+     *
+     * @return The HBox layout containing the form buttons.
+     *
+     * @author Lw2380
+     */
     private HBox createFormButtons() {
         HBox buttonBox = new HBox(20);
         buttonBox.setAlignment(Pos.CENTER);
@@ -828,13 +910,25 @@ public class AdminPage extends Page {
         return buttonBox;
     }
 
+    /**
+     * Updates the machine image if a temporary image is available and the machine image view exists.
+     *
+     * @author Lw2380
+     */
     private void updateMachineImage() {
         if (tempMachineImage != null && machineImageView != null) {
             machineImageView.setImage(tempMachineImage);
         }
     }
 
-
+    /**
+     * Sets the border colour of the current button and removes the border colour of the last pressed button.
+     *
+     * @param currentButton The button currently pressed.
+     * @param lastPressedButton The button previously pressed.
+     *
+     * @author Lw2380
+     */
     private void setLastPressedButton(ButtonWrapper currentButton, ButtonWrapper lastPressedButton) {
 
         if (lastPressedButton != null) {
@@ -843,6 +937,13 @@ public class AdminPage extends Page {
         currentButton.setBorderColour(Color.BLACK);
     }
 
+    /**
+     * Creates the right section of the layout, including the header and user or machine list.
+     *
+     * @return The VBox layout containing the right section.
+     *
+     * @author Lw2380
+     */
     private VBox createRightSection() {
 
         // Remove the existing right section if it exists
@@ -967,36 +1068,81 @@ public class AdminPage extends Page {
         return null; // Handle other cases as needed
     }
 
-    // Method to open the edit window with user's information filled out
+    /**
+     * Opens the edit window for the specified user.
+     *
+     * @param user The user to be edited.
+     *
+     * @author Lw2380
+     */
     private void openEditWindow(User user) {
         openWindow("User Manager", "Edit User", user, null);
     }
 
-    // Method to open the edit window with machine's information filled out
+    /**
+     * Opens the edit window with machine's information filled out.
+     *
+     * @param machine The machine to be edited.
+     *
+     * @author Lw2380
+     */
     private void openEditWindow(Machine machine) {
         openWindow("Machine Manager", "Edit Machine", null, machine);
     }
 
+    /**
+     * Filters users by name based on the provided name string.
+     *
+     * @param name The name string used for filtering users.
+     *
+     * @author Lw2380
+     */
     private void filterUsersByName(String name) {
         currentName = name;
         applyUserFilters();
     }
 
+    /**
+     * Filters users by role based on the provided role string.
+     *
+     * @param role The role string used for filtering users.
+     *
+     * @author Lw2380
+     */
     private void filterUsersByRole(String role) {
         currentRole = role;
         applyUserFilters();
     }
 
+    /**
+     * Filters machines by name based on the provided name string.
+     *
+     * @param name The name string used for filtering machines.
+     *
+     * @author Lw2380
+     */
     private void filterMachinesByName(String name) {
         currentName = name;
         applyMachineFilters();
     }
 
+    /**
+     * Filters machines by status based on the provided status string.
+     *
+     * @param status The status string used for filtering machines.
+     *
+     * @author Lw2380
+     */
     private void filterMachinesByStatus(String status) {
         currentMachineStatus = status;
         applyMachineFilters();
     }
 
+    /**
+     * Applies filters to the list of users based on the current name and role criteria.
+     *
+     * @author Lw2380
+     */
     private void applyUserFilters() {
         filteredUserList = allUsersList.stream()
                 .filter(user -> user.getName().toLowerCase().contains(currentName.toLowerCase()))
@@ -1006,6 +1152,11 @@ public class AdminPage extends Page {
         updateDisplayedUserList(filteredUserList);
     }
 
+    /**
+     * Applies filters to the list of machines based on the current name and status criteria.
+
+     *  @author Lw2380
+     */
     private void applyMachineFilters() {
         filteredMachineList = machines.stream()
                 .filter(machine -> machine.getName().toLowerCase().contains(currentName.toLowerCase()))
@@ -1016,6 +1167,13 @@ public class AdminPage extends Page {
         System.out.println(filteredMachineList);
     }
 
+    /**
+     * Updates the displayed user list in the user list VBox.
+     *
+     * @param users The list of users to be displayed.
+     *
+     * @author Lw2380
+     */
     private void updateDisplayedUserList(List<User> users) {
         userListVBox.getChildren().clear();
 
@@ -1024,6 +1182,13 @@ public class AdminPage extends Page {
         }
     }
 
+    /**
+     * Updates the displayed machine list in the machine list VBox.
+     *
+     * @param machines The list of machines to be displayed.
+     *
+     * @author Lw2380
+     */
     private void updateDisplayedMachineList(List<Machine> machines) {
         machineListVBox.getChildren().clear();
 
@@ -1032,6 +1197,14 @@ public class AdminPage extends Page {
         }
     }
 
+    /**
+     * Creates a button representing a user with the provided user's information.
+     *
+     * @param user The user for which the button is created.
+     * @return The ButtonWrapper representing the user.
+     *
+     * * @author Lw2380
+     */
     private ButtonWrapper createUserButton(User user) {
         ButtonWrapper userButton = new ButtonWrapper();
         userButton.setCornerRadius(5);
@@ -1082,7 +1255,14 @@ public class AdminPage extends Page {
         return userButton;
     }
 
-
+    /**
+     * Creates a button representing a machine with the provided machine's information.
+     *
+     * @param machine The machine for which the button is created.
+     * @return The ButtonWrapper representing the machine.
+     *
+     * * @author Lw2380
+     */
     private ButtonWrapper createMachineButton(Machine machine) {
         ButtonWrapper machineButton = new ButtonWrapper();
         machineButton.setCornerRadius(5);
@@ -1123,7 +1303,14 @@ public class AdminPage extends Page {
 
         return machineButton;
     }
-
+    /**
+     * Creates a button representing a user type with the provided user type.
+     *
+     * @param userType The type of user for which the button is created.
+     * @return The ButtonWrapper representing the user type.
+     *
+     * * @author Lw2380
+     */
     private ButtonWrapper createUserTypeButton(String userType) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
@@ -1167,7 +1354,14 @@ public class AdminPage extends Page {
 
         return button;
     }
-
+    /**
+     * Creates a button representing a machine status with the provided status.
+     *
+     * @param machineStatus The status of the machine for which the button is created.
+     * @return The ButtonWrapper representing the machine status.
+     *
+     * * @author Lw2380
+     */
     private ButtonWrapper createMachineTypeButton(String machineStatus) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
@@ -1204,7 +1398,12 @@ public class AdminPage extends Page {
 
         return button;
     }
-
+    /**
+     * Updates the header label with the provided text.
+     *
+     * @param text The text to be set as the header label.
+     * @author Lw2380
+     */
     private void updateHeader(String text) {
         headerLabel.setText(text);
     }
