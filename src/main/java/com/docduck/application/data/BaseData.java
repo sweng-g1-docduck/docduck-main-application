@@ -8,6 +8,7 @@ import com.docduck.application.xmldom.XMLJDOMDataHandler;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,8 +18,8 @@ public class BaseData {
 
     public XMLJDOMDataHandler domDataHandler;
     private String docduckDataFileName;
-    private FileWriter docduckDataOutputWriter;
-
+    private File docduckDataInputFile;
+    private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
     public BaseData() {
 
@@ -28,16 +29,20 @@ public class BaseData {
         }
         catch (JDOMDataHandlerNotInitialised e) {
             e.printError();
-            System.out.println("Creating a new instance");
+            System.out.println("Creating a new XMLJDOMDataHandler instance");
 
-            loadDataFiles();
+            try {
+                loadDataFiles();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
 
-            domDataHandler = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true, docduckDataOutputWriter);
+            domDataHandler = XMLJDOMDataHandler.createNewInstance(docduckDataInputFile.getPath(), "DocDuckSchema.xsd", true, true);
             domDataHandler.setupJDOM();
         }
     }
 
-    private void loadDataFiles() {
+    private void loadDataFiles() throws IOException {
 
         String workingDirectory;
         String OS = System.getProperty("os.name").toUpperCase();
@@ -48,35 +53,38 @@ public class BaseData {
             workingDirectory = null;
         }
 
-        String docduckWorkingDirectory = workingDirectory + "/docduck/resources/";
+        String docduckWorkingDirectory = workingDirectory + "/com.docduck/resources/";
         Path docduckPath = Paths.get(docduckWorkingDirectory);
-        System.out.println("DocDuck Path = " + docduckPath);
+        docduckDataFileName = docduckPath + "/DocDuckData.xml";
 
         if (!Files.exists(docduckPath)) {
             // Directory doesn't exist, create it.
             if (new File(docduckWorkingDirectory).mkdirs()) {
-                // Directory created
-                System.out.println("Created " + docduckWorkingDirectory);
-                docduckDataFileName = docduckPath.getFileName().toString() + "/DocDuckData.xml";
-                System.out.println("DocDuckFileName = " + docduckDataFileName);
-                try {
-                    Files.createFile(Paths.get(docduckDataFileName));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                InputStream defaultInput = classLoader.getResourceAsStream("DocDuckDefaults.xml");;
+
+                if (defaultInput == null) {
+                    System.err.println("DocDuckDefaults.xml null and not found!");
+                }
+                else {
+                    Files.copy(defaultInput, Paths.get(docduckDataFileName));
+                    docduckDataInputFile = new File(docduckDataFileName);
                 }
             }
         }
         else {
-            docduckDataFileName = docduckPath.getFileName().toString() + "/DocDuckData.xml";
-        }
-        System.out.println("DocDuckFileName = " + docduckDataFileName);
-
-        try {
-            docduckDataOutputWriter = new FileWriter(docduckDataFileName);
-            System.out.println("Output Writer = " + docduckDataOutputWriter);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            docduckDataInputFile = new File(docduckDataFileName);
+            if (docduckDataInputFile.length() == 0) {
+                System.err.println("Data File is empty, cannot parse empty file");
+                docduckDataInputFile.delete();
+                InputStream defaultInput = classLoader.getResourceAsStream("DocDuckDefaults.xml");
+                if (defaultInput == null) {
+                    System.err.println("DocDuckDefaults.xml null and not found!");
+                }
+                else {
+                    Files.copy(defaultInput, Paths.get(docduckDataFileName));
+                    docduckDataInputFile = new File(docduckDataFileName);
+                }
+            }
         }
     }
 
@@ -126,7 +134,7 @@ public class BaseData {
 
     
     protected int addPrefix(int id, int prefix) {
-        
+
         String idString = Integer.toString(id);
         String prefixString = Integer.toString(prefix);
 
@@ -134,12 +142,11 @@ public class BaseData {
         int prefixedID = -1;
         try {
             prefixedID = Integer.parseInt(prefixString + idString);
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.err.println("Error caused by adding prefix to non-prefixed ID");
             e.printStackTrace();
         }
-        
+
         return prefixedID;
     }
 }

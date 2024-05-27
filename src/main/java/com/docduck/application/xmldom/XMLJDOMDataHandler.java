@@ -7,7 +7,6 @@ import org.jdom2.Attribute;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -40,15 +39,15 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @param setNamespaceAware - Whether to set the namespace awareness
      * @author William-A-B
      */
-    private XMLJDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware, FileWriter outputWriter) {
-        super(xmlFilename, schemaFilename, validate, setNamespaceAware, outputWriter);
+    private XMLJDOMDataHandler(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware) {
+        super(xmlFilename, schemaFilename, validate, setNamespaceAware);
     }
 
     public static XMLJDOMDataHandler createNewInstance(String xmlFilename, String schemaFilename, boolean validate,
-            boolean setNamespaceAware, FileWriter outputWriter) {
+            boolean setNamespaceAware) {
 
         synchronized (XMLJDOMDataHandler.class) {
-            domDataHandlerInstance = new XMLJDOMDataHandler(xmlFilename, schemaFilename, validate, setNamespaceAware, outputWriter);
+            domDataHandlerInstance = new XMLJDOMDataHandler(xmlFilename, schemaFilename, validate, setNamespaceAware);
         }
 
         return domDataHandlerInstance;

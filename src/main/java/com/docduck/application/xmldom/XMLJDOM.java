@@ -21,7 +21,6 @@ public class XMLJDOM {
     private final String schemaFilename;
     private final boolean xsdValidate;
     private final boolean namespaceAware;
-    private final FileWriter xmlOutputWriter;
     static final String outputEncoding = "UTF-8";
     static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
     static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
@@ -31,14 +30,12 @@ public class XMLJDOM {
 
     protected Document document;
 
-    public XMLJDOM(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware, FileWriter outputWriter) {
+    public XMLJDOM(String xmlFilename, String schemaFilename, boolean validate, boolean setNamespaceAware) {
 
         this.xmlFilename = xmlFilename;
         this.schemaFilename = schemaFilename;
         this.xsdValidate = validate;
         this.namespaceAware = setNamespaceAware;
-        this.xmlOutputWriter = outputWriter;
-
     }
 
     /**
@@ -50,7 +47,6 @@ public class XMLJDOM {
     public void setupJDOM() {
         this.document = null;
 
-        InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
         InputStream schemaStream = classloader.getResourceAsStream(schemaFilename);
 
         try {
@@ -80,7 +76,7 @@ public class XMLJDOM {
             OutputStreamWriter errorWriter = new OutputStreamWriter(System.err, outputEncoding);
             documentBuilder.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
 
-            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlFilename);
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (IOException | SAXException | ParserConfigurationException e) {
@@ -101,7 +97,7 @@ public class XMLJDOM {
         InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
 
         try {
-            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlFilename);
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (SAXException | IOException e) {
@@ -236,16 +232,6 @@ public class XMLJDOM {
             }
 //            parentElement.addContent(attID, desiredELement);
         }
-
-//        XMLOutputter xmlOutputter = new XMLOutputter();
-//
-//        // pretty print
-//        xmlOutputter.setFormat(Format.getPrettyFormat());
-//        try {
-//            xmlOutputter.output(document, System.out);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     /**
@@ -287,18 +273,13 @@ public class XMLJDOM {
     public void outputDocumentToXML() {
         XMLOutputter xmlOutputter = new XMLOutputter();
 
-//        OutputStream xmlOutputStream;
-//        try {
-//            xmlOutputStream = new FileOutputStream(xmlFilename);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//            throw new RuntimeException(e);
-//        }
-
         // pretty print
         xmlOutputter.setFormat(Format.getPrettyFormat());
 
+        FileWriter xmlOutputWriter;
+
         try {
+            xmlOutputWriter = new FileWriter(xmlFilename);
             xmlOutputter.output(document, xmlOutputWriter);
         } catch (IOException e) {
             e.printStackTrace();
