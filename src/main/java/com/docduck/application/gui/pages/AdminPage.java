@@ -434,13 +434,13 @@ public class AdminPage extends Page {
             TextField datasheetField = createFormField("Datasheet Hyperlink",
                     machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
-            datasheetValue = machine != null ? machine.getDatasheetRef() : "";
+            datasheetValue = machine != null ? machine.getDatasheet() : "";
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink",
                     machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
-            purchaseLocationValue = machine != null ? machine.getPurchaseLocationRef() : "";
+            purchaseLocationValue = machine != null ? machine.getPurchaseLocation() : "";
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
