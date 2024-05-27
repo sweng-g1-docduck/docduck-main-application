@@ -1,15 +1,9 @@
 package com.docduck.application;
 
-import java.io.File;
-
-import com.docduck.application.data.User;
 import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.EventManager;
 import com.docduck.application.gui.GUIBuilder;
 import com.docduck.application.gui.XMLBuilder;
-
-import com.docduck.application.xmldom.JDOMDataHandlerNotInitialised;
-import com.docduck.application.xmldom.XMLJDOMDataHandler;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.Scene;
@@ -19,6 +13,10 @@ import javafx.stage.Stage;
 
 public class DocDuckApplication extends Application {
 
+    public static final int MIN_WINDOW_HEIGHT = 759;
+    public static final int MIN_WINDOW_WIDTH = 1296;
+    public static final int DEFAULT_WINDOW_HEIGHT = 759;
+    public static final int DEFAULT_WINDOW_WIDTH = 1296;
     private static Pane root;
     private static GUIBuilder guiBuilder;
     private static FTPHandler ftpHandler;
@@ -27,12 +25,6 @@ public class DocDuckApplication extends Application {
     public void start(Stage stage) {
 
         System.out.println("Starting DocDuck Application");
-
-        // XMLJDOM example method
-//        jdom2Example();
-
-        File f = new File("/DocDuckDataExample.xml");
-        System.out.println(f);
 
         root = new Pane();
         XMLBuilder xmlBuilder = XMLBuilder.createInstance(root);
@@ -46,12 +38,10 @@ public class DocDuckApplication extends Application {
 
         Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
 
-        stage.setMinHeight(759);
-        stage.setMinWidth(1296);
-        stage.setHeight(759);
-        stage.setWidth(1296);
-
-        System.out.println();
+        stage.setMinHeight(MIN_WINDOW_HEIGHT);
+        stage.setMinWidth(MIN_WINDOW_WIDTH);
+        stage.setHeight(DEFAULT_WINDOW_HEIGHT);
+        stage.setWidth(DEFAULT_WINDOW_WIDTH);
 
         stage.setTitle("DocDuck");
         stage.setScene(scene);
@@ -62,36 +52,14 @@ public class DocDuckApplication extends Application {
         guiBuilder.displayPage("LOGIN");
 //        guiBuilder.StartPage();
 //        ftpHandler.startApp();
-        System.out.println(stage.getWidth());
-        System.out.println(stage.getHeight());
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
                 stage.getWidth(), stage.getHeight());
 
         stage.widthProperty().addListener(stageSizeListener);
         stage.heightProperty().addListener(stageSizeListener);
-
     }
 
-    /**
-     * An example method to show how the JDOM2 API Implementation works for the
-     * DocDuck Application
-     * 
-     * @author William-A-B
-     */
-    private void jdom2Example() {
-
-        XMLJDOMDataHandler dom;
-
-        try {
-            dom = XMLJDOMDataHandler.getInstance();
-        } catch (JDOMDataHandlerNotInitialised e) {
-            e.printError();
-            dom = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true);
-            dom.setupJDOM();
-        }
-        dom.addNewUser(new User("Billy", "billy", "password", "bob321@york.ac.uk", "OPERATOR"));
-    }
 
     @Override
     public void stop() {

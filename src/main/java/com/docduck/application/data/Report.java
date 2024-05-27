@@ -1,7 +1,9 @@
 package com.docduck.application.data;
 
+import com.docduck.application.xmldom.ElementDataNotRemoved;
+import com.docduck.application.xmldom.InvalidID;
+import org.jdom2.Element;
 import java.util.List;
-
 import org.jdom2.Element;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,8 @@ public class Report extends BaseData {
         this.description = description;
         this.pathToFile = pathToFile;
         this.userID = user.getId();
+
+        domDataHandler.addNewReport(this);
     }
 
     /**
@@ -114,6 +118,12 @@ public class Report extends BaseData {
     public int getId() {
         return this.id;
     }
+    public void deleteReport() throws ElementDataNotRemoved {
+        domDataHandler.deleteReport(id);
+    }
 
+    public void editReport(String valueToEdit, String newValue) {
+        domDataHandler.editReport(id, valueToEdit, newValue);
+    }
 
 }

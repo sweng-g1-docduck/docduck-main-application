@@ -1,13 +1,14 @@
 package com.docduck.application.xmldom;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.Report;
+import com.docduck.application.data.User;
 import org.jdom2.Attribute;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
@@ -397,6 +398,74 @@ public class XMLJDOMDataHandler extends XMLJDOM {
         addElement("machineReport", -1, newReportParent);
         outputDocumentToXML();
     }
+
+    /**
+     * Edit a data value of the given machine
+     * @param id - The ID of the machine to edit
+     * @param valueToEdit - The value/type of the data to edit
+     * @param newValue - The new value to set the data to
+     * @author William-A-B
+     */
+    public void editMachine(int id, String valueToEdit, String newValue) {
+        editElement("machine", id, valueToEdit, newValue);
+        outputDocumentToXML();
+    }
+    /**
+     * Edit a data value of the given user
+     * @param id - The ID of the user to edit
+     * @param valueToEdit - The value/type of the data to edit
+     * @param newValue - The new value to set the data to
+     * @author William-A-B
+     */
+    public void editUser(int id, String valueToEdit, String newValue) {
+        editElement("user", id, valueToEdit, newValue);
+        outputDocumentToXML();
+    }
+    /**
+     * Edit a data value of the given report
+     * @param id - The ID of the report to edit
+     * @param valueToEdit - The value/type of the data to edit
+     * @param newValue - The new value to set the data to
+     * @author William-A-B
+     */
+    public void editReport(int id, String valueToEdit, String newValue) {
+        editElement("report", id, valueToEdit, newValue);
+        outputDocumentToXML();
+    }
+
+    /**
+     * Deletes the machine with the given ID from the xml
+     * @param id - The ID of the machine to delete
+     * @throws ElementDataNotRemoved - Thrown if the data could not be deleted.
+     * @author William-A-B
+     */
+    public void deleteMachine(int id) throws ElementDataNotRemoved {
+        removeElement("machine", id);
+        outputDocumentToXML();
+    }
+
+    /**
+     * Deletes the user with the given ID from the xml
+     * @param id - The ID of the user to delete
+     * @throws ElementDataNotRemoved - Thrown if the data could not be deleted.
+     * @author William-A-B
+     */
+    public void deleteUser(int id) throws ElementDataNotRemoved {
+        removeElement("user", id);
+        outputDocumentToXML();
+    }
+
+    /**
+     * Deletes the report with the given ID from the xml
+     * @param id - The ID of the report to delete
+     * @throws ElementDataNotRemoved - Thrown if the data could not be deleted.
+     * @author William-A-B
+     */
+    public void deleteReport(int id) throws ElementDataNotRemoved {
+        removeElement("report", id);
+        outputDocumentToXML();
+    }
+
 
     /**
      * Checks if an ID already exists in the XML

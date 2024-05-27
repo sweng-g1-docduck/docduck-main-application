@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<docduckData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DocDuckSchema.xsd">
+  <machineData>
+  </machineData>
+  <userData>
+    <user id="2001">
+      <name>Default User</name>
+      <username>username</username>
+      <password>password</password>
+      <email></email>
+      <role>OPERATOR</role>
+    </user>
+  </userData>
+  <machineReport>
+  </machineReport>
+</docduckData>
