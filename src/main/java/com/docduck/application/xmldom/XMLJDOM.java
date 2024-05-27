@@ -1,24 +1,19 @@
 package com.docduck.application.xmldom;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Stack;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.jdom2.Attribute;
-import org.jdom2.Content;
-import org.jdom2.DataConversionException;
-import org.jdom2.Document;
-import org.jdom2.Element;
+import org.jdom2.*;
 import org.jdom2.input.DOMBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.jdom2.util.IteratorIterable;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class XMLJDOM {
 
@@ -41,7 +36,6 @@ public class XMLJDOM {
         this.schemaFilename = schemaFilename;
         this.xsdValidate = validate;
         this.namespaceAware = setNamespaceAware;
-
     }
 
     /**
@@ -53,7 +47,6 @@ public class XMLJDOM {
     public void setupJDOM() {
         this.document = null;
 
-        InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
         InputStream schemaStream = classloader.getResourceAsStream(schemaFilename);
 
         try {
@@ -83,7 +76,7 @@ public class XMLJDOM {
             OutputStreamWriter errorWriter = new OutputStreamWriter(System.err, outputEncoding);
             documentBuilder.setErrorHandler(new DOMErrorHandler(new PrintWriter(errorWriter, true)));
 
-            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlFilename);
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (IOException | SAXException | ParserConfigurationException e) {
@@ -104,7 +97,7 @@ public class XMLJDOM {
         InputStream xmlStream = classloader.getResourceAsStream(xmlFilename);
 
         try {
-            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlStream);
+            org.w3c.dom.Document w3cDocument = documentBuilder.parse(xmlFilename);
             this.document = new DOMBuilder().build(w3cDocument);
         }
         catch (SAXException | IOException e) {
@@ -239,16 +232,6 @@ public class XMLJDOM {
             }
 //            parentElement.addContent(attID, desiredELement);
         }
-
-        XMLOutputter xmlOutputter = new XMLOutputter();
-
-        // pretty print
-        xmlOutputter.setFormat(Format.getPrettyFormat());
-        try {
-            xmlOutputter.output(document, System.out);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -265,6 +248,44 @@ public class XMLJDOM {
         newElement.setText(elementValue);
 
         return newElement;
+    }
+
+    /**
+     * Removes the provided element and all its children from the XML completely
+     * @param elementName - The name of the element and its children to remove
+     * @param id - The ID of the element to remove
+     * @throws ElementDataNotRemoved - Thrown if the data could not be deleted.
+     * @author William-A-B
+     */
+    protected void removeElement(String elementName, int id) throws ElementDataNotRemoved {
+
+        Element elementToRemove = getElement(elementName, id, true, null);
+
+        if (elementToRemove.isRootElement()) {
+            System.err.println("Cannot remove root element");
+            return;
+        }
+        elementToRemove.removeContent();
+
+        if (!elementToRemove.getChildren().isEmpty()) {
+            // Element content not removed successfully
+            throw new ElementDataNotRemoved("The child data of element " + elementName + " with ID: " + id + " was not removed successfully");
+        }
+        elementToRemove.detach();
+    }
+
+    /**
+     * Edits the value of the given element. The element is specified by the element name
+     * @param parentElement - The parent element of the element being edited
+     * @param id - The ID of the parent element
+     * @param elementName - The name of the element with the data to edit
+     * @param newValue - The new value to set the data to
+     * @author William-A-B
+     */
+    protected void editElement(String parentElement, int id, String elementName, String newValue) {
+        Element parentOfElementToEdit = getElement(parentElement, id, true, null);
+        Element elementToEdit = parentOfElementToEdit.getChild(elementName);
+        elementToEdit.setText(newValue);
     }
 
     /**
@@ -290,25 +311,20 @@ public class XMLJDOM {
     public void outputDocumentToXML() {
         XMLOutputter xmlOutputter = new XMLOutputter();
 
-        OutputStream xmlOutputStream;
-        try {
-            xmlOutputStream = new FileOutputStream(xmlFilename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
         // pretty print
         xmlOutputter.setFormat(Format.getPrettyFormat());
 
+        FileWriter xmlOutputWriter;
+
         try {
-            xmlOutputter.output(document, xmlOutputStream);
+            xmlOutputWriter = new FileWriter(xmlFilename);
+            xmlOutputter.output(document, xmlOutputWriter);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
         try {
-            xmlOutputStream.close();
+            xmlOutputWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

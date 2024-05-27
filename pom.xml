@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>com.docduck.textlibrary</groupId>
 			<artifactId>textlibrary</artifactId>
-			<version>3.2</version>
+			<version>3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.docduck.graphicslibrary</groupId>

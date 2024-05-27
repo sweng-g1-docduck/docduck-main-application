@@ -246,7 +246,7 @@ public class ReportPage extends Page {
         // Attached Media
 
         try {
-            if (machine.getCurrentReport().getPathToFile() != null) {
+            if (drawAttachedMedia(machine.getCurrentReport().getPathToFile()) != null) {
 
                 Label mediaTitle = new Label("Attached Media: ");
                 mediaTitle.setFont(new Font(fontName, smallFontSize));
@@ -254,6 +254,7 @@ public class ReportPage extends Page {
 
                 infoBox.getChildren().addAll(new Label(), mediaTitle, new Label(),
                         drawAttachedMedia(machine.getCurrentReport().getPathToFile()));
+
             }
         }
         catch (FileNotFoundException e) {
@@ -334,23 +335,30 @@ public class ReportPage extends Page {
      */
     private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
         String extension = getExtension(filePath);
-        if (extension.equals("png") || extension.equals("jpeg")) {
-            Image img = new Image(filePath);
-            ImageView view1 = new ImageView(img);
-            view1.setFitWidth(reportDescWidth - 35); // Offset to fit the bar
-            view1.setPreserveRatio(true);
-            return view1;
-        }
-        else if (extension.equals("mp4") || extension.equals("mp3")) {
-            BCMediaPlayer BCMP = new BCMediaPlayer("src/main/resources/clock.mp4");
-            BCMP.setWidth(250);
-            BCMediaControls BCMC = new BCMediaControls(BCMP);
-            BCMC.setWidth(250);
-            BCMC.setIconSpacing(5);
+        try {
+            if (extension.equals("png") || extension.equals("jpeg")) {
 
-            VBox box = new VBox(BCMP, BCMC);
-            box.setAlignment(Pos.CENTER);
-            return box;
+                Image img = new Image(filePath);
+                ImageView view1 = new ImageView(img);
+                view1.setFitWidth(reportDescWidth - 35); // Offset to fit the bar
+                view1.setPreserveRatio(true);
+                return view1;
+            }
+
+            else if (extension.equals("mp4") || extension.equals("mp3")) {
+                BCMediaPlayer BCMP = new BCMediaPlayer("src/main/resources/clock.mp4");
+                BCMP.setWidth(250);
+                BCMediaControls BCMC = new BCMediaControls(BCMP);
+                BCMC.setWidth(250);
+                BCMC.setIconSpacing(5);
+
+                VBox box = new VBox(BCMP, BCMC);
+                box.setAlignment(Pos.CENTER);
+                return box;
+            }
+        }
+        catch (NullPointerException | IllegalArgumentException e) {
+            throw new FileNotFoundException();
         }
 
         return null;
