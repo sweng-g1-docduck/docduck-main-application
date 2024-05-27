@@ -1,6 +1,9 @@
 package com.docduck.application.files;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -32,7 +35,7 @@ public class FTPHandler {
     private final static String SERVER_IP = "81.101.49.54";
     private final static String USERNAME = "docduck";
     private final static String PASSWORD = "sweng";
-    private final static String FILE_STORE = "%AppData%/Roaming/com.dockduck/resources/";
+    private String FILE_STORE;
     
     private FTPHandler() {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -121,12 +124,31 @@ public class FTPHandler {
             }
             scheduleFileUpdates(5.0);
         }
+        
         catch (Exception ex) {
             guiBuilder.OfflinePage();
         }
     }
 
     private void prepareClient() throws IOException {
+    	
+    	String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        FILE_STORE = workingDirectory + "/com.docduck/resources/";
+        Path docduckPath = Paths.get(FILE_STORE);
+        
+        if (!Files.exists(docduckPath)) {
+            // Directory doesn't exist, create it.
+            new File(FILE_STORE).mkdirs();
+        }
+    	
         ftp = new FTPClient();
 
         ftp.connect(SERVER_IP);

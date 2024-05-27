@@ -51,7 +51,7 @@ public class DocDuckApplication extends Application {
 
         guiBuilder.displayPage("LOGIN");
 //        guiBuilder.StartPage();
-//        ftpHandler.startApp();
+        ftpHandler.start();
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
                 stage.getWidth(), stage.getHeight());
