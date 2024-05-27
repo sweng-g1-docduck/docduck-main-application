@@ -1,5 +1,37 @@
 package com.docduck.application.gui.pages;
 
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.User;
+import com.docduck.buttonlibrary.ButtonWrapper;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
@@ -11,6 +43,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -54,16 +87,22 @@ public class AdminPage extends Page {
     private String datasheetValue;
     private String purchaseLocationValue;
     private String nameFieldValue;
-    private boolean nullUserField = true;
-    private boolean nullUsernameField = true;
-    private boolean nullEmailField = true;
-    private boolean nullRoleField = true;
-    private boolean nullPasswordField = true;
+    private String serialNumberValue;
+    private boolean nullUserField;
+    private boolean nullUsernameField;
+    private boolean nullEmailField;
+    private boolean nullRoleField;
+    private boolean nullPasswordField;
     private boolean nullMachineField;
     private boolean nullLocationField;
     private boolean nullStatusField;
     private boolean nullDatasheetField;
     private boolean nullPurchaseLocationField;
+    private boolean nullSerialNumberField;
+    private Image tempMachineImage;
+    private ImageView machineImageView;
+
+
 
 
     /**
@@ -275,17 +314,29 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Full Name"), 0, row);
             TextField nameField = createFormField("Full Name", user != null ? user.getName() : "");
             gridPane.add(nameField, 1, row++);
-            usernameFieldValue = user.getName();
+            nameFieldValue = user.getName();
+            if (nameFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please Fill in Fields");
+                nullUserField = true;
+            }
 
             gridPane.add(createLabel("Username"), 0, row);
             TextField usernameField = createFormField("Username", user != null ? user.getUsername() : "");
             gridPane.add(usernameField, 1, row++);
             usernameFieldValue = user.getUsername();
+            if (usernameFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Username");
+                nullUsernameField = true;
+            }
 
             gridPane.add(createLabel("Email"), 0, row);
             TextField emailField = createFormField("Email", user != null ? user.getEmail() : "");
             gridPane.add(emailField, 1, row++);
             emailFieldValue = user.getEmail();
+            if (emailFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Email");
+                nullEmailField = true;
+            }
 
             ComboBox<String> roleComboBox;
             if (user != null) {
@@ -293,6 +344,10 @@ public class AdminPage extends Page {
                 roleComboBox = createUserComboBox(user.getRole());
                 gridPane.add(roleComboBox, 1, row++);
                 roleFieldValue = user.getRole();
+                if (roleFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please select Role");
+                    roleFieldValue = "OPERATOR";
+                }
             }
             else {
                 gridPane.add(createLabel("Role"), 0, row);
@@ -307,10 +362,11 @@ public class AdminPage extends Page {
 
 
 
+
             // Set the instance variables when the form fields are filled out
             nameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 nameFieldValue = newValue.strip();
-                if (nameFieldValue.equals("")) {
+                if (nameFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please fill in First and Second Name");
                     nullUserField = true;
                 }
@@ -392,16 +448,37 @@ public class AdminPage extends Page {
 
         int row = 0;
 
+        ImageView machineImageView = new ImageView();
+        machineImageView.setFitWidth(100);
+        machineImageView.setPreserveRatio(true);
+        if (tempMachineImage != null) {
+            machineImageView.setImage(tempMachineImage);
+        }
+
+        formLayout.getChildren().add(machineImageView);
+
         if (managerType.equals("Machine Manager")) {
             gridPane.add(createLabel("Machine Name"), 0, row);
             TextField machineNameField = createFormField("Machine Name", machine != null ? machine.getName() : "");
             gridPane.add(machineNameField, 1, row++);
             machineFieldValue = machine != null ? machine.getName() : "";
 
+            if (machineFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullMachineField = true;
+                System.out.println(nullMachineField);
+            }
+
             gridPane.add(createLabel("Location"), 0, row);
             TextField locationField = createFormField("Location", machine != null ? machine.getLocation() : "");
             gridPane.add(locationField, 1, row++);
             locationFieldValue = machine != null ? machine.getLocation() : "";
+
+            if (locationFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullLocationField = true;
+                System.out.println(nullMachineField);
+            }
 
             ComboBox<String> statusComboBox;
             if (machine != null) {
@@ -409,26 +486,46 @@ public class AdminPage extends Page {
                 statusComboBox = createStatusComboBox(machine.getStatus());
                 gridPane.add(statusComboBox, 1, row++);
                 statusValue = machine.getStatus();
+
+                if (statusValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Fields");
+                    nullStatusField = true;
+                }
             } 
             else {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox("");
                 gridPane.add(statusComboBox, 1, row++);
             }
-
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
-            gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : ""), 1,
-                    row++);
-            TextField datasheetField = createFormField("Datasheet Hyperlink",
-                    machine != null ? machine.getDatasheetRef() : "");
+            TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
             datasheetValue = machine != null ? machine.getDatasheetRef() : "";
+
+            if (datasheetValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullDatasheetField = true;
+            }
+
+            gridPane.add(createLabel("Serial Number"), 0, row);
+            TextField serialNumberField = createFormField("Serial Number", machine != null ? machine.getSerialNumber() : "");
+            gridPane.add(serialNumberField, 1, row++);
+            serialNumberValue = machine != null ? machine.getSerialNumber() : "";
+
+            if (serialNumberValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullSerialNumberField = true;
+            }
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink",
                     machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
             purchaseLocationValue = machine != null ? machine.getPurchaseLocationRef() : "";
+            if (purchaseLocationValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullPurchaseLocationField = true;
+            }
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -436,29 +533,45 @@ public class AdminPage extends Page {
                 if (machineFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please fill in Machine Name");
                     nullMachineField = true;
+                    System.out.println(nullMachineField);
                 } else {
                     nullTextMessage.setText("");
                     nullMachineField = false;
+                    System.out.println(nullMachineField);
                 }
             });
+
             locationField.textProperty().addListener((observable, oldValue, newValue) -> {
                 locationFieldValue = newValue.strip();
                 if (locationFieldValue.isEmpty()) {
-                    nullTextMessage.setText("Please fill in Location");
-                    nullLocationField = true;
+                    nullTextMessage.setText("Please fill in Machine Name");
+                    nullLocationField= true;
                 } else {
                     nullTextMessage.setText("");
                     nullLocationField = false;
                 }
             });
+
             statusComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
                 statusValue = newValue.strip();
                 if (statusValue.isEmpty()) {
                     nullTextMessage.setText("Please select Status");
                     nullStatusField = true;
+
                 } else {
                     nullTextMessage.setText("");
                     nullStatusField = false;
+                }
+            });
+
+            serialNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+                serialNumberValue = newValue.strip();
+                if (serialNumberValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in serial Number Value");
+                    nullSerialNumberField = true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullSerialNumberField = false;
                 }
             });
 
@@ -539,6 +652,33 @@ public class AdminPage extends Page {
         HBox buttonBox = new HBox(20);
         buttonBox.setAlignment(Pos.CENTER);
 
+        // Add Machine Picture button
+        ButtonWrapper addMachinePictureButton = new ButtonWrapper();
+        addMachinePictureButton.setText("Add Machine Picture");
+        addMachinePictureButton.setCornerRadius(5);
+        addMachinePictureButton.setButtonWidth(150);
+        addMachinePictureButton.setButtonHeight(24);
+        addMachinePictureButton.setFontName(fontName);
+        addMachinePictureButton.setBackgroundColour(btnColour);
+        addMachinePictureButton.setClickcolour(btnClickColour);
+        addMachinePictureButton.setHoverColour(btnHoverColour);
+        addMachinePictureButton.setFontColour(lightTextColour);
+        addMachinePictureButton.setFontSize(12);
+        addMachinePictureButton.removeBorder();
+
+        addMachinePictureButton.setOnAction(event -> {
+            // Handle add machine picture action
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Open Resource File");
+            File file = fileChooser.showOpenDialog(managerPopOutStage);
+            if (file != null) {
+                System.out.println(file.getPath());
+                // Update the machine image
+                tempMachineImage = new Image(file.toURI().toString());
+                updateMachineImage();
+            }
+        });
+
         ButtonWrapper saveButton = new ButtonWrapper();
         saveButton.setText("Save");
         saveButton.setCornerRadius(5);
@@ -601,6 +741,9 @@ public class AdminPage extends Page {
                         if (roleFieldValue != null) {
                             user.setRole(roleFieldValue);
                         }
+                        if (usernameFieldValue != null) {
+                            user.setUsername(usernameFieldValue);
+                        }
                         break;
                     }
                 }
@@ -609,7 +752,10 @@ public class AdminPage extends Page {
                     User user = new User(nameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue);
                     allUsersList.add(user);
                     createRightSection();
-                } else if (userExists) {
+                    managerPopOutStage.close();
+                }
+
+                else if (userExists) {
                     createRightSection();
                     System.out.println("User updated successfully");
                 } else {
@@ -624,11 +770,15 @@ public class AdminPage extends Page {
                     if (machine.getName().equals(machineFieldValue)) {
                         machineExists = true;
                         // Update machine details if fields are not null
+
                         if (locationFieldValue != null) {
                             machine.setLocation(locationFieldValue);
                         }
                         if (statusValue != null) {
                             machine.setStatus(statusValue);
+                        }
+                        if (serialNumberValue != null) {
+                            machine.setSerialNumber(serialNumberValue);
                         }
                         if (datasheetValue != null) {
                             machine.setDatasheet(datasheetValue);
@@ -636,12 +786,12 @@ public class AdminPage extends Page {
                         if (purchaseLocationValue != null) {
                             machine.setPurchaseLocation(purchaseLocationValue);
                         }
-                        break;
                     }
                 }
 
-                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
-                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue, purchaseLocationValue);
+                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField  &&!nullSerialNumberField &&!nullLocationField) {
+                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
+                    System.out.println(nullStatusField);
                     machines.add(machine);
                     createRightSection();
                     managerPopOutStage.close();
@@ -661,8 +811,18 @@ public class AdminPage extends Page {
             managerPopOutStage.close();
         });
 
-        buttonBox.getChildren().addAll(saveButton, cancelButton);
+        if (editingMachines) {
+            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
+        } else {
+            buttonBox.getChildren().addAll(saveButton, cancelButton);
+        }
         return buttonBox;
+    }
+
+    private void updateMachineImage() {
+        if (tempMachineImage != null && machineImageView != null) {
+            machineImageView.setImage(tempMachineImage);
+        }
     }
 
 
@@ -871,15 +1031,37 @@ public class AdminPage extends Page {
         double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
         userButton.setButtonHeight(height);
         userButton.setFont(Font.font("System", 80));
-
-        userButton.setText(
-                user.getName() + " - " + user.getUsername() + " - " + user.getEmail() + " (" + user.getRole() + ")");
         userButton.setBackgroundColour(btnColour);
         userButton.setClickcolour(btnClickColour);
         userButton.setHoverColour(btnHoverColour);
         userButton.setFontColour(lightTextColour);
         userButton.setFontSize(18);
         userButton.removeBorder();
+
+        // Create a VBox for the user information
+        VBox userInfo = new VBox();
+
+        // Create a label for the user's name in bold and big text
+        Label userName = new Label(user.getName());
+        userName.setFont(Font.font("System", FontWeight.BOLD, 24));
+        userInfo.getChildren().add(userName);
+
+        // Create an HBox for the rest of the user information
+        HBox userDetails = new HBox();
+
+        // Add the user's username, email, and role to the HBox
+        Label userUsername = new Label("Username: " + user.getUsername());
+        Label userEmail = new Label("Email: " + user.getEmail());
+        Label userRole = new Label("Role: " + user.getRole());
+
+        userDetails.getChildren().addAll(userUsername, userEmail, userRole);
+        userDetails.setSpacing(10); // Set spacing between the details
+
+        // Add the HBox to the VBox
+        userInfo.getChildren().add(userDetails);
+
+        // Set the VBox as the text for the button
+        userButton.setGraphic(userInfo);
 
         // Adjust event handling to open the edit window with user's information
         userButton.setOnAction(event -> {
@@ -891,16 +1073,14 @@ public class AdminPage extends Page {
         return userButton;
     }
 
+
     private ButtonWrapper createMachineButton(Machine machine) {
         ButtonWrapper machineButton = new ButtonWrapper();
         machineButton.setCornerRadius(5);
         machineButton.setButtonWidth(960);
-        // Calculate the height dynamically based on the number of machines
         double height = Math.max(50, Math.min(70, 500 / machines.size()));
         machineButton.setButtonHeight(height);
         machineButton.setFont(Font.font("System", 80));
-
-        machineButton.setText(machine.getName() + " - " + machine.getLocation() + " - " + machine.getStatus());
         machineButton.setBackgroundColour(btnColour);
         machineButton.setClickcolour(btnClickColour);
         machineButton.setHoverColour(btnHoverColour);
@@ -908,7 +1088,24 @@ public class AdminPage extends Page {
         machineButton.setFontSize(18);
         machineButton.removeBorder();
 
-        // Adjust event handling to open the edit window with machine's information
+        VBox machineInfo = new VBox();
+
+        Label machineName = new Label(machine.getName());
+        machineName.setFont(Font.font("System", FontWeight.BOLD, 24));
+        machineInfo.getChildren().add(machineName);
+
+        HBox machineDetails = new HBox();
+
+        Label machineLocation = new Label("Location: " + machine.getLocation());
+        Label machineStatus = new Label("Status: " + machine.getStatus());
+
+        machineDetails.getChildren().addAll(machineLocation, machineStatus);
+        machineDetails.setSpacing(10);
+
+        machineInfo.getChildren().add(machineDetails);
+
+        machineButton.setGraphic(machineInfo);
+
         machineButton.setOnAction(event -> {
             openEditWindow(machine);
             setLastPressedButton(machineButton, lastPressedMachineButton);

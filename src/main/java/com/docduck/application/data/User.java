@@ -31,12 +31,12 @@ public class User extends BaseData {
 
         ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
         int counter = 1;
-        
-        while (userIDs.contains(addPrefix(counter,USER_ID_PREFIX))) {
+
+        while (userIDs.contains(addPrefix(counter, USER_ID_PREFIX))) {
             counter++;
         }
 
-        this.id = addPrefix(counter,USER_ID_PREFIX);
+        this.id = addPrefix(counter, USER_ID_PREFIX);
         this.name = name;
         this.username = username;
         this.passwordHash = passwordHash;
@@ -48,7 +48,7 @@ public class User extends BaseData {
 
     /**
      * Constructor to create a new User and populate the data from the xml files
-     * 
+     *
      * @param id - The ID of the user to get out of the xml database
      * @throws InvalidID The provided id of the user doesn't exist in the data
      * @author William-A-B
@@ -137,21 +137,36 @@ public class User extends BaseData {
         this.passwordHash = hashPassword(password);
     }
 
-    public String hashPassword(String password) {
+    /**
+     * Hashes the provided password using the SHA-256 algorithm and encodes the hash in Base64.
+     *
+     * @param password The plain text password to be hashed.
+     * @return The Base64 encoded hash of the password.
+     * @throws RuntimeException if the SHA-256 algorithm is not available.
+     * @author Lw2380
+     */
+    private String hashPassword(String password) {
 
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(password.getBytes());
             return Base64.getEncoder().encodeToString(hash);
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
         }
     }
 
+    /**
+     * Checks if the provided password matches the stored hashed password.
+     *
+     * @param password The plain text password to be checked.
+     * @return true if the hashed password matches the stored hash, false otherwise.
+     * @author Lw2380
+     */
     public boolean checkPassword(String password) {
         return hashPassword(password).equals(passwordHash);
     }
+}
 
     public void deleteUser() throws ElementDataNotRemoved {
         domDataHandler.deleteUser(id);

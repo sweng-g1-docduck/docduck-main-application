@@ -36,7 +36,7 @@ public class DocDuckApplication extends Application {
         xmlBuilder.updateInstances();
         ftpHandler.updateInstances();
 
-        Scene scene = new Scene(root, 1280, 720, Color.BEIGE);
+        Scene scene = new Scene(root, 1280, 720, Color.web("245494"));
 
         stage.setMinHeight(MIN_WINDOW_HEIGHT);
         stage.setMinWidth(MIN_WINDOW_WIDTH);

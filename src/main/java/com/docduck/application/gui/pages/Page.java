@@ -39,23 +39,27 @@ public class Page extends BorderPane {
 
     protected ArrayList<Machine> machines;
 
-    protected final Color barColour = Color.web("245494");
-    protected final Color backgroundColour = Color.LIGHTSLATEGREY;
-    protected final Color boxColour = Color.LIGHTGREY;
-    protected final Color btnColour = Color.web("fbb12eff");
-    protected final Color btnHoverColour = Color.web("#ff8c00ff");
-    protected final Color btnClickColour = Color.web("fbb12eff");
-    protected final Color lightTextColour = Color.WHITE;
-    protected final Color darkTextColour = Color.BLACK;
-    protected final String fontName = "Arial";
-    protected final int smallFontSize = 12;
+    protected final Color backgroundColour = Color.web("#F5F5F5"); // Light grey for main background
+    protected final Color boxColour = Color.web("#faf6f0"); // White for div background
+    protected final Color btnColour = Color.web("fbb12eff"); // orange for button background
+    protected final Color btnHoverColour = Color.web("#ff8c00ff"); // Slightly darker grey for button hover
+    protected final Color btnClickColour = Color.web("#909090"); // Darker grey for button click
+    protected final Color lightTextColour = Color.web("#333333"); // Dark grey for light text
+    protected final Color darkTextColour = Color.web("#ffffff"); // White for dark text
+    protected final String fontName = "Arial"; // Font family from CSS
+    protected final int smallFontSize = 12; // Small font size as per CSS
+    protected final Color barColour = Color.web("#faf6f0"); // Lighter pastel grey
+
+
+
+
 
     public Page(ArrayList<Machine> machines, User user) {
         super();
         this.machines = machines;
         this.user = user;
         this.events = EventManager.getInstance();
-
+        setBackground(new Background(new BackgroundFill(Color.web("#245494"), CornerRadii.EMPTY, Insets.EMPTY)));
         setMinWidth(1280);
         setMinHeight(720);
     }
