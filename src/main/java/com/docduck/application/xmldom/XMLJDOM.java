@@ -251,6 +251,44 @@ public class XMLJDOM {
     }
 
     /**
+     * Removes the provided element and all its children from the XML completely
+     * @param elementName - The name of the element and its children to remove
+     * @param id - The ID of the element to remove
+     * @throws ElementDataNotRemoved - Thrown if the data could not be deleted.
+     * @author William-A-B
+     */
+    protected void removeElement(String elementName, int id) throws ElementDataNotRemoved {
+
+        Element elementToRemove = getElement(elementName, id, true, null);
+
+        if (elementToRemove.isRootElement()) {
+            System.err.println("Cannot remove root element");
+            return;
+        }
+        elementToRemove.removeContent();
+
+        if (!elementToRemove.getChildren().isEmpty()) {
+            // Element content not removed successfully
+            throw new ElementDataNotRemoved("The child data of element " + elementName + " with ID: " + id + " was not removed successfully");
+        }
+        elementToRemove.detach();
+    }
+
+    /**
+     * Edits the value of the given element. The element is specified by the element name
+     * @param parentElement - The parent element of the element being edited
+     * @param id - The ID of the parent element
+     * @param elementName - The name of the element with the data to edit
+     * @param newValue - The new value to set the data to
+     * @author William-A-B
+     */
+    protected void editElement(String parentElement, int id, String elementName, String newValue) {
+        Element parentOfElementToEdit = getElement(parentElement, id, true, null);
+        Element elementToEdit = parentOfElementToEdit.getChild(elementName);
+        elementToEdit.setText(newValue);
+    }
+
+    /**
      * Gets the attribute value for a given element and attribute name
      * 
      * @param element       - the element to get the attribute for

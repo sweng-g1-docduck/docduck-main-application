@@ -1,11 +1,11 @@
 package com.docduck.application.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.docduck.application.xmldom.ElementDataNotRemoved;
+import com.docduck.application.xmldom.InvalidID;
 import org.jdom2.Element;
 
-import com.docduck.application.xmldom.InvalidID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Class for storing all data related to a machine - The Machine's Name - The
@@ -47,7 +47,8 @@ public class Machine extends BaseData {
         this.datasheetRef = dataSheet;
         this.purchaseLocationRef = purchaseLocation;
         this.status = status;
-        addNewDataToXML();
+
+        domDataHandler.addNewMachine(this);
     }
 
     /**
@@ -100,10 +101,6 @@ public class Machine extends BaseData {
             }
 
         }
-    }
-
-    private void addNewDataToXML() {
-        domDataHandler.addNewMachine(this);
     }
 
     public int getId() {
@@ -185,5 +182,13 @@ public class Machine extends BaseData {
 
     public void setPurchaseLocation(String purchaseLocation) {
         this.purchaseLocationRef = purchaseLocation;
+    }
+
+    public void deleteMachine() throws ElementDataNotRemoved {
+        domDataHandler.deleteMachine(id);
+    }
+
+    public void editMachine(String valueToEdit, String newValue) {
+        domDataHandler.editMachine(id, valueToEdit, newValue);
     }
 }

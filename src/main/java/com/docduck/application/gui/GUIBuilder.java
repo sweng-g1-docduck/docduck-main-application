@@ -8,6 +8,7 @@ import com.docduck.application.files.FTPHandler;
 import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.application.gui.pages.StatusPage;
+import com.docduck.application.xmldom.ElementDataNotRemoved;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -294,7 +295,7 @@ public class GUIBuilder {
 
     private void populateData() {
 
-        user = new User("Bob", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
+        user = new User("Name", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
 
         BaseData bd = new BaseData();
         machines = bd.setupMachineDataFromXML();
@@ -317,7 +318,15 @@ public class GUIBuilder {
             }
         }
 
-        bd.domDataHandler.addNewUser(user);
+        for (User user : allUsers) {
+            try {
+                user.deleteUser();
+            } catch (ElementDataNotRemoved e) {
+                e.printErrorMessage();
+                throw new RuntimeException(e);
+            }
+        }
+
     }
     
 }

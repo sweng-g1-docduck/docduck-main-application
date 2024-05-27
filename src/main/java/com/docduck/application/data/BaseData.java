@@ -6,7 +6,6 @@ import com.docduck.application.xmldom.JDOMDataHandlerNotInitialised;
 import com.docduck.application.xmldom.XMLJDOMDataHandler;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 
 public class BaseData {
 
-    public XMLJDOMDataHandler domDataHandler;
+    protected XMLJDOMDataHandler domDataHandler;
     private String docduckDataFileName;
     private File docduckDataInputFile;
     private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
