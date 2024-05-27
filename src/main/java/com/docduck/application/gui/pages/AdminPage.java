@@ -90,7 +90,7 @@ public class AdminPage extends Page {
 
     private Image tempMachineImage;
     private ImageView machineImageView;
-    ObjectProperty<Image> imageProperty = new SimpleObjectProperty<>();
+
 
 
 
@@ -696,6 +696,7 @@ public class AdminPage extends Page {
 
                 if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField  &&!nullSerialNumberField &&!nullLocationField) {
                     Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
+                    System.out.println(machine);
                     machines.add(machine);
                     createRightSection();
                     managerPopOutStage.close();
