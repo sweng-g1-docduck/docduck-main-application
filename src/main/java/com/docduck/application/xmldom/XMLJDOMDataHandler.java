@@ -8,7 +8,9 @@ import org.jdom2.Attribute;
 import org.jdom2.DataConversionException;
 import org.jdom2.Element;
 
-import com.docduck.application.data.*;
+import com.docduck.application.data.Machine;
+import com.docduck.application.data.Report;
+import com.docduck.application.data.User;
 
 public class XMLJDOMDataHandler extends XMLJDOM {
 
@@ -20,11 +22,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
      * @author William-A-B
      */
     public enum DataType {
-        MACHINE,
-        COMPONENT,
-        PART,
-        REPORT,
-        USER
+        MACHINE, COMPONENT, PART, REPORT, USER
     }
 
     /**
@@ -282,6 +280,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
     /**
      * Gets a list of all the machine IDs within the XML
+     * 
      * @return An arraylist of integers containing all the IDs for the machines
      * @author William-A-B
      */
@@ -291,6 +290,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
     /**
      * Gets a list of all the report IDs within the XML
+     * 
      * @return An arraylist of integers containing all the IDs for the reports
      * @author William-A-B
      */
@@ -300,6 +300,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
     /**
      * Gets a list of all the user IDs within the XML
+     * 
      * @return An arraylist of integers containing all the IDs for the users
      * @author William-A-B
      */
@@ -422,7 +423,7 @@ public class XMLJDOMDataHandler extends XMLJDOM {
             if (currentElement.hasAttributes()) {
 
                 List<Attribute> attributes = currentElement.getAttributes();
-                
+
                 if (attributes.get(0).getName().equals("id")) {
                     try {
                         currentElementID = currentElement.getAttribute("id").getIntValue();
@@ -444,7 +445,5 @@ public class XMLJDOMDataHandler extends XMLJDOM {
 
         return false;
     }
-
-
 
 }
