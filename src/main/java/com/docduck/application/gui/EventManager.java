@@ -60,9 +60,6 @@ public class EventManager {
         case "goBack":
             return e -> guiBuilder.StartPage();
 
-        case "loadApp":
-            return e -> ftpHandler.startApp();
-
         case "loadAppOffline":
             return e -> {
                 XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",

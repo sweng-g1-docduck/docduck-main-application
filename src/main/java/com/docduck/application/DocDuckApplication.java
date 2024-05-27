@@ -42,16 +42,16 @@ public class DocDuckApplication extends Application {
         stage.setMinWidth(MIN_WINDOW_WIDTH);
         stage.setHeight(DEFAULT_WINDOW_HEIGHT);
         stage.setWidth(DEFAULT_WINDOW_WIDTH);
-
         stage.setTitle("DocDuck");
         stage.setScene(scene);
-
         stage.show();
+
+        ftpHandler.start();
+        
         guiBuilder.buildLoginPage();
 
         guiBuilder.displayPage("LOGIN");
 //        guiBuilder.StartPage();
-//        ftpHandler.startApp();
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
                 stage.getWidth(), stage.getHeight());

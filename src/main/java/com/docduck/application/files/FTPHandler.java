@@ -1,6 +1,9 @@
 package com.docduck.application.files;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -11,6 +14,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -31,6 +35,7 @@ public class FTPHandler {
     private final static String SERVER_IP = "81.101.49.54";
     private final static String USERNAME = "docduck";
     private final static String PASSWORD = "sweng";
+    private String FILE_STORE;
     
     private FTPHandler() {
         df.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -82,7 +87,7 @@ public class FTPHandler {
      * Downloads files from server and starts application onto login page.
      * @author rw1834
      */
-    public void startApp() {
+    public void start() {
 
         try {
 
@@ -110,28 +115,40 @@ public class FTPHandler {
                         System.out.println("File is " + ftpName);
                     }
 
-                    OutputStream output = new FileOutputStream("src/main/resources/" + ftpName);
+                    OutputStream output = new FileOutputStream(FILE_STORE + ftpName);
                     ftp.retrieveFile(ftpName, output);
                     output.close();
-                    File localFile = new File("src/main/resources/" + ftpName);
+                    File localFile = new File(FILE_STORE + ftpName);
                     localFile.setLastModified(ftpTime.getTime());
                 }
             }
-
-            XMLReader myReader = new XMLReader("src/main/resources/docduck-application-slides.xml",
-                    "src/main/resources/DocDuckStandardSchema.xsd", true);
-            myReader.readXML();
-            xmlBuilder.setData(myReader.getData());
-            guiBuilder.setData(myReader.getData());
-            guiBuilder.LoginPage();
             scheduleFileUpdates(5.0);
         }
+        
         catch (Exception ex) {
             guiBuilder.OfflinePage();
         }
     }
 
     private void prepareClient() throws IOException {
+    	
+    	String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        FILE_STORE = workingDirectory + "/com.docduck/resources/";
+        Path docduckPath = Paths.get(FILE_STORE);
+        
+        if (!Files.exists(docduckPath)) {
+            // Directory doesn't exist, create it.
+            new File(FILE_STORE).mkdirs();
+        }
+    	
         ftp = new FTPClient();
 
         ftp.connect(SERVER_IP);
@@ -144,7 +161,7 @@ public class FTPHandler {
         if (!FTPReply.isPositiveCompletion(reply)) {
             ftp.disconnect();
         }
-
+        ftp.setFileType(FTP.BINARY_FILE_TYPE);
         ftp.enterLocalPassiveMode();
     }
 
@@ -180,7 +197,7 @@ public class FTPHandler {
         if (ftp.isAvailable() && ftp.isConnected()) {
 
             try {
-                File local = new File("src/main/resources/");
+                File local = new File("FILE_STORE");
                 FTPFile[] ftpFiles = ftp.listFiles();
                 File[] localFiles = local.listFiles();
 
@@ -271,7 +288,7 @@ public class FTPHandler {
         if (ftp.isAvailable() && ftp.isConnected()) {
 
             try {
-                File localFile = new File("src/main/resources/" + localFilename);
+                File localFile = new File(FILE_STORE + localFilename);
                 InputStream inputStream = new FileInputStream(localFile);
                 ftp.storeFile(localFilename, inputStream);
                 inputStream.close();
@@ -336,10 +353,10 @@ public class FTPHandler {
                         if (ftpFile.getName().equalsIgnoreCase(ftpFilename)) {
                             String stringTime = ftp.getModificationTime(ftpFile.getName());
                             Date ftpTime = df.parse(stringTime);
-                            OutputStream output = new FileOutputStream("src/main/resources/" + ftpFilename);
+                            OutputStream output = new FileOutputStream(FILE_STORE + ftpFilename);
                             ftp.retrieveFile(ftpFilename, output);
                             output.close();
-                            File localFile = new File("src/main/resources/" + ftpFilename);
+                            File localFile = new File(FILE_STORE + ftpFilename);
                             localFile.setLastModified(ftpTime.getTime());
 
                             if (debug) {
