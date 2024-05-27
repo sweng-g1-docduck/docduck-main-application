@@ -76,18 +76,17 @@ public class AdminPage extends Page {
     private String purchaseLocationValue;
     private String nameFieldValue;
     private String serialNumberValue;
-    private boolean nullUserField = true;
-    private boolean nullUsernameField = true;
-    private boolean nullEmailField = true;
-    private boolean nullRoleField = true;
-    private boolean nullPasswordField = true;
-    private boolean nullMachineField = true;
-    private boolean nullLocationField = true;
-    private boolean nullStatusField = true;
-    private boolean nullDatasheetField = true;
-    private boolean nullPurchaseLocationField = true;
-    private boolean nullSerialNumberField = true;
-
+    private boolean nullUserField;
+    private boolean nullUsernameField;
+    private boolean nullEmailField;
+    private boolean nullRoleField;
+    private boolean nullPasswordField;
+    private boolean nullMachineField;
+    private boolean nullLocationField;
+    private boolean nullStatusField;
+    private boolean nullDatasheetField;
+    private boolean nullPurchaseLocationField;
+    private boolean nullSerialNumberField;
     private Image tempMachineImage;
     private ImageView machineImageView;
 
@@ -300,17 +299,29 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Full Name"), 0, row);
             TextField nameField = createFormField("Full Name", user != null ? user.getName() : "");
             gridPane.add(nameField, 1, row++);
-            usernameFieldValue = user.getName();
+            nameFieldValue = user.getName();
+            if (nameFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please Fill in Fields");
+                nullUserField = true;
+            }
 
             gridPane.add(createLabel("Username"), 0, row);
             TextField usernameField = createFormField("Username", user != null ? user.getUsername() : "");
             gridPane.add(usernameField, 1, row++);
             usernameFieldValue = user.getUsername();
+            if (usernameFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Username");
+                nullUsernameField = true;
+            }
 
             gridPane.add(createLabel("Email"), 0, row);
             TextField emailField = createFormField("Email", user != null ? user.getEmail() : "");
             gridPane.add(emailField, 1, row++);
             emailFieldValue = user.getEmail();
+            if (emailFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Email");
+                nullEmailField = true;
+            }
 
             ComboBox<String> roleComboBox;
             if (user != null) {
@@ -318,6 +329,10 @@ public class AdminPage extends Page {
                 roleComboBox = createUserComboBox(user.getRole());
                 gridPane.add(roleComboBox, 1, row++);
                 roleFieldValue = user.getRole();
+                if (roleFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please select Role");
+                    roleFieldValue = "OPERATOR";
+                }
             } else {
                 gridPane.add(createLabel("Role"), 0, row);
                 roleComboBox = createUserComboBox("");
@@ -331,10 +346,11 @@ public class AdminPage extends Page {
 
 
 
+
             // Set the instance variables when the form fields are filled out
             nameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 nameFieldValue = newValue.strip();
-                if (nameFieldValue.equals("")) {
+                if (nameFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please fill in First and Second Name");
                     nullUserField = true;
                 }
@@ -432,10 +448,22 @@ public class AdminPage extends Page {
             gridPane.add(machineNameField, 1, row++);
             machineFieldValue = machine != null ? machine.getName() : "";
 
+            if (machineFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullMachineField = true;
+                System.out.println(nullMachineField);
+            }
+
             gridPane.add(createLabel("Location"), 0, row);
             TextField locationField = createFormField("Location", machine != null ? machine.getLocation() : "");
             gridPane.add(locationField, 1, row++);
             locationFieldValue = machine != null ? machine.getLocation() : "";
+
+            if (locationFieldValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullLocationField = true;
+                System.out.println(nullMachineField);
+            }
 
             ComboBox<String> statusComboBox;
             if (machine != null) {
@@ -443,6 +471,11 @@ public class AdminPage extends Page {
                 statusComboBox = createStatusComboBox(machine.getStatus());
                 gridPane.add(statusComboBox, 1, row++);
                 statusValue = machine.getStatus();
+
+                if (statusValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Fields");
+                    nullStatusField = true;
+                }
             } else {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox("");
@@ -453,15 +486,29 @@ public class AdminPage extends Page {
             gridPane.add(datasheetField, 1, row++);
             datasheetValue = machine != null ? machine.getDatasheetRef() : "";
 
+            if (datasheetValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullDatasheetField = true;
+            }
+
             gridPane.add(createLabel("Serial Number"), 0, row);
             TextField serialNumberField = createFormField("Serial Number", machine != null ? machine.getSerialNumber() : "");
             gridPane.add(serialNumberField, 1, row++);
             serialNumberValue = machine != null ? machine.getSerialNumber() : "";
 
+            if (serialNumberValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullSerialNumberField = true;
+            }
+
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
             purchaseLocationValue = machine != null ? machine.getPurchaseLocationRef() : "";
+            if (purchaseLocationValue.isEmpty()) {
+                nullTextMessage.setText("Please fill in Fields");
+                nullPurchaseLocationField = true;
+            }
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -469,9 +516,22 @@ public class AdminPage extends Page {
                 if (machineFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please fill in Machine Name");
                     nullMachineField = true;
+                    System.out.println(nullMachineField);
                 } else {
                     nullTextMessage.setText("");
                     nullMachineField = false;
+                    System.out.println(nullMachineField);
+                }
+            });
+
+            locationField.textProperty().addListener((observable, oldValue, newValue) -> {
+                locationFieldValue = newValue.strip();
+                if (locationFieldValue.isEmpty()) {
+                    nullTextMessage.setText("Please fill in Machine Name");
+                    nullLocationField= true;
+                } else {
+                    nullTextMessage.setText("");
+                    nullLocationField = false;
                 }
             });
 
@@ -480,6 +540,7 @@ public class AdminPage extends Page {
                 if (statusValue.isEmpty()) {
                     nullTextMessage.setText("Please select Status");
                     nullStatusField = true;
+
                 } else {
                     nullTextMessage.setText("");
                     nullStatusField = false;
@@ -649,6 +710,9 @@ public class AdminPage extends Page {
                         if (roleFieldValue != null) {
                             user.setRole(roleFieldValue);
                         }
+                        if (usernameFieldValue != null) {
+                            user.setUsername(usernameFieldValue);
+                        }
                         break;
                     }
                 }
@@ -696,7 +760,7 @@ public class AdminPage extends Page {
 
                 if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField  &&!nullSerialNumberField &&!nullLocationField) {
                     Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
-                    System.out.println(machine);
+                    System.out.println(nullStatusField);
                     machines.add(machine);
                     createRightSection();
                     managerPopOutStage.close();

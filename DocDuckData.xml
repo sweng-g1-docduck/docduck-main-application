@@ -104,13 +104,13 @@
       </parts>
     </machine>
     <machine id="1003">
-      <name>machinetest</name>
-      <status>MAINTENANCE</status>
-      <serialNumber>g</serialNumber>
-      <location>testroom</location>
+      <name>f</name>
+      <status />
+      <serialNumber>efe</serialNumber>
+      <location>fef</location>
       <imageRef />
-      <datasheetRef>test</datasheetRef>
-      <purchaseLocationRef>test</purchaseLocationRef>
+      <datasheetRef>ef</datasheetRef>
+      <purchaseLocationRef>fefef</purchaseLocationRef>
     </machine>
   </machineData>
   <userData>
