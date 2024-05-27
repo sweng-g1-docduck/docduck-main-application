@@ -104,6 +104,7 @@
       </parts>
     </machine>
     <machine id="1003">
+
       <name />
       <status>MAINTENANCE</status>
       <serialNumber>g</serialNumber>
@@ -132,8 +133,8 @@
       <name>Billy</name>
       <username>bob321</username>
       <password>bobpassword</password>
-      <email>bob321@york.ac.uk</email>
-      <role>OPERATOR</role>
+      <email>wab513@york.ac.uk</email>
+      <role>ADMIN</role>
     </user>
   </userData>
   <machineReport>
