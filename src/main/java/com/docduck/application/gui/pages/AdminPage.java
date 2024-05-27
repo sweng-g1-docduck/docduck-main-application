@@ -426,16 +426,14 @@ public class AdminPage extends Page {
             }
 
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
-            gridPane.add(createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : ""), 1,
-                    row++);
             TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
             gridPane.add(datasheetField, 1, row++);
-            datasheetValue = machine != null ? machine.getDatasheet() : "";
+            datasheetValue = machine != null ? machine.getDatasheetRef() : "";
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink", machine != null ? machine.getPurchaseLocationRef() : "");
             gridPane.add(purchaseLocationField, 1, row++);
-            purchaseLocationValue = machine != null ? machine.getPurchaseLocation() : "";
+            purchaseLocationValue = machine != null ? machine.getPurchaseLocationRef() : "";
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -602,7 +600,10 @@ public class AdminPage extends Page {
                     User user = new User(nameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue);
                     allUsersList.add(user);
                     createRightSection();
-                } else if (userExists) {
+                    managerPopOutStage.close();
+                }
+
+                else if (userExists) {
                     createRightSection();
                     System.out.println("User updated successfully");
                 } else {
@@ -864,15 +865,37 @@ public class AdminPage extends Page {
         double height = Math.max(50, Math.min(70, 500 / allUsersList.size()));
         userButton.setButtonHeight(height);
         userButton.setFont(Font.font("System", 80));
-
-        userButton.setText(
-                user.getName() + " - " + user.getUsername() + " - " + user.getEmail() + " (" + user.getRole() + ")");
         userButton.setBackgroundColour(btnColour);
         userButton.setClickcolour(btnClickColour);
         userButton.setHoverColour(btnHoverColour);
         userButton.setFontColour(lightTextColour);
         userButton.setFontSize(18);
         userButton.removeBorder();
+
+        // Create a VBox for the user information
+        VBox userInfo = new VBox();
+
+        // Create a label for the user's name in bold and big text
+        Label userName = new Label(user.getName());
+        userName.setFont(Font.font("System", FontWeight.BOLD, 24));
+        userInfo.getChildren().add(userName);
+
+        // Create an HBox for the rest of the user information
+        HBox userDetails = new HBox();
+
+        // Add the user's username, email, and role to the HBox
+        Label userUsername = new Label("Username: " + user.getUsername());
+        Label userEmail = new Label("Email: " + user.getEmail());
+        Label userRole = new Label("Role: " + user.getRole());
+
+        userDetails.getChildren().addAll(userUsername, userEmail, userRole);
+        userDetails.setSpacing(10); // Set spacing between the details
+
+        // Add the HBox to the VBox
+        userInfo.getChildren().add(userDetails);
+
+        // Set the VBox as the text for the button
+        userButton.setGraphic(userInfo);
 
         // Adjust event handling to open the edit window with user's information
         userButton.setOnAction(event -> {
@@ -884,16 +907,14 @@ public class AdminPage extends Page {
         return userButton;
     }
 
+
     private ButtonWrapper createMachineButton(Machine machine) {
         ButtonWrapper machineButton = new ButtonWrapper();
         machineButton.setCornerRadius(5);
         machineButton.setButtonWidth(960);
-        // Calculate the height dynamically based on the number of machines
         double height = Math.max(50, Math.min(70, 500 / machines.size()));
         machineButton.setButtonHeight(height);
         machineButton.setFont(Font.font("System", 80));
-
-        machineButton.setText(machine.getName() + " - " + machine.getLocation() + " - " + machine.getStatus());
         machineButton.setBackgroundColour(btnColour);
         machineButton.setClickcolour(btnClickColour);
         machineButton.setHoverColour(btnHoverColour);
@@ -901,7 +922,24 @@ public class AdminPage extends Page {
         machineButton.setFontSize(18);
         machineButton.removeBorder();
 
-        // Adjust event handling to open the edit window with machine's information
+        VBox machineInfo = new VBox();
+
+        Label machineName = new Label(machine.getName());
+        machineName.setFont(Font.font("System", FontWeight.BOLD, 24));
+        machineInfo.getChildren().add(machineName);
+
+        HBox machineDetails = new HBox();
+
+        Label machineLocation = new Label("Location: " + machine.getLocation());
+        Label machineStatus = new Label("Status: " + machine.getStatus());
+
+        machineDetails.getChildren().addAll(machineLocation, machineStatus);
+        machineDetails.setSpacing(10);
+
+        machineInfo.getChildren().add(machineDetails);
+
+        machineButton.setGraphic(machineInfo);
+
         machineButton.setOnAction(event -> {
             openEditWindow(machine);
             setLastPressedButton(machineButton, lastPressedMachineButton);
