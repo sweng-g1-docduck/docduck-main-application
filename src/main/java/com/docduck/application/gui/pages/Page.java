@@ -28,6 +28,7 @@ public class Page extends BorderPane {
      * This class will contain the basic page structure for the main application
      * This will include the main menu and a container to contain each specific
      * pages content
+     * * @author Will, Josh, Lw2380
      */
 
     protected final EventManager events;
