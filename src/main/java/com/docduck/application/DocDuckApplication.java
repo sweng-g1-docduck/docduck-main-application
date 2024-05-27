@@ -26,9 +26,6 @@ public class DocDuckApplication extends Application {
 
         System.out.println("Starting DocDuck Application");
 
-        // XMLJDOM example method
-//        jdom2Example();
-
         root = new Pane();
         XMLBuilder xmlBuilder = XMLBuilder.createInstance(root);
         guiBuilder = GUIBuilder.createInstance(root);
@@ -50,10 +47,10 @@ public class DocDuckApplication extends Application {
         stage.setScene(scene);
 
         stage.show();
-        guiBuilder.buildPages();
+        guiBuilder.buildLoginPage();
 
-        guiBuilder.displayPage("STATUS");
-//        guiBuilder.LoginPage();
+        guiBuilder.displayPage("LOGIN");
+//        guiBuilder.StartPage();
 //        ftpHandler.startApp();
 
         ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> guiBuilder.scaleNodes(root,
@@ -63,27 +60,6 @@ public class DocDuckApplication extends Application {
         stage.heightProperty().addListener(stageSizeListener);
     }
 
-    /**
-     * An example method to show how the JDOM2 API Implementation works for the
-     * DocDuck Application
-     * 
-     * @author William-A-B
-     */
-//    private void jdom2Example() {
-//
-//        BaseData data = new BaseData();
-//
-//        XMLJDOMDataHandler dom;
-//
-//        try {
-//            dom = XMLJDOMDataHandler.getInstance();
-//        } catch (JDOMDataHandlerNotInitialised e) {
-//            e.printError();
-//            dom = XMLJDOMDataHandler.createNewInstance("DocDuckData.xml", "DocDuckSchema.xsd", true, true);
-//            dom.setupJDOM();
-//        }
-//        dom.addNewUser(new User("Billy", "billy", "password", "bob321@york.ac.uk", "OPERATOR"));
-//    }
 
     @Override
     public void stop() {

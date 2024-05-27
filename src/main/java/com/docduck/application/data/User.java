@@ -74,6 +74,7 @@ public class User extends BaseData {
             }
 
             if (target.getName().equals("password")) {
+                System.out.println(target.getValue());
                 this.passwordHash = target.getValue();
             }
 
@@ -136,7 +137,7 @@ public class User extends BaseData {
         this.passwordHash = hashPassword(password);
     }
 
-    private String hashPassword(String password) {
+    public String hashPassword(String password) {
 
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

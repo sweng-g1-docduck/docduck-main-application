@@ -9,6 +9,7 @@ import com.docduck.application.gui.pages.AdminPage;
 import com.docduck.application.gui.pages.ReportPage;
 import com.docduck.application.gui.pages.StatusPage;
 import com.docduck.application.xmldom.ElementDataNotRemoved;
+import com.docduck.application.gui.pages.LoginPage;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -41,6 +42,7 @@ public class GUIBuilder {
 
     private AdminPage adminPage;
     private ArrayList<User> allUsers;
+    private LoginPage loginPage;
 
     private GUIBuilder(Pane root) {
         this.root = root;
@@ -266,8 +268,12 @@ public class GUIBuilder {
 
         case "ADMIN":
             root.getChildren().add(adminPage);
-            scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
             break;
+            
+        case "LOGIN":
+            root.getChildren().add(loginPage);
+            break;
+
         }
         scaleNodes(root, CURRENT_WINDOW_WIDTH, CURRENT_WINDOW_HEIGHT);
     }
@@ -285,48 +291,43 @@ public class GUIBuilder {
 
     /**
      * Builds all the pages
+     * @param user 
      */
-    public void buildPages() {
-        populateData();
+    public void buildPages(User user) {
+//        populateData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-        adminPage = new AdminPage(machines, user, allUsers); // needs integrating (move user and machines out of admin page and use below)
+        adminPage = new AdminPage(machines, user, allUsers); 
+                                                        
+    }
+    
+    public void buildLoginPage() {
+        populateData();
+        loginPage = new LoginPage(allUsers);    
     }
 
     private void populateData() {
 
-        user = new User("Name", "bob1", "passwordHash", "bob@york.ac.uk", "ADMIN");
-
         BaseData bd = new BaseData();
         machines = bd.setupMachineDataFromXML();
         allUsers = bd.setupUserDataFromXML();
-        ArrayList<Report>allReports = bd.setupReportDataFromXML();
 
-        for (Machine machine :  machines) {
+        ArrayList<Report> allReports = bd.setupReportDataFromXML();
+
+        for (Machine machine : machines) {
             for (Report report : allReports) {
-                for (User user :  allUsers) {
+                for (User user : allUsers) {
                     if (user.getId() == report.getUserID()) {
                         report.setUser(user);
                         break;
                     }
                 }
-                
+
                 if (report.getMachineID() == machine.getId()) {
                     machine.addReport(report);
                     break;
                 }
             }
         }
-
-        for (User user : allUsers) {
-            try {
-                user.deleteUser();
-            } catch (ElementDataNotRemoved e) {
-                e.printErrorMessage();
-                throw new RuntimeException(e);
-            }
-        }
-
     }
-    
 }
