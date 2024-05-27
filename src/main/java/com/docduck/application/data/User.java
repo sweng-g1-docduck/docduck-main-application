@@ -1,5 +1,6 @@
 package com.docduck.application.data;
 
+import com.docduck.application.xmldom.ElementDataNotRemoved;
 import com.docduck.application.xmldom.InvalidID;
 import org.jdom2.Element;
 
@@ -41,6 +42,8 @@ public class User extends BaseData {
         this.passwordHash = passwordHash;
         this.email = email;
         this.role = role;
+
+        domDataHandler.addNewUser(this);
     }
 
     /**
@@ -148,5 +151,13 @@ public class User extends BaseData {
 
     public boolean checkPassword(String password) {
         return hashPassword(password).equals(passwordHash);
+    }
+
+    public void deleteUser() throws ElementDataNotRemoved {
+        domDataHandler.deleteUser(id);
+    }
+
+    public void editUser(String valueToEdit, String newValue) {
+        domDataHandler.editUser(id, valueToEdit, newValue);
     }
 }
