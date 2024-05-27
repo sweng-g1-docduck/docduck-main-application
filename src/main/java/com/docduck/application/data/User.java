@@ -166,7 +166,6 @@ public class User extends BaseData {
     public boolean checkPassword(String password) {
         return hashPassword(password).equals(passwordHash);
     }
-}
 
     public void deleteUser() throws ElementDataNotRemoved {
         domDataHandler.deleteUser(id);

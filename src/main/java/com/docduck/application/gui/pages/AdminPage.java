@@ -88,17 +88,17 @@ public class AdminPage extends Page {
     private String purchaseLocationValue;
     private String nameFieldValue;
     private String serialNumberValue;
-    private boolean nullUserField;
-    private boolean nullUsernameField;
-    private boolean nullEmailField;
-    private boolean nullRoleField;
-    private boolean nullPasswordField;
-    private boolean nullMachineField;
-    private boolean nullLocationField;
-    private boolean nullStatusField;
-    private boolean nullDatasheetField;
-    private boolean nullPurchaseLocationField;
-    private boolean nullSerialNumberField;
+    private boolean nullUserField = true;
+    private boolean nullUsernameField = true;
+    private boolean nullEmailField = true;
+    private boolean nullRoleField = true;
+    private boolean nullPasswordField= true;
+    private boolean nullMachineField= true;
+    private boolean nullLocationField= true;
+    private boolean nullStatusField= true;
+    private boolean nullDatasheetField= true;
+    private boolean nullPurchaseLocationField= true;
+    private boolean nullSerialNumberField= true;
     private Image tempMachineImage;
     private ImageView machineImageView;
 
@@ -319,6 +319,7 @@ public class AdminPage extends Page {
                 nullTextMessage.setText("Please Fill in Fields");
                 nullUserField = true;
             }
+            else {nullUserField = false;}
 
             gridPane.add(createLabel("Username"), 0, row);
             TextField usernameField = createFormField("Username", user != null ? user.getUsername() : "");
@@ -328,6 +329,7 @@ public class AdminPage extends Page {
                 nullTextMessage.setText("Please fill in Username");
                 nullUsernameField = true;
             }
+            else {nullUsernameField = false;}
 
             gridPane.add(createLabel("Email"), 0, row);
             TextField emailField = createFormField("Email", user != null ? user.getEmail() : "");
@@ -337,6 +339,7 @@ public class AdminPage extends Page {
                 nullTextMessage.setText("Please fill in Email");
                 nullEmailField = true;
             }
+            else {nullEmailField = false;}
 
             ComboBox<String> roleComboBox;
             if (user != null) {
@@ -468,6 +471,7 @@ public class AdminPage extends Page {
                 nullMachineField = true;
                 System.out.println(nullMachineField);
             }
+            else{nullMachineField = false;}
 
             gridPane.add(createLabel("Location"), 0, row);
             TextField locationField = createFormField("Location", machine != null ? machine.getLocation() : "");
@@ -479,6 +483,7 @@ public class AdminPage extends Page {
                 nullLocationField = true;
                 System.out.println(nullMachineField);
             }
+            else{nullLocationField = false;}
 
             ComboBox<String> statusComboBox;
             if (machine != null) {
@@ -491,6 +496,7 @@ public class AdminPage extends Page {
                     nullTextMessage.setText("Please fill in Fields");
                     nullStatusField = true;
                 }
+                else{nullStatusField = false;}
             } 
             else {
                 gridPane.add(createLabel("Status"), 0, row);
@@ -506,6 +512,7 @@ public class AdminPage extends Page {
                 nullTextMessage.setText("Please fill in Fields");
                 nullDatasheetField = true;
             }
+            else{nullDatasheetField = false;}
 
             gridPane.add(createLabel("Serial Number"), 0, row);
             TextField serialNumberField = createFormField("Serial Number", machine != null ? machine.getSerialNumber() : "");
@@ -516,6 +523,7 @@ public class AdminPage extends Page {
                 nullTextMessage.setText("Please fill in Fields");
                 nullSerialNumberField = true;
             }
+            else{nullSerialNumberField = false;}
 
             gridPane.add(createLabel("Purchase Location Hyperlink"), 0, row);
             TextField purchaseLocationField = createFormField("Purchase Location Hyperlink",
@@ -526,6 +534,7 @@ public class AdminPage extends Page {
                 nullTextMessage.setText("Please fill in Fields");
                 nullPurchaseLocationField = true;
             }
+            else{nullPurchaseLocationField = false;}
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
