@@ -10,6 +10,7 @@ import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -354,5 +355,15 @@ public class FTPHandler {
             }
         }
     }
+
+	public BooleanSupplier isFileUploaded() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public BooleanSupplier isAppStarted() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

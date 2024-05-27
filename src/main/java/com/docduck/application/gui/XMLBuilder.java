@@ -115,7 +115,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildTextBoxes(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String textBox = "textBox";
@@ -185,7 +185,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildShapes(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildShapes(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String shape = "shape";
@@ -316,7 +316,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildImages(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildImages(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String image = "image";
@@ -408,7 +408,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildButtons(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildButtons(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String button = "button";
@@ -468,7 +468,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildHyperlinks(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildHyperlinks(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String hyperlink = "hyperlink";
@@ -505,7 +505,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildBackgroundColours(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildBackgroundColours(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String backgroundColour = "backgroundColour";
@@ -527,7 +527,7 @@ public class XMLBuilder {
         return nodeList;
     }
 
-    private ArrayList<Node> buildTextFields(ArrayList<Node> nodeList, int slideNumber) {
+    public ArrayList<Node> buildTextFields(ArrayList<Node> nodeList, int slideNumber) {
         int occurance = 1;
         boolean hasDataRemaining = true;
         final String textField = "textField";
@@ -634,4 +634,5 @@ public class XMLBuilder {
         }
         return nodeList;
     }
+}
 }

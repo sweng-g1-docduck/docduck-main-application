@@ -32,6 +32,9 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+/*
+ * Zhihao Ma
+ */
 public class DocDuckApplicationTest {
     private Pane rootPane;
 

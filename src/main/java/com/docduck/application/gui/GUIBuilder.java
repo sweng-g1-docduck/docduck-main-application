@@ -320,5 +320,10 @@ public class GUIBuilder {
             }
         }
     }
+
+	public Object getLastAction() {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }
