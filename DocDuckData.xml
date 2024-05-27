@@ -103,15 +103,6 @@
         </part>
       </parts>
     </machine>
-    <machine id="1003">
-      <name>Computer</name>
-      <status />
-      <serialNumber />
-      <location />
-      <imageRef />
-      <datasheetRef />
-      <purchaseLocationRef />
-    </machine>
   </machineData>
   <userData>
     <user id="2001">
@@ -138,6 +129,13 @@
     <user id="2002">
       <name>Billy</name>
       <username>bob321</username>
+      <password>password</password>
+      <email>bob321@york.ac.uk</email>
+      <role>OPERATOR</role>
+    </user>
+    <user id="2003">
+      <name>Billy</name>
+      <username>billy</username>
       <password>password</password>
       <email>bob321@york.ac.uk</email>
       <role>OPERATOR</role>
