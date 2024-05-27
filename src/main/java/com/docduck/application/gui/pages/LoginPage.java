@@ -8,8 +8,11 @@ import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBoxField;
 import com.docduck.textlibrary.TextBoxPassword;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -45,6 +48,9 @@ public class LoginPage extends Page {
     }
 
     public void drawLoginComponents() {
+        
+        
+        
         VBox contents = new VBox();
         contents.setAlignment(Pos.CENTER);
         HBox buttons = new HBox();
@@ -75,6 +81,9 @@ public class LoginPage extends Page {
         passwordField.hideText();
         passwordField.createButton();
 
+
+        
+
         stackedPasswordBox.getChildren().addAll(passwordField, passwordField.returnPasswordField());
         passwordBox.getChildren().addAll(stackedPasswordBox, passwordField.returnButton());
         passwordBox.setTranslateX(25);
@@ -83,18 +92,33 @@ public class LoginPage extends Page {
         signInBtn.setBackgroundColour(signInBtnColour);
         signInBtn.setHoverColour(signInBtnHoverColour);
         signInBtn.setClickcolour(signInbtnClickColour);
-        signInBtn.setOnAction((event -> {
-
-            for (User user : allUsers) {
-                if (user.getUsername().equals(usernameField.getText())
-                        && user.getPasswordHash().equals(user.hashPassword(passwordField.getText()))) {
-                    GUIBuilder.getInstance().buildPages(user);
-                    GUIBuilder.getInstance().displayPage("STATUS");
-                    usernameField.clear();
-                    passwordField.clear();
+        
+        Label incorrectLogin = drawSubText("Incorrect Username or password", Color.RED);
+        incorrectLogin.setVisible(false);
+        
+        EventHandler<ActionEvent> loginEvent = new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                boolean incorrectUser = true;
+                for (User user : allUsers) {
+                    if (user.getUsername().equals(usernameField.getText())
+                            && user.getPasswordHash().equals(user.hashPassword(passwordField.getText()))) {
+                        GUIBuilder.getInstance().buildPages(user);
+                        GUIBuilder.getInstance().displayPage("STATUS");
+                        usernameField.clear();
+                        passwordField.clear();
+                        incorrectUser = false;
+                        incorrectLogin.setVisible(false);
+                    }
+                }
+                if (incorrectUser) {
+                    incorrectLogin.setVisible(true);
                 }
             }
-        }));
+        };
+        
+        signInBtn.setOnAction(loginEvent);
+        passwordField.setOnAction(loginEvent);
+        
 
         signUpBtn.setFontSize(14);
         signUpBtn.setBackgroundColour(signUpBtnColour);
@@ -113,7 +137,7 @@ public class LoginPage extends Page {
         view.setPreserveRatio(true);
 
         contents.setSpacing(15);
-        contents.getChildren().addAll(view, usernameField, passwordBox, buttons);
+        contents.getChildren().addAll(view, usernameField, passwordBox, buttons, incorrectLogin);
 
         ButtonWrapper xmlButton = drawButtonWrapper(250, 40, "Build from PWS XML");
         xmlButton.setOnAction(events.getActionEvent("chooseXML"));
