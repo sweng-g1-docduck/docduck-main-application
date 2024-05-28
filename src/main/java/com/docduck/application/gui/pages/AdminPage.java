@@ -232,6 +232,12 @@ public class AdminPage extends Page {
         button.setFontSize(10);
         button.removeBorder();
 
+        // Disable the buttons for deletion till implemented
+        if ("Remove User".equals(text) || "Remove Machine".equals(text)) {
+            button.setDisable(true);
+            button.setStyle("-fx-opacity: 0.5;");
+        }
+
         button.setOnAction(event -> {
 
             switch (text) {
