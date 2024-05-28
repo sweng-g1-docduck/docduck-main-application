@@ -690,7 +690,7 @@
       <xs:documentation> The status for a machine. </xs:documentation>
     </xs:annotation>
     <xs:restriction base="xs:string">
-      <xs:pattern value="ONLINE|MAINTAINANCE|OFFLINE" />
+      <xs:pattern value="ONLINE|MAINTENANCE|OFFLINE" />
     </xs:restriction>
   </xs:simpleType>
   
