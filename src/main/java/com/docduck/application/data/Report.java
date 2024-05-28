@@ -13,7 +13,7 @@ import com.docduck.application.xmldom.InvalidID;
  * A Class for storing all data for a report - The User which has submitted the
  * report - The description of the fault - The path of the uploaded media
  * 
- * @author jrb617
+ * @author jrb617 wab513 lw2380
  */
 public class Report extends BaseData {
 

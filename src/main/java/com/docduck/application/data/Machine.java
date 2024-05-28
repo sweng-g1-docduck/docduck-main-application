@@ -13,7 +13,7 @@ import java.util.List;
  * - The datasheet Url - The Purchase location Url - The Current Report
  * associated with the machine - All previous reports of the machine
  * 
- * @author jrb617
+ * @author jrb617 wab513 lw2380
  */
 public class Machine extends BaseData {
 
@@ -29,6 +29,18 @@ public class Machine extends BaseData {
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
+    /**
+     * Creates a new machine and auto-increments to the next available id
+     * 
+     * @param name
+     * @param room
+     * @param status
+     * @param serialNumber
+     * @param dataSheet
+     * @param purchaseLocation
+     * 
+     * @author jrb617 wab513
+     */
     public Machine(String name, String room, String status, String serialNumber, String dataSheet,
             String purchaseLocation) {
         super();

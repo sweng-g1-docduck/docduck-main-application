@@ -17,6 +17,12 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 
+/**
+ * Class to construct the Login page of the application and enable a valid user
+ * to log in to the application
+ *
+ * @author htsm500 jrb617
+ */
 public class LoginPage extends Page {
 
     private final Color signInBtnColour = btnColour;
@@ -40,6 +46,11 @@ public class LoginPage extends Page {
         drawLoginComponents();
     }
 
+    /**
+     * Draws all components required for the Login Page
+     * 
+     * @author htsm500 jrb617
+     */
     public void drawLoginComponents() {
 
         VBox contents = new VBox();
@@ -139,6 +150,14 @@ public class LoginPage extends Page {
 
     }
 
+    /**
+     * Draws an enterable text field with defined parameters
+     * 
+     * @param width      The width of the text field
+     * @param height     The height of the text field
+     * @param promptText The prompt text displayed in the text field
+     * @return TextBoxField with the defined properties
+     */
     public TextBoxField drawTextField(int width, int height, String promptText) {
         TextBoxField textField = new TextBoxField();
         textField.setBoxWidth(width);

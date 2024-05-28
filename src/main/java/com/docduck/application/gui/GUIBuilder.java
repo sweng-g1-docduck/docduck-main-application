@@ -270,7 +270,7 @@ public class GUIBuilder {
         case "ADMIN":
             root.getChildren().add(adminPage);
             break;
-            
+
         case "LOGIN":
             root.getChildren().add(loginPage);
             break;
@@ -292,19 +292,19 @@ public class GUIBuilder {
 
     /**
      * Builds all the pages
-     * @param user 
+     * 
+     * @param user
      */
     public void buildPages(User user) {
-//        populateData();
         statusPage = new StatusPage(machines, user);
         reportPage = new ReportPage(machines, user);
-        adminPage = new AdminPage(machines, user, allUsers); 
-                                                        
+        adminPage = new AdminPage(machines, user, allUsers);
+
     }
-    
+
     public void buildLoginPage() {
         populateData();
-        loginPage = new LoginPage(allUsers);    
+        loginPage = new LoginPage(allUsers);
     }
 
     private void populateData() {

@@ -1,6 +1,9 @@
 package com.docduck.application.gui.pages;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import com.docduck.application.data.Machine;
@@ -30,6 +33,12 @@ import javafx.scene.text.TextAlignment;
 import uk.co.bookcook.BCMediaControls;
 import uk.co.bookcook.BCMediaPlayer;
 
+/**
+ * A class which draws the Report page of the program, The report page displays
+ * active reports and the information of them to engineers and admins
+ * 
+ * @author jrb617
+ */
 public class ReportPage extends Page {
 
     private final ArrayList<Machine> reportMachines = new ArrayList<>();
@@ -50,7 +59,7 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Draws reports bar
+     * Draws Top bar of the report list
      * 
      * @return HBOX for the top of the bar
      * @author jrb617
@@ -78,10 +87,9 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Draws the scrollable report grid
+     * Draws the scrollable grid containing the reports
      * 
      * @author jrb617
-     * @apiNote Pending integration
      */
     public void drawReportButtons() {
 
@@ -300,6 +308,12 @@ public class ReportPage extends Page {
 
     }
 
+    /**
+     * Draws the information of the user who submitted the report
+     * 
+     * @param machine The machine which has had a report submitted
+     * @return JavaFX VBox containing the user information
+     */
     private VBox drawUserInfo(Machine machine) {
         VBox userInfoBox = new VBox();
         userInfoBox.setAlignment(Pos.TOP_LEFT);
@@ -327,18 +341,19 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Creates a node specific to the desired media, img for and image TODO audio
+     * Creates a node specific to the desired media, img for and image  audio
      * and video
      * 
      * @param filePath The path to the file
      * @return Node of the correct type to display the data
+     * @author jrb617 wab513
      */
     private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
         String extension = getExtension(filePath);
         try {
             if (extension.equals("png") || extension.equals("jpeg")) {
 
-                Image img = new Image(filePath);
+                Image img = new Image(getDocDuckWorkingDirectory() + filePath);
                 ImageView view1 = new ImageView(img);
                 view1.setFitWidth(reportDescWidth - 35); // Offset to fit the bar
                 view1.setPreserveRatio(true);
@@ -357,7 +372,7 @@ public class ReportPage extends Page {
                 return box;
             }
         }
-        catch (NullPointerException | IllegalArgumentException e) {
+        catch (NullPointerException | IllegalArgumentException | IOException e) {
             throw new FileNotFoundException();
         }
 
@@ -369,9 +384,30 @@ public class ReportPage extends Page {
      * 
      * @param filePath The name of the filepath to the desired file
      * @return String extension of the file e.g "png"
+     * @author jrb617
      */
     private String getExtension(String filePath) {
         return filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
+    }
+
+    /**
+     * Gets the working directory of the application 
+     *  
+     * @return String woith the working directory
+     * @throws IOException
+     * @author wab513
+     */
+    private String getDocDuckWorkingDirectory() throws IOException {
+        String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        return workingDirectory;
     }
 
 }

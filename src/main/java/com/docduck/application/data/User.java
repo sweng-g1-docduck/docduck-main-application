@@ -12,9 +12,9 @@ import java.util.List;
 
 /**
  * A Class for storing the non-secure data related to a user - The User's name -
- * The User's email - The User's role
+ * The User's email - The User's role - password hash - role
  * 
- * @author jrb617
+ * @author jrb617 wab513 lw2380
  */
 public class User extends BaseData {
 

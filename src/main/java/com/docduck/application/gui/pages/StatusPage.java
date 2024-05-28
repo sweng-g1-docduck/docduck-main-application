@@ -1,12 +1,19 @@
 package com.docduck.application.gui.pages;
 
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -25,7 +32,14 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 
+/**
+ * Draws the status of all machines in a grid with colour showing their status.
+ * the user can generate and submit a report to log the machine offline
+ * 
+ * @author jrb617 lw2380 wab513
+ */
 public class StatusPage extends Page {
 
     private ComboBox<String> roomSelectBox;
@@ -46,6 +60,7 @@ public class StatusPage extends Page {
     private final Color offlineClickColour = Color.web("#c82815");
 
     private final Color infoTextColour = darkTextColour;
+    private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     public StatusPage(ArrayList<Machine> machines, User user) {
         super(machines, user);
@@ -84,8 +99,6 @@ public class StatusPage extends Page {
 
     /**
      * Initialises the room selection dropdown box
-     * <p>
-     * REQUIRES INTGRATION
      * 
      * @author jrb617
      */
@@ -130,10 +143,8 @@ public class StatusPage extends Page {
     }
 
     /**
-     * Draws the scrollable machine grid
-     * <p>
-     * REQUIRES INTGRATION
-     * 
+     * Draws the scrollable machine grid containing buttons for each machine
+     *
      * @author jrb617
      */
     public void drawMachineButtons() {
@@ -154,13 +165,14 @@ public class StatusPage extends Page {
 
         ArrayList<ButtonWrapper> buttons = new ArrayList<>();
         for (Machine machine : machines) {
-            
+
             if (machine.getLocation().equals(roomSelectBox.getValue()) || roomSelectBox.getValue().equals("All")) {
 
                 ButtonWrapper button = new ButtonWrapper();
                 double buttonWidth = (machineBoxWidth - 75) / 3;
                 try {
-                    Image img = new Image(machine.getImageRef());
+                    InputStream imageAsStream = classloader.getResourceAsStream(machine.getImageRef());
+                    Image img = new Image(imageAsStream);
                     ImageView view1 = new ImageView(img);
                     view1.setFitWidth(buttonWidth - 40);
                     view1.setFitHeight(160);
@@ -172,10 +184,8 @@ public class StatusPage extends Page {
                     System.err.println("The path to the machine image could not be found");
                 }
 
-                
                 button.setButtonHeight(200);
                 button.setButtonWidth(buttonWidth);
-                
 
                 button.setCornerRadius(20);
                 button.setFontColour(lightTextColour);
@@ -248,10 +258,8 @@ public class StatusPage extends Page {
 
     /**
      * Draws the machine report page
-     * <p>
-     * REQUIRES INTGRATION
      * 
-     * @param machine A machine in the database
+     * @param machine The machine which's report is being generated
      * @author jrb617
      */
     private void drawReport(Machine machine) {
@@ -261,8 +269,7 @@ public class StatusPage extends Page {
         reportBox.setPrefWidth(reportWidth);
         reportBox.setPadding(new Insets(20, 10, 10, 10));
         reportBox.setSpacing(10);
-        reportBox.setBackground(
-                new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
+        reportBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
 
         TextBox machineName = new TextBox();
 
@@ -312,7 +319,8 @@ public class StatusPage extends Page {
                 // Submit report to XML
                 machine.setStatus("OFFLINE");
                 setRight(null);
-                Report report = new Report(user, titleBox.getText(), descriptionBox.getText(), "FilePath");
+                Report report = new Report(user, titleBox.getText(), descriptionBox.getText(),
+                        events.getUploadedMediaFileName());
                 machine.addReport(report);
                 drawMachineButtons();
             }
@@ -328,8 +336,6 @@ public class StatusPage extends Page {
 
     /**
      * Draws the Machine Information Side Panel
-     * <p>
-     * REQUIRES INTGRATION
      * 
      * @param machine Name of machine selected
      * @author jrb617
@@ -376,7 +382,6 @@ public class StatusPage extends Page {
         ButtonWrapper cancelBtn = drawButtonWrapper(reportWidth - 120, 40, "Close");
         cancelBtn.setOnAction((event -> setRight(null)));
 
-//        dataBox.getChildren().addAll(serialNum, location, datasheet, purchaseLink);
         dataPane.setTop(machineInfo);
         btnBox.getChildren().addAll(reportBtn, cancelBtn);
         dataPane.setBottom(btnBox);
@@ -387,7 +392,7 @@ public class StatusPage extends Page {
     }
 
     /**
-     * Creates and adds all nodes to the root BorderPane REQUIRES INTGRATION
+     * Creates and adds all nodes to the root BorderPane
      * 
      * @author jrb617
      */
@@ -395,7 +400,6 @@ public class StatusPage extends Page {
     public void buildPage() {
 
         setupRoomSelect();
-//        drawRoomSelect();
         setTop(drawMenuBar());
         drawMachineButtons();
     }

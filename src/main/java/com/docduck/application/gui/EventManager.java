@@ -1,6 +1,13 @@
 package com.docduck.application.gui;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.docduck.application.data.Machine;
 import com.docduck.application.files.FTPHandler;
@@ -25,6 +32,7 @@ public class EventManager {
     private final Pane root;
     private final Stage stage;
     private static EventManager instance;
+    private String uploadedMediaFileName;
 
     private EventManager(Pane root, HostServices hostServices, Stage stage) {
         this.hostServices = hostServices;
@@ -92,10 +100,21 @@ public class EventManager {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Media File", "*.png"));
                 File selectedFile = fileChooser.showOpenDialog(stage);
-
+                uploadedMediaFileName = null;
+                
                 if (selectedFile != null) {
                     String filePath = selectedFile.getAbsolutePath();
                     String filename = selectedFile.getName();
+                    File inputFile = new File(filePath);
+                    InputStream fileInputAsStream;
+                    try {
+                        fileInputAsStream = new FileInputStream(inputFile);
+                        Files.copy(fileInputAsStream, getDocDuckWorkingDirectoryAsPath());
+                    }
+                    catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    uploadedMediaFileName = "/com.docduck/resources/" + filename;
                     System.out.println(filePath);
                     ftpHandler.connect();
                     ftpHandler.uploadFileFromPath(filePath, filename);
@@ -170,5 +189,24 @@ public class EventManager {
 
     public EventHandler<ActionEvent> getSlideEvent(int nextSlide, int slideCount) {
         return e -> xmlBuilder.buildCustomXML(nextSlide, slideCount);
+    }
+    
+    public String getUploadedMediaFileName() {
+        return uploadedMediaFileName;
+    }
+    
+    private Path getDocDuckWorkingDirectoryAsPath() throws IOException {
+        String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        String docduckWorkingDirectory = workingDirectory + "/com.docduck/resources/";
+        Path docduckPath = Paths.get(docduckWorkingDirectory);
+        return docduckPath;
     }
 }

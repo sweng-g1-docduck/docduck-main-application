@@ -25,10 +25,8 @@ import javafx.scene.text.Font;
 public class Page extends BorderPane {
 
     /**
-     * This class will contain the basic page structure for the main application
-     * This will include the main menu and a container to contain each specific
-     * pages content
-     * * @author Will, Josh, Lw2380
+     * Contains the basic structure for each page including the menu bar,
+     * standardised buttons and text * @author wab513, jrb617, Lw2380
      */
 
     protected final EventManager events;
@@ -43,20 +41,16 @@ public class Page extends BorderPane {
     protected final Color docDuckBlue = Color.web("#245494");
     protected final Color backgroundColour = Color.web("#F5F5F5"); // Light grey for main background
     protected final Color boxColour = Color.web("#faf6f0"); // White for div background
-    
+
     protected final Color btnColour = Color.web("fbb12eff"); // orange for button background
     protected final Color btnHoverColour = Color.web("#ff8c00ff"); // Darker orange for button hover
     protected final Color btnClickColour = Color.web("#ff6f00"); // Darkest orange for button click
-    
-    protected final Color lightTextColour =  Color.web("#ffffff"); 
+
+    protected final Color lightTextColour = Color.web("#ffffff");
     protected final Color darkTextColour = Color.web("#333333");
     protected final String fontName = "Arial"; // Font family from CSS
     protected final int smallFontSize = 12; // Small font size as per CSS
     protected final Color barColour = Color.web("#E6E6E6"); // Lighter pastel grey
-
-
-
-
 
     public Page(ArrayList<Machine> machines, User user) {
         super();
@@ -67,7 +61,7 @@ public class Page extends BorderPane {
         setMinWidth(1280);
         setMinHeight(720);
     }
-    
+
     public Page() {
         super();
         this.events = EventManager.getInstance();
@@ -133,6 +127,14 @@ public class Page extends BorderPane {
 
     }
 
+    /**
+     * Draws all of the information of a machine: Serial number, location,
+     * datasheet, and purchase links
+     * 
+     * @param machine The machine which's information is to be displayed
+     * @return A VBox containing the information
+     * @author jrb617
+     */
     protected VBox drawMachineInfoBox(Machine machine) {
 
         Color textColour = darkTextColour;
@@ -170,6 +172,14 @@ public class Page extends BorderPane {
         return genInfoBox;
     }
 
+    /**
+     * Draws a standardised buttonWrapper
+     * 
+     * @param width  Width of the buttonWrapper
+     * @param height Height of the buttonWrapper
+     * @param Text   within the buttonWrapper
+     * @return ButtonWrapper
+     */
     protected ButtonWrapper drawButtonWrapper(int width, int height, String text) {
         ButtonWrapper button = new ButtonWrapper();
         button.setCornerRadius(5);
@@ -187,6 +197,14 @@ public class Page extends BorderPane {
 
     }
 
+    /**
+     * Draws a standardised small text
+     * 
+     * @param title      The content of the text
+     * @param textColour the font colour of the text
+     * @return JavaFX Label containing the text
+     * @author jrb617
+     */
     protected Label drawSubText(String title, Color textColour) {
         Label subTitle = new Label(title);
         subTitle.setFont(new Font(fontName, smallFontSize));
