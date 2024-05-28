@@ -91,11 +91,11 @@ public class AdminPage extends Page {
     private boolean nullUserField = true;
     private boolean nullUsernameField = true;
     private boolean nullEmailField = true;
-    private boolean nullRoleField = true;
+    private boolean nullRoleField = false;
     private boolean nullPasswordField= true;
     private boolean nullMachineField= true;
     private boolean nullLocationField= true;
-    private boolean nullStatusField= true;
+    private boolean nullStatusField= false;
     private boolean nullDatasheetField= true;
     private boolean nullPurchaseLocationField= true;
     private boolean nullSerialNumberField= true;
@@ -231,6 +231,12 @@ public class AdminPage extends Page {
         button.setFontColour(lightTextColour);
         button.setFontSize(10);
         button.removeBorder();
+
+        // Disable the buttons for deletion till implemented
+        if ("Remove User".equals(text) || "Remove Machine".equals(text)) {
+            button.setDisable(true);
+            button.setStyle("-fx-opacity: 0.5;");
+        }
 
         button.setOnAction(event -> {
 
@@ -449,7 +455,6 @@ public class AdminPage extends Page {
                 roleFieldValue = newValue.strip();
                 if (roleFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please select Role");
-                    nullRoleField = true;
                 }
                 else {
                     nullTextMessage.setText("");
@@ -531,7 +536,6 @@ public class AdminPage extends Page {
             if (machineFieldValue.isEmpty()) {
                 nullTextMessage.setText("Please fill in Fields");
                 nullMachineField = true;
-                System.out.println(nullMachineField);
             }
             else{nullMachineField = false;}
 
@@ -627,7 +631,7 @@ public class AdminPage extends Page {
                 statusValue = newValue.strip();
                 if (statusValue.isEmpty()) {
                     nullTextMessage.setText("Please select Status");
-                    nullStatusField = true;
+                    //nullStatusField = true;
 
                 } else {
                     nullTextMessage.setText("");
@@ -740,11 +744,11 @@ public class AdminPage extends Page {
      * @author Lw2380
      */
     private HBox createFormButtons() {
-        HBox buttonBox = new HBox(20);
+    HBox buttonBox = new HBox(20);
         buttonBox.setAlignment(Pos.CENTER);
 
-        // Add Machine Picture button
-        ButtonWrapper addMachinePictureButton = new ButtonWrapper();
+    // Add Machine Picture button
+    ButtonWrapper addMachinePictureButton = new ButtonWrapper();
         addMachinePictureButton.setText("Add Machine Picture");
         addMachinePictureButton.setCornerRadius(5);
         addMachinePictureButton.setButtonWidth(150);
@@ -758,19 +762,16 @@ public class AdminPage extends Page {
         addMachinePictureButton.removeBorder();
 
         addMachinePictureButton.setOnAction(event -> {
-            // Handle add machine picture action
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Open Resource File");
-            File file = fileChooser.showOpenDialog(managerPopOutStage);
-            if (file != null) {
-                System.out.println(file.getPath());
-                // Update the machine image
-                tempMachineImage = new Image(file.toURI().toString());
-                updateMachineImage();
-            }
-        });
+        // Handle add machine picture action
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        File file = fileChooser.showOpenDialog(managerPopOutStage);
+        if (file != null) {
+            System.out.println(file.getPath());
+        }
+    });
 
-        ButtonWrapper saveButton = new ButtonWrapper();
+    ButtonWrapper saveButton = new ButtonWrapper();
         saveButton.setText("Save");
         saveButton.setCornerRadius(5);
         saveButton.setButtonWidth(100);
@@ -783,7 +784,7 @@ public class AdminPage extends Page {
         saveButton.setFontSize(12);
         saveButton.removeBorder();
 
-        ButtonWrapper cancelButton = new ButtonWrapper();
+    ButtonWrapper cancelButton = new ButtonWrapper();
         cancelButton.setText("Cancel");
         cancelButton.setCornerRadius(5);
         cancelButton.setButtonWidth(100);
@@ -797,118 +798,97 @@ public class AdminPage extends Page {
         cancelButton.removeBorder();
 
         saveButton.setOnAction(event -> {
-            // Handle save action
-            if (editingUsers) {
-                System.out.println("User Save button pressed");
-                // if user does not exist from user list, then add user to list.
-                // if we are adding a user with real details (e.g. username, email) then deny it
-                // if we are editing a user then the above is okay, but it should change the
-                // existing user in array (and save to xml)
-                User user = new User(usernameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue,
-                        roleFieldValue); // placeholder
+        // Handle save action
+        if (editingUsers) {
+            System.out.println("User Save button pressed");
+
+            boolean userExists = false;
+
+            for (User user : allUsersList) {
+                if (user.getEmail().equals(emailFieldValue) || user.getUsername().equals(usernameFieldValue)) {
+                    userExists = true;
+                    // Update user details if fields are not null
+                    if (nameFieldValue != null) {
+                        user.setName(nameFieldValue);
+                    }
+                    if (usernameFieldValue != null) {
+                        user.setUsername(usernameFieldValue);
+                    }
+                    if (passwordFieldValue != null) {
+                        user.setPassword(passwordFieldValue);
+                    }
+                    if (roleFieldValue != null) {
+                        user.setRole(roleFieldValue);
+                    }
+                    break;
+                }
+            }
+
+            if (!userExists && !nullUserField && !nullUsernameField && !nullRoleField && !nullEmailField && !nullPasswordField) {
+                User user = new User(nameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue);
                 allUsersList.add(user);
                 createRightSection();
+                managerPopOutStage.close();
             }
-            else if (editingMachines) {
-                System.out.println("Machine Save button pressed");
 
-                Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, "g", datasheetValue,
-                        locationFieldValue);
-                System.out.println(statusValue);
-                machineList.add(machine);
+            else if (userExists) {
                 createRightSection();
-                boolean userExists = false;
+                System.out.println("User updated successfully");
+            } else {
+                System.out.println("Please fill in all required fields.");
+            }
+        } else if (editingMachines) {
+            System.out.println("Machine Save button pressed");
 
-                for (User user : allUsersList) {
-                    if (user.getEmail().equals(emailFieldValue) || user.getUsername().equals(usernameFieldValue)) {
-                        userExists = true;
-                        // Update user details if fields are not null
-                        if (nameFieldValue != null) {
-                            user.setName(nameFieldValue);
-                        }
-                        if (passwordFieldValue != null) {
-                            user.setPassword(passwordFieldValue);
-                        }
-                        if (roleFieldValue != null) {
-                            user.setRole(roleFieldValue);
-                        }
-                        if (usernameFieldValue != null) {
-                            user.setUsername(usernameFieldValue);
-                        }
-                        break;
+            boolean machineExists = false;
+
+            for (Machine machine : machines) {
+                if (machine.getName().equals(machineFieldValue)) {
+                    machineExists = true;
+                    // Update machine details if fields are not null
+
+                    if (locationFieldValue != null) {
+                        machine.setLocation(locationFieldValue);
                     }
-                }
-
-                if (!userExists && !nullUserField && !nullUsernameField && !nullRoleField && !nullEmailField && !nullPasswordField) {
-                    User user = new User(nameFieldValue, usernameFieldValue, passwordFieldValue, emailFieldValue, roleFieldValue);
-                    allUsersList.add(user);
-                    createRightSection();
-                    managerPopOutStage.close();
-                }
-
-                else if (userExists) {
-                    createRightSection();
-                    System.out.println("User updated successfully");
-                } else {
-                    System.out.println("Please fill in all required fields.");
-                }
-            } else if (editingMachines) {
-                System.out.println("Machine Save button pressed");
-
-                boolean machineExists = false;
-
-                for (Machine machine : machines) {
-                    if (machine.getName().equals(machineFieldValue)) {
-                        machineExists = true;
-                        // Update machine details if fields are not null
-
-                        if (locationFieldValue != null) {
-                            machine.setLocation(locationFieldValue);
-                        }
-                        if (statusValue != null) {
-                            machine.setStatus(statusValue);
-                        }
-                        if (serialNumberValue != null) {
-                            machine.setSerialNumber(serialNumberValue);
-                        }
-                        if (datasheetValue != null) {
-                            machine.setDatasheet(datasheetValue);
-                        }
-                        if (purchaseLocationValue != null) {
-                            machine.setPurchaseLocation(purchaseLocationValue);
-                        }
+                    if (statusValue != null) {
+                        machine.setStatus(statusValue);
                     }
-                }
-
-                if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField  &&!nullSerialNumberField &&!nullLocationField) {
-                    Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
-                    System.out.println(nullStatusField);
-                    machines.add(machine);
-                    createRightSection();
-                    managerPopOutStage.close();
-                } else if (machineExists) {
-                    createRightSection();
-                    System.out.println("Machine updated successfully");
-                    managerPopOutStage.close();
-                } else {
-                    System.out.println("Please fill in all required fields.");
+                    if (serialNumberValue != null) {
+                        machine.setSerialNumber(serialNumberValue);
+                    }
+                    if (datasheetValue != null) {
+                        machine.setDatasheet(datasheetValue);
+                    }
+                    if (purchaseLocationValue != null) {
+                        machine.setPurchaseLocation(purchaseLocationValue);
+                    }
                 }
             }
-        });
+
+            if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
+                Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
+                machines.add(machine);
+                createRightSection();
+                managerPopOutStage.close();
+            } else if (machineExists) {
+                createRightSection();
+                System.out.println("Machine updated successfully");
+                managerPopOutStage.close();
+            } else {
+                System.out.println("Please fill in all required fields.");
+            }
+        }
+    });
 
         cancelButton.setOnAction(event -> {
-            // Handle cancel action
-            System.out.println("Cancel button pressed");
-            managerPopOutStage.close();
-        });
+        // Handle cancel action
+        System.out.println("Cancel button pressed");
+        managerPopOutStage.close();
+    });
 
-        if (editingMachines) {
-            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
-        } else {
-            buttonBox.getChildren().addAll(saveButton, cancelButton);
-        }
+        buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
         return buttonBox;
-    }
+}
 
     /**
      * Updates the machine image if a temporary image is available and the machine image view exists.
