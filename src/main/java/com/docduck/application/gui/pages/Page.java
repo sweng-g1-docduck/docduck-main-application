@@ -45,14 +45,14 @@ public class Page extends BorderPane {
     protected final Color boxColour = Color.web("#faf6f0"); // White for div background
     
     protected final Color btnColour = Color.web("fbb12eff"); // orange for button background
-    protected final Color btnHoverColour = Color.web("#ff8c00ff"); // Slightly darker grey for button hover
-    protected final Color btnClickColour = Color.web("#909090"); // Darker grey for button click
+    protected final Color btnHoverColour = Color.web("#ff8c00ff"); // Darker orange for button hover
+    protected final Color btnClickColour = Color.web("#ff6f00"); // Darkest orange for button click
     
-    protected final Color lightTextColour =  Color.web("#ffffff"); // Dark grey for light text
-    protected final Color darkTextColour = Color.web("#333333");// White for dark text
+    protected final Color lightTextColour =  Color.web("#ffffff"); 
+    protected final Color darkTextColour = Color.web("#333333");
     protected final String fontName = "Arial"; // Font family from CSS
     protected final int smallFontSize = 12; // Small font size as per CSS
-    protected final Color barColour = Color.web("#faf6f0"); // Lighter pastel grey
+    protected final Color barColour = Color.web("#E6E6E6"); // Lighter pastel grey
 
 
 
@@ -110,6 +110,7 @@ public class Page extends BorderPane {
             reportBtn.setOnAction(events.getActionEvent("reportPage"));
 
             ButtonWrapper partBtn = drawButtonWrapper(160, 60, "Part Search");
+            partBtn.setFontColour(darkTextColour);
             partBtn.setDisable(true);
             menuBar.getChildren().addAll(reportBtn, partBtn);
         }
@@ -134,7 +135,7 @@ public class Page extends BorderPane {
 
     protected VBox drawMachineInfoBox(Machine machine) {
 
-        Color textColour = lightTextColour;
+        Color textColour = darkTextColour;
 
         VBox genInfoBox = new VBox();
         genInfoBox.setAlignment(Pos.TOP_LEFT);

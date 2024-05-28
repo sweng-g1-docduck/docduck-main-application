@@ -5,7 +5,7 @@
       <name>3D Printer</name>
 	    <status>OFFLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
-      <location>Labs_4th_Floor</location>
+      <location>3d Printing Lab</location>
       <imageRef>\Role Hierarchy Updated.png</imageRef>
       <datasheetRef>https://bbc.co.uk</datasheetRef>
       <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
@@ -42,7 +42,7 @@
       </components>
       <parts>
         <part id="1201">
-          <name>Green material</name>
+          <name>Green PLA</name>
           <stockNumber>10</stockNumber>
           <serialNumber>ABC694164548259</serialNumber>
           <quantity>100</quantity>
@@ -56,7 +56,7 @@
       <name>CNC Mill</name>
 	  <status>ONLINE</status>
       <serialNumber>ABC7jkbsv0571001</serialNumber>
-      <location>Engineering Manufacturing Facility</location>
+      <location>Machine Shop</location>
       <imageRef>\docducklogo.png</imageRef>
       <datasheetRef>https://bbc.co.uk</datasheetRef>
       <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
