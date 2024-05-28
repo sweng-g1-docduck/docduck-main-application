@@ -754,8 +754,6 @@
             <xs:element name="imageRef" type="xs:string"/>
             <xs:element name="datasheetRef" type="xs:string"/>
             <xs:element name="purchaseLocationRef" type="xs:string"/>
-            <xs:element name="components" type="componentInfo"/>
-            <xs:element name="parts" type="partInfo"/>
           </xs:sequence>
           <xs:attribute type="xs:int" name="id" use="optional"/>
         </xs:complexType>
