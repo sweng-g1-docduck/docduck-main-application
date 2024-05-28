@@ -10,10 +10,6 @@ import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,23 +28,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import com.docduck.application.data.Machine;
-import com.docduck.application.data.User;
-import com.docduck.buttonlibrary.ButtonWrapper;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Represents the admin page of the application, where administrators can manage
@@ -79,11 +63,10 @@ public class AdminPage extends Page {
     private String emailFieldValue;
     private String roleFieldValue;
     private String passwordFieldValue;
-    private String machineFieldValue;
+    private String machineNameFieldValue;
     private String locationFieldValue;
     private String statusValue;
-    private int userIdValue;
-    private int machineIdValue;
+
     private String datasheetValue;
     private String purchaseLocationValue;
     private String nameFieldValue;
@@ -531,9 +514,9 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Machine Name"), 0, row);
             TextField machineNameField = createFormField("Machine Name", machine != null ? machine.getName() : "");
             gridPane.add(machineNameField, 1, row++);
-            machineFieldValue = machine != null ? machine.getName() : "";
+            machineNameFieldValue = machine != null ? machine.getName() : "";
 
-            if (machineFieldValue.isEmpty()) {
+            if (machineNameFieldValue.isEmpty()) {
                 nullTextMessage.setText("Please fill in Fields");
                 nullMachineField = true;
             }
@@ -604,15 +587,13 @@ public class AdminPage extends Page {
 
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-                machineFieldValue = newValue.strip();
-                if (machineFieldValue.isEmpty()) {
+                machineNameFieldValue = newValue.strip();
+                if (machineNameFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please fill in Machine Name");
                     nullMachineField = true;
-                    System.out.println(nullMachineField);
                 } else {
                     nullTextMessage.setText("");
                     nullMachineField = false;
-                    System.out.println(nullMachineField);
                 }
             });
 
@@ -815,7 +796,7 @@ public class AdminPage extends Page {
                         user.setUsername(usernameFieldValue);
                     }
                     if (passwordFieldValue != null) {
-                        user.setPassword(passwordFieldValue);
+                        user.setPassword(user.hashPassword(passwordFieldValue));
                     }
                     if (roleFieldValue != null) {
                         user.setRole(roleFieldValue);
@@ -846,15 +827,15 @@ public class AdminPage extends Page {
             boolean machineExists = false;
 
             for (Machine machine : machines) {
-                if (machine.getName().equals(machineFieldValue)) {
+                if (machine.getName().equals(machineNameFieldValue)) {
                     machineExists = true;
                     // Update machine details if fields are not null
 
-                    if(machineFieldValue != null) {
-                        machine.setName(machineFieldValue);
-                    }
                     if (locationFieldValue != null) {
                         machine.setLocation(locationFieldValue);
+                    }
+                    if(machineNameFieldValue != null) {
+                        machine.setName(machineNameFieldValue);
                     }
                     if (statusValue != null) {
                         machine.setStatus(statusValue);
@@ -872,7 +853,7 @@ public class AdminPage extends Page {
             }
 
             if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
-                Machine machine = new Machine(machineFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
+                Machine machine = new Machine(machineNameFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
                 machines.add(machine);
                 createRightSection();
                 managerPopOutStage.close();
@@ -892,7 +873,12 @@ public class AdminPage extends Page {
         managerPopOutStage.close();
     });
 
-        buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
+        if (editingMachines) {
+            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
+        }
+        if (editingUsers) {
+            buttonBox.getChildren().addAll(saveButton, cancelButton);
+        }
         return buttonBox;
 }
 
