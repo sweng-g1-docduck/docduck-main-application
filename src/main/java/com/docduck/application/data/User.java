@@ -74,7 +74,6 @@ public class User extends BaseData {
             }
 
             if (target.getName().equals("password")) {
-                System.out.println(target.getValue());
                 this.passwordHash = target.getValue();
             }
 
@@ -145,7 +144,7 @@ public class User extends BaseData {
      * @throws RuntimeException if the SHA-256 algorithm is not available.
      * @author Lw2380
      */
-    private String hashPassword(String password) {
+    public String hashPassword(String password) {
 
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");

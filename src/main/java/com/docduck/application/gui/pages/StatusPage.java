@@ -33,19 +33,19 @@ public class StatusPage extends Page {
     private final int machineBoxWidth = 1270 - reportWidth;
     private Machine currentMachine;
 
-    private final Color onlineButtonColour = Color.LIMEGREEN;
-    private final Color onlineHoverColour = Color.GREEN;
-    private final Color onlineClickColour = Color.DARKGREEN;
+    private final Color onlineButtonColour = Color.web("#4ff080");
+    private final Color onlineHoverColour = Color.web("#20ec5e");
+    private final Color onlineClickColour = Color.web("#11c849");
 
-    private final Color maintenanceButtonColour = Color.ORANGE;
-    private final Color maintenanceHoverColour = Color.DARKORANGE;
-    private final Color maintenanceClickColour = Color.ORANGERED;
+    private final Color maintenanceButtonColour = Color.web("#f0db5b");
+    private final Color maintenanceHoverColour = Color.web("#ecd12c");
+    private final Color maintenanceClickColour = Color.web("#d2b713");
 
-    private final Color offlineButtonColour = Color.RED;
-    private final Color offlineHoverColour = Color.DARKRED;
-    private final Color offlineClickColour = Color.INDIANRED;
+    private final Color offlineButtonColour = Color.web("#ed665c");
+    private final Color offlineHoverColour = Color.web("#e83c28");
+    private final Color offlineClickColour = Color.web("#c82815");
 
-    private final Color infoTextColour = lightTextColour;
+    private final Color infoTextColour = darkTextColour;
 
     public StatusPage(ArrayList<Machine> machines, User user) {
         super(machines, user);
@@ -74,7 +74,7 @@ public class StatusPage extends Page {
         TextBox title = new TextBox();
         title.setText("Machine Overview");
         title.setFontSize(20);
-        title.setFontColour(lightTextColour);
+        title.setFontColour(darkTextColour);
         title.setBoxWidth(200);
 
         contents.getChildren().add(title);
@@ -262,7 +262,7 @@ public class StatusPage extends Page {
         reportBox.setPadding(new Insets(20, 10, 10, 10));
         reportBox.setSpacing(10);
         reportBox.setBackground(
-                new Background(new BackgroundFill(backgroundColour, new CornerRadii(10), new Insets(5))));
+                new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
 
         TextBox machineName = new TextBox();
 
@@ -340,7 +340,7 @@ public class StatusPage extends Page {
         infoBox.setMaxHeight(630);
         infoBox.setPadding(new Insets(20, 10, 10, 10));
         infoBox.setSpacing(10);
-        infoBox.setBackground(new Background(new BackgroundFill(backgroundColour, new CornerRadii(10), new Insets(5))));
+        infoBox.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
 
         TextBox machineName = new TextBox();
 
@@ -358,7 +358,7 @@ public class StatusPage extends Page {
         dataPane.setPrefWidth(reportWidth - 10);
 
         dataPane.setPadding(new Insets(20, 10, 10, 10));
-        dataPane.setBackground(new Background(new BackgroundFill(boxColour, new CornerRadii(10), new Insets(5))));
+        dataPane.setBackground(new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
 
         VBox machineInfo = drawMachineInfoBox(machine);
 

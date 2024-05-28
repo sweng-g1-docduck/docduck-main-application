@@ -106,25 +106,25 @@
   </machineData>
   <userData>
     <user id="2001">
-      <name>James Stevenson</name>
-      <username>js2140</username>
+      <name>Default Adminn</name>
+      <username>Admin</username>
       <password>l3cFIV89usLnuXrV1Q8+hieB10SLV7uxfu8x1LQKO4k=</password>
-      <email>js2140@york.ac.uk</email>
-      <role>OPERATOR</role>
-    </user>
-    <user id="2002">
-      <name>William Betteridge</name>
-      <username>wab513</username>
-      <password>iRQe4wI419zR7podDJHPgGF4ehxORGETv7Kd3SW/mDU=</password>
-      <email>wab513@york.ac.uk</email>
+      <email>Admin@docduck.com</email>
       <role>ADMIN</role>
     </user>
-    <user id="2003">
-      <name>Billy</name>
-      <username>bob321</username>
-      <password>bobpassword</password>
-      <email>bob321@york.ac.uk</email>
+    <user id="2002">
+      <name>Default Operator</name>
+      <username>Operator</username>
+      <password>iRQe4wI419zR7podDJHPgGF4ehxORGETv7Kd3SW/mDU=</password>
+      <email>Operator@docduck.com</email>
       <role>OPERATOR</role>
+    </user>
+    <user id="2003">
+      <name>Default Engineer</name>
+      <username>Engineer</username>
+      <password>bobpassword</password>
+      <email>engineer@docduck.com</email>
+      <role>ENGINEER</role>
     </user>
   </userData>
   <machineReport>

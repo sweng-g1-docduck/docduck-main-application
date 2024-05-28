@@ -37,11 +37,11 @@ public class ReportPage extends Page {
     private final int reportBoxWidth = 1270 - reportDescWidth;
     private Machine currentMachine;
 
-    private final Color buttonColour = Color.RED;
-    private final Color buttonHoverColour = Color.DARKRED;
-    private final Color buttonClickColour = Color.INDIANRED;
+    private final Color buttonColour = Color.web("#ed665c");
+    private final Color buttonHoverColour = Color.web("#e83c28");
+    private final Color buttonClickColour = Color.web("#c82815");
 
-    private final Color reportTextColour = lightTextColour;
+    private final Color reportTextColour = darkTextColour;
     private final Color btnTextColour = darkTextColour;
 
     public ReportPage(ArrayList<Machine> machines, User user) {
@@ -69,7 +69,7 @@ public class ReportPage extends Page {
         title.setFontName(fontName);
         title.setText("Machine Overview");
         title.setFontSize(20);
-        title.setFontColour(lightTextColour);
+        title.setFontColour(reportTextColour);
         title.setBoxWidth(200);
 
         contents.getChildren().add(title);
@@ -186,7 +186,7 @@ public class ReportPage extends Page {
         infoBox.setPrefWidth(reportDescWidth - 15);
         infoBox.setMaxHeight(630);
         infoBox.setPadding(new Insets(20, 10, 10, 10));
-        infoBox.setBackground(new Background(new BackgroundFill(backgroundColour, new CornerRadii(10), new Insets(5))));
+        infoBox.setBackground(new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
 
         TextBox machineName = new TextBox();
         machineName.setFontName(fontName);
