@@ -3,7 +3,7 @@
 <machineData>
     <machine id="1001">
       <name>3D Printer</name>
-	    <status>OFFLINE</status>
+	  <status>OFFLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>3d Printing Lab</location>
       <imageRef>\Role Hierarchy Updated.png</imageRef>
@@ -24,15 +24,6 @@
               <stockNumber>10</stockNumber>
               <serialNumber>ABC694374858259</serialNumber>
               <quantity>5</quantity>
-              <location>Labs_4th_Floor_Office</location>
-              <datasheetRef>https://bbc.co.uk</datasheetRef>
-              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-            </part>
-            <part id="1112">
-              <name>LCD Screen Case</name>
-              <stockNumber>32</stockNumber>
-              <serialNumber>ABC378454858259</serialNumber>
-              <quantity>20</quantity>
               <location>Labs_4th_Floor_Office</location>
               <datasheetRef>https://bbc.co.uk</datasheetRef>
               <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
@@ -79,15 +70,6 @@
               <datasheetRef>https://bbc.co.uk</datasheetRef>
               <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
             </part>
-            <part id="1114">
-              <name>LCD Screen Case</name>
-              <stockNumber>32</stockNumber>
-              <serialNumber>ABC378454858259</serialNumber>
-              <quantity>20</quantity>
-              <location>Labs_4th_Floor_Office</location>
-              <datasheetRef>https://bbc.co.uk</datasheetRef>
-              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-            </part>
           </parts>
         </component>
       </components>
@@ -103,27 +85,69 @@
         </part>
       </parts>
     </machine>
+    <machine id="1003">
+    <name>Drill Press</name>
+	  <status>MAINTENANCE</status>
+      <serialNumber>ABC723370571001</serialNumber>
+      <location>3d Printing Lab</location>
+      <imageRef>\Role Hierarchy Updated.png</imageRef>
+      <datasheetRef>https://bbc.co.uk</datasheetRef>
+      <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+      <components>
+        <component id="1101">
+          <name>Control Panel</name>
+          <stockNumber>2</stockNumber>
+          <serialNumber>ABC999284858259</serialNumber>
+          <quantity>2</quantity>
+          <location>Labs_4th_Floor_Office</location>
+          <datasheetRef>https://bbc.co.uk</datasheetRef>
+          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+          <parts>
+            <part id="1111">
+              <name>LCD Screen</name>
+              <stockNumber>10</stockNumber>
+              <serialNumber>ABC694374858259</serialNumber>
+              <quantity>5</quantity>
+              <location>Labs_4th_Floor_Office</location>
+              <datasheetRef>https://bbc.co.uk</datasheetRef>
+              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
+            </part>
+          </parts>
+        </component>
+      </components>
+      <parts>
+        <part id="1201">
+          <name></name>
+          <stockNumber>0</stockNumber>
+          <serialNumber></serialNumber>
+          <quantity>0</quantity>
+          <location></location>
+          <datasheetRef></datasheetRef>
+          <purchaseLocationRef></purchaseLocationRef>
+        </part>
+      </parts>
+    </machine>
   </machineData>
   <userData>
     <user id="2001">
-      <name>James Stevenson</name>
-      <username>js2140</username>
-      <password>l3cFIV89usLnuXrV1Q8+hieB10SLV7uxfu8x1LQKO4k=</password>
-      <email>js2140@york.ac.uk</email>
-      <role>OPERATOR</role>
-    </user>
-    <user id="2002">
-      <name>William Betteridge</name>
-      <username>wab513</username>
-      <password>iRQe4wI419zR7podDJHPgGF4ehxORGETv7Kd3SW/mDU=</password>
-      <email>wab513@york.ac.uk</email>
+      <name>Default Admin</name>
+      <username>Admin</username>
+      <password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</password>
+      <email>admin@docduck.com</email>
       <role>ADMIN</role>
     </user>
+    <user id="2002">
+      <name>Default Engineer</name>
+      <username>Engineer</username>
+      <password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</password>
+      <email>engineer@docduck.com</email>
+      <role>ENGINEER</role>
+    </user>
     <user id="2003">
-      <name>Billy</name>
-      <username>bob321</username>
-      <password>bobpassword</password>
-      <email>bob321@york.ac.uk</email>
+      <name>Default Operator</name>
+      <username>Operator</username>
+      <password>XohImNooBHFR0OVvjcYpJ3NgPQ1qq73WKhHvch0VQtg=</password>
+      <email>operator@docduck.com</email>
       <role>OPERATOR</role>
     </user>
   </userData>
