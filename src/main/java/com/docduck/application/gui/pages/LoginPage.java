@@ -19,13 +19,13 @@ import java.util.ArrayList;
 
 public class LoginPage extends Page {
 
-    private final Color signInBtnColour = Color.web("#fbb12eff");
-    private final Color signInBtnHoverColour = Color.web("#0056b3ff");
+    private final Color signInBtnColour = btnColour;
+    private final Color signInBtnHoverColour = btnHoverColour;
     private final Color signInbtnClickColour = btnClickColour;
 
-    private final Color signUpBtnColour = Color.web("#fbb12eff");
-    private final Color signUpBtnHoverColour = Color.web("#ff8c00ff");
-    private final Color signUpBtnClickColour = Color.web("#ffffffff");
+    private final Color signUpBtnColour = btnColour;
+    private final Color signUpBtnHoverColour = btnHoverColour;
+    private final Color signUpBtnClickColour = btnClickColour;
     private ArrayList<User> allUsers;
 
     public LoginPage(ArrayList<User> allUsers) {
@@ -93,6 +93,8 @@ public class LoginPage extends Page {
             @Override public void handle(ActionEvent e) {
                 boolean incorrectUser = true;
                 for (User user : allUsers) {
+                    System.out.println(user.getUsername() + " "+ user.getPasswordHash());
+                    System.out.println(user.getRole());
                     if (user.getUsername().equals(usernameField.getText())
                             && user.getPasswordHash().equals(user.hashPassword(passwordField.getText()))) {
                         GUIBuilder.getInstance().buildPages(user);
@@ -140,7 +142,7 @@ public class LoginPage extends Page {
         setCenter(contents);
         BorderPane.setAlignment(xmlButton, Pos.CENTER);
         setBottom(xmlButton);
-        setBackground(new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
+        setBackground(new Background(new BackgroundFill(docDuckBlue, new CornerRadii(10), new Insets(5))));
 
     }
 

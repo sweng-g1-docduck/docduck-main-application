@@ -40,13 +40,16 @@ public class Page extends BorderPane {
 
     protected ArrayList<Machine> machines;
 
+    protected final Color docDuckBlue = Color.web("#245494");
     protected final Color backgroundColour = Color.web("#F5F5F5"); // Light grey for main background
     protected final Color boxColour = Color.web("#faf6f0"); // White for div background
+    
     protected final Color btnColour = Color.web("fbb12eff"); // orange for button background
     protected final Color btnHoverColour = Color.web("#ff8c00ff"); // Slightly darker grey for button hover
     protected final Color btnClickColour = Color.web("#909090"); // Darker grey for button click
-    protected final Color lightTextColour = Color.web("#333333"); // Dark grey for light text
-    protected final Color darkTextColour = Color.web("#ffffff"); // White for dark text
+    
+    protected final Color lightTextColour =  Color.web("#ffffff"); // Dark grey for light text
+    protected final Color darkTextColour = Color.web("#333333");// White for dark text
     protected final String fontName = "Arial"; // Font family from CSS
     protected final int smallFontSize = 12; // Small font size as per CSS
     protected final Color barColour = Color.web("#faf6f0"); // Lighter pastel grey
