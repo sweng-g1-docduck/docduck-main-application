@@ -74,7 +74,6 @@ public class User extends BaseData {
             }
 
             if (target.getName().equals("password")) {
-                System.out.println(target.getValue());
                 this.passwordHash = target.getValue();
             }
 

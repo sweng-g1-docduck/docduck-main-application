@@ -223,7 +223,7 @@ public class AdminPage extends Page {
         button.setCornerRadius(5);
         button.setButtonWidth(250);
         button.setButtonHeight(18);
-        button.setFontName("Arial");
+        button.setFontName(fontName);
         button.setText(text);
         button.setBackgroundColour(btnColour);
         button.setClickcolour(btnClickColour);
@@ -320,7 +320,7 @@ public class AdminPage extends Page {
         formLayout.setAlignment(Pos.CENTER);
 
         Label headerLabel = new Label(managerType + " Form - " + actionType);
-        headerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        headerLabel.setFont(Font.font(fontName, FontWeight.BOLD, 20));
 
         formLayout.getChildren().add(headerLabel);
 
@@ -488,7 +488,7 @@ public class AdminPage extends Page {
      */
     private Label createLabel(String text) {
         Label label = new Label(text);
-        label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        label.setFont(Font.font(fontName, FontWeight.BOLD, 14));
         return label;
     }
 
@@ -1316,11 +1316,11 @@ public class AdminPage extends Page {
 
             // Remove highlight from the last pressed button before applying to the new one
             if (lastPressedUserButton != null) {
-                lastPressedUserButton.setBackgroundColour("#fbb12eff"); // Default colour
+                lastPressedUserButton.setBackgroundColour(btnColour); // Default colour
             }
 
             // Set highlight to the current button
-            button.setBackgroundColour("#2e78fb"); // Highlight colour
+            button.setBackgroundColour(btnClickColour); // Highlight colour
 
             filterUsersByRole(finalRole);
             lastPressedUserButton = button;
@@ -1328,7 +1328,7 @@ public class AdminPage extends Page {
 
         // Highlight the "All Users" button by default
         if (userType.equals("All Users")) {
-            button.setBackgroundColour("#2e78fb"); // Highlight colour
+            button.setBackgroundColour(btnClickColour); // Highlight colour
             lastPressedUserButton = button;
         }
 
@@ -1360,11 +1360,11 @@ public class AdminPage extends Page {
 
             // Remove highlight from the last pressed button before applying to the new one
             if (lastPressedMachineButton != null) {
-                lastPressedMachineButton.setBackgroundColour("#fbb12eff"); // Default colour
+                lastPressedMachineButton.setBackgroundColour(btnColour); // Default colour
             }
 
             // Set highlight to the current button
-            button.setBackgroundColour("#2e78fb"); // Highlight colour
+            button.setBackgroundColour(btnClickColour); // Highlight colour
 
             filterMachinesByStatus(machineStatus);
             lastPressedMachineButton = button;
@@ -1372,7 +1372,7 @@ public class AdminPage extends Page {
 
         // Highlight the "All Machines" button by default
         if (machineStatus.equals("All Machines")) {
-            button.setBackgroundColour("#2e78fb"); // Highlight colour
+            button.setBackgroundColour(btnClickColour); // Highlight colour
             lastPressedMachineButton = button;
         }
 

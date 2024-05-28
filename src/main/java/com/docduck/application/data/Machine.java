@@ -112,6 +112,11 @@ public class Machine extends BaseData {
 
     public void setStatus(String status) {
         this.status = status;
+        if (this.status.equals("ONLINE") && this.currentReport != null) {
+            System.out.println("Archived report");
+            oldReports.add(currentReport);
+            currentReport = null;
+        }
     }
 
     @Override

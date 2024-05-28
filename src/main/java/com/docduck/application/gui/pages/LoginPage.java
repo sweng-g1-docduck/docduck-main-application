@@ -19,13 +19,13 @@ import java.util.ArrayList;
 
 public class LoginPage extends Page {
 
-    private final Color signInBtnColour = Color.web("#fbb12eff");
-    private final Color signInBtnHoverColour = Color.web("#0056b3ff");
+    private final Color signInBtnColour = btnColour;
+    private final Color signInBtnHoverColour = btnHoverColour;
     private final Color signInbtnClickColour = btnClickColour;
 
-    private final Color signUpBtnColour = Color.web("#fbb12eff");
-    private final Color signUpBtnHoverColour = Color.web("#ff8c00ff");
-    private final Color signUpBtnClickColour = Color.web("#ffffffff");
+    private final Color signUpBtnColour = btnColour;
+    private final Color signUpBtnHoverColour = btnHoverColour;
+    private final Color signUpBtnClickColour = btnClickColour;
     private ArrayList<User> allUsers;
 
     public LoginPage(ArrayList<User> allUsers) {
@@ -41,9 +41,7 @@ public class LoginPage extends Page {
     }
 
     public void drawLoginComponents() {
-        
-        
-        
+
         VBox contents = new VBox();
         contents.setAlignment(Pos.CENTER);
         HBox buttons = new HBox();
@@ -74,9 +72,6 @@ public class LoginPage extends Page {
         passwordField.hideText();
         passwordField.createButton();
 
-
-        
-
         stackedPasswordBox.getChildren().addAll(passwordField, passwordField.returnPasswordField());
         passwordBox.getChildren().addAll(stackedPasswordBox, passwordField.returnButton());
         passwordBox.setTranslateX(25);
@@ -85,12 +80,13 @@ public class LoginPage extends Page {
         signInBtn.setBackgroundColour(signInBtnColour);
         signInBtn.setHoverColour(signInBtnHoverColour);
         signInBtn.setClickcolour(signInbtnClickColour);
-        
+
         Label incorrectLogin = drawSubText("Incorrect Username or password", Color.RED);
         incorrectLogin.setVisible(false);
-        
+
         EventHandler<ActionEvent> loginEvent = new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
+            @Override
+            public void handle(ActionEvent e) {
                 boolean incorrectUser = true;
                 for (User user : allUsers) {
                     if (user.getUsername().equals(usernameField.getText())
@@ -108,10 +104,9 @@ public class LoginPage extends Page {
                 }
             }
         };
-        
+
         signInBtn.setOnAction(loginEvent);
         passwordField.setOnAction(loginEvent);
-        
 
         signUpBtn.setFontSize(14);
         signUpBtn.setBackgroundColour(signUpBtnColour);
@@ -135,12 +130,12 @@ public class LoginPage extends Page {
         ButtonWrapper xmlButton = drawButtonWrapper(250, 40, "Build from PWS XML");
         xmlButton.setOnAction(events.getActionEvent("chooseXML"));
         xmlButton.setTranslateY(-20);
-        
+
         BorderPane.setAlignment(contents, Pos.CENTER);
         setCenter(contents);
         BorderPane.setAlignment(xmlButton, Pos.CENTER);
         setBottom(xmlButton);
-        setBackground(new Background(new BackgroundFill(barColour, new CornerRadii(10), new Insets(5))));
+        setBackground(new Background(new BackgroundFill(docDuckBlue, new CornerRadii(10), new Insets(5))));
 
     }
 
