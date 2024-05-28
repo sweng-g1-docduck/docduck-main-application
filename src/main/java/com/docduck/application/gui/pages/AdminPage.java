@@ -91,11 +91,11 @@ public class AdminPage extends Page {
     private boolean nullUserField = true;
     private boolean nullUsernameField = true;
     private boolean nullEmailField = true;
-    private boolean nullRoleField = true;
+    private boolean nullRoleField = false;
     private boolean nullPasswordField= true;
     private boolean nullMachineField= true;
     private boolean nullLocationField= true;
-    private boolean nullStatusField= true;
+    private boolean nullStatusField= false;
     private boolean nullDatasheetField= true;
     private boolean nullPurchaseLocationField= true;
     private boolean nullSerialNumberField= true;
