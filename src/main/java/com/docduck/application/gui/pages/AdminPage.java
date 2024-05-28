@@ -820,6 +820,9 @@ public class AdminPage extends Page {
                     if (roleFieldValue != null) {
                         user.setRole(roleFieldValue);
                     }
+                    if (emailFieldValue != null) {
+                        user.setEmail(emailFieldValue);
+                    }
                     break;
                 }
             }
