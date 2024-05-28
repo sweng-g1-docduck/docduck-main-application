@@ -71,6 +71,9 @@ public class AdminPage extends Page {
     private String purchaseLocationValue;
     private String nameFieldValue;
     private String serialNumberValue;
+    private int machineIdValue;
+    private int userIdValue;
+
     private boolean nullUserField = true;
     private boolean nullUsernameField = true;
     private boolean nullEmailField = true;
@@ -396,7 +399,9 @@ public class AdminPage extends Page {
             gridPane.add(createLabel("Password"), 0, row);
             gridPane.add(passwordField, 1, row++);
 
-
+            if (user!= null) {
+                userIdValue = user.getId();
+            }
 
 
             // Set the instance variables when the form fields are filled out
@@ -543,7 +548,6 @@ public class AdminPage extends Page {
 
                 if (statusValue.isEmpty()) {
                     nullTextMessage.setText("Please fill in Fields");
-                    nullStatusField = true;
                 }
                 else{nullStatusField = false;}
             } 
@@ -551,6 +555,7 @@ public class AdminPage extends Page {
                 gridPane.add(createLabel("Status"), 0, row);
                 statusComboBox = createStatusComboBox("");
                 gridPane.add(statusComboBox, 1, row++);
+                statusValue = "ONLINE";
             }
             gridPane.add(createLabel("Datasheet Hyperlink"), 0, row);
             TextField datasheetField = createFormField("Datasheet Hyperlink", machine != null ? machine.getDatasheetRef() : "");
@@ -585,6 +590,11 @@ public class AdminPage extends Page {
             }
             else{nullPurchaseLocationField = false;}
 
+            if (machine != null) {
+                machineIdValue = machine.getId();
+            }
+
+
             // Set the instance variables when the form fields are filled out
             machineNameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 machineNameFieldValue = newValue.strip();
@@ -613,6 +623,7 @@ public class AdminPage extends Page {
                 if (statusValue.isEmpty()) {
                     nullTextMessage.setText("Please select Status");
                     //nullStatusField = true;
+                    statusValue = "ONLINE";
 
                 } else {
                     nullTextMessage.setText("");
@@ -786,7 +797,7 @@ public class AdminPage extends Page {
             boolean userExists = false;
 
             for (User user : allUsersList) {
-                if (user.getEmail().equals(emailFieldValue) || user.getUsername().equals(usernameFieldValue)) {
+                if (user.getId() == userIdValue) {
                     userExists = true;
                     // Update user details if fields are not null
                     if (nameFieldValue != null) {
@@ -796,7 +807,7 @@ public class AdminPage extends Page {
                         user.setUsername(usernameFieldValue);
                     }
                     if (passwordFieldValue != null) {
-                        user.setPassword(user.hashPassword(passwordFieldValue));
+                        user.setPassword(passwordFieldValue);
                     }
                     if (roleFieldValue != null) {
                         user.setRole(roleFieldValue);
@@ -818,6 +829,7 @@ public class AdminPage extends Page {
             else if (userExists) {
                 createRightSection();
                 System.out.println("User updated successfully");
+                managerPopOutStage.close();
             } else {
                 System.out.println("Please fill in all required fields.");
             }
@@ -827,7 +839,7 @@ public class AdminPage extends Page {
             boolean machineExists = false;
 
             for (Machine machine : machines) {
-                if (machine.getName().equals(machineNameFieldValue)) {
+                if (machine.getId() == machineIdValue) {
                     machineExists = true;
                     // Update machine details if fields are not null
 
@@ -836,6 +848,7 @@ public class AdminPage extends Page {
                     }
                     if(machineNameFieldValue != null) {
                         machine.setName(machineNameFieldValue);
+                        System.out.println(machineNameFieldValue +"editing");
                     }
                     if (statusValue != null) {
                         machine.setStatus(statusValue);
@@ -855,6 +868,7 @@ public class AdminPage extends Page {
             if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
                 Machine machine = new Machine(machineNameFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
                 machines.add(machine);
+                System.out.println(machineNameFieldValue +"adding");
                 createRightSection();
                 managerPopOutStage.close();
             } else if (machineExists) {

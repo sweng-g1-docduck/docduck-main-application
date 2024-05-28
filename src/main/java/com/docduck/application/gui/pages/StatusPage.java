@@ -89,7 +89,7 @@ public class StatusPage extends Page {
      * 
      * @author jrb617
      */
-    private void setupRoomSelect() {
+    public void setupRoomSelect() {
 
         ArrayList<String> allLocations = new ArrayList<>();
         for (Machine machine : machines) {
@@ -395,7 +395,7 @@ public class StatusPage extends Page {
     public void buildPage() {
 
         setupRoomSelect();
-        drawRoomSelect();
+//        drawRoomSelect();
         setTop(drawMenuBar());
         drawMachineButtons();
     }

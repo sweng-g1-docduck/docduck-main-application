@@ -9,48 +9,7 @@
       <imageRef>\Role Hierarchy Updated.png</imageRef>
       <datasheetRef>https://bbc.co.uk</datasheetRef>
       <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-      <components>
-        <component id="1101">
-          <name>Control Panel</name>
-          <stockNumber>2</stockNumber>
-          <serialNumber>ABC999284858259</serialNumber>
-          <quantity>2</quantity>
-          <location>Labs_4th_Floor_Office</location>
-          <datasheetRef>https://bbc.co.uk</datasheetRef>
-          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-          <parts>
-            <part id="1111">
-              <name>LCD Screen</name>
-              <stockNumber>10</stockNumber>
-              <serialNumber>ABC694374858259</serialNumber>
-              <quantity>5</quantity>
-              <location>Labs_4th_Floor_Office</location>
-              <datasheetRef>https://bbc.co.uk</datasheetRef>
-              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-            </part>
-            <part id="1112">
-              <name>LCD Screen Case</name>
-              <stockNumber>32</stockNumber>
-              <serialNumber>ABC378454858259</serialNumber>
-              <quantity>20</quantity>
-              <location>Labs_4th_Floor_Office</location>
-              <datasheetRef>https://bbc.co.uk</datasheetRef>
-              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-            </part>
-          </parts>
-        </component>
-      </components>
-      <parts>
-        <part id="1201">
-          <name>Green material</name>
-          <stockNumber>10</stockNumber>
-          <serialNumber>ABC694164548259</serialNumber>
-          <quantity>100</quantity>
-          <location>Labs_4th_Floor_Office</location>
-          <datasheetRef>https://bbc.co.uk</datasheetRef>
-          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-        </part>
-      </parts>
+
     </machine>
     <machine id="1002">
       <name>CNC Mill</name>
@@ -60,48 +19,7 @@
       <imageRef>\docducklogo.png</imageRef>
       <datasheetRef>https://bbc.co.uk</datasheetRef>
       <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-      <components>
-        <component id="1102">
-          <name>Control Panel</name>
-          <stockNumber>2</stockNumber>
-          <serialNumber>ABC999284858259</serialNumber>
-          <quantity>2</quantity>
-          <location>Labs_4th_Floor_Office</location>
-          <datasheetRef>https://bbc.co.uk</datasheetRef>
-          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-          <parts>
-            <part id="1113">
-              <name>LCD Screen</name>
-              <stockNumber>10</stockNumber>
-              <serialNumber>ABC694374858259</serialNumber>
-              <quantity>5</quantity>
-              <location>Labs_4th_Floor_Office</location>
-              <datasheetRef>https://bbc.co.uk</datasheetRef>
-              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-            </part>
-            <part id="1114">
-              <name>LCD Screen Case</name>
-              <stockNumber>32</stockNumber>
-              <serialNumber>ABC378454858259</serialNumber>
-              <quantity>20</quantity>
-              <location>Labs_4th_Floor_Office</location>
-              <datasheetRef>https://bbc.co.uk</datasheetRef>
-              <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-            </part>
-          </parts>
-        </component>
-      </components>
-      <parts>
-        <part id="1202">
-          <name>Green material</name>
-          <stockNumber>10</stockNumber>
-          <serialNumber>ABC694164548259</serialNumber>
-          <quantity>100</quantity>
-          <location>Labs_4th_Floor_Office</location>
-          <datasheetRef>https://bbc.co.uk</datasheetRef>
-          <purchaseLocationRef>https://amazon.co.uk</purchaseLocationRef>
-        </part>
-      </parts>
+
     </machine>
   </machineData>
   <userData>

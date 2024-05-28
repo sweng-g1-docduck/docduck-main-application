@@ -138,7 +138,7 @@ public class User extends BaseData {
 
     public void setPassword(String password) {
         this.passwordHash = hashPassword(password);
-        editUser("password", passwordHash);
+        editUser("password", this.passwordHash);
     }
 
     /**
