@@ -449,7 +449,6 @@ public class AdminPage extends Page {
                 roleFieldValue = newValue.strip();
                 if (roleFieldValue.isEmpty()) {
                     nullTextMessage.setText("Please select Role");
-                    nullRoleField = true;
                 }
                 else {
                     nullTextMessage.setText("");
@@ -531,7 +530,6 @@ public class AdminPage extends Page {
             if (machineFieldValue.isEmpty()) {
                 nullTextMessage.setText("Please fill in Fields");
                 nullMachineField = true;
-                System.out.println(nullMachineField);
             }
             else{nullMachineField = false;}
 
@@ -627,7 +625,7 @@ public class AdminPage extends Page {
                 statusValue = newValue.strip();
                 if (statusValue.isEmpty()) {
                     nullTextMessage.setText("Please select Status");
-                    nullStatusField = true;
+                    //nullStatusField = true;
 
                 } else {
                     nullTextMessage.setText("");
