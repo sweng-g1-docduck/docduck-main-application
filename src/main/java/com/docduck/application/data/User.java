@@ -118,22 +118,27 @@ public class User extends BaseData {
 
     public void setName(String name) {
         this.name = name;
+        editUser("name", name);
     }
 
     public void setUsername(String username) {
         this.username = username;
+        editUser("username", username);
     }
 
     public void setEmail(String email) {
         this.email = email;
+        editUser("email", email);
     }
 
     public void setRole(String role) {
         this.role = role;
+        editUser("role", role);
     }
 
     public void setPassword(String password) {
         this.passwordHash = hashPassword(password);
+        editUser("password", passwordHash);
     }
 
     /**
