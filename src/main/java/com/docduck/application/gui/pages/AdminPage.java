@@ -805,6 +805,9 @@ public class AdminPage extends Page {
                     if (nameFieldValue != null) {
                         user.setName(nameFieldValue);
                     }
+                    if (usernameFieldValue != null) {
+                        user.setUsername(usernameFieldValue);
+                    }
                     if (passwordFieldValue != null) {
                         user.setPassword(passwordFieldValue);
                     }
