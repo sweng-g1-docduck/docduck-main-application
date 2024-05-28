@@ -258,6 +258,7 @@ public class GUIBuilder {
 
         case "STATUS":
             root.getChildren().add(statusPage);
+            statusPage.setupRoomSelect();
             statusPage.drawMachineButtons();
             break;
 
