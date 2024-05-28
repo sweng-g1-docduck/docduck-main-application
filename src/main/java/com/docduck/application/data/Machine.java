@@ -169,24 +169,30 @@ public class Machine extends BaseData {
 
     public void setName(String name) {
         this.name = name;
+        editMachine("name", name);
     }
 
     public void setLocation(String location) {
         this.location = location;
+        editMachine("location", location);
     }
 
 
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
+        editMachine("serialNumber", serialNumber);
     }
 
     public void setDatasheet(String datasheet) {
         this.datasheetRef = datasheet;
+        editMachine("datasheetRef", datasheet);
     }
 
     public void setPurchaseLocation(String purchaseLocation) {
         this.purchaseLocationRef = purchaseLocation;
+        editMachine("purchaseLocationRef", purchaseLocation);
     }
+
 
     public void deleteMachine() throws ElementDataNotRemoved {
         domDataHandler.deleteMachine(id);
