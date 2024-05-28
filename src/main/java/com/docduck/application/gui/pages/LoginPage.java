@@ -89,8 +89,6 @@ public class LoginPage extends Page {
             public void handle(ActionEvent e) {
                 boolean incorrectUser = true;
                 for (User user : allUsers) {
-                    System.out.println(user.getUsername() + " " + user.getPasswordHash());
-                    System.out.println(user.getRole());
                     if (user.getUsername().equals(usernameField.getText())
                             && user.getPasswordHash().equals(user.hashPassword(passwordField.getText()))) {
                         GUIBuilder.getInstance().buildPages(user);
