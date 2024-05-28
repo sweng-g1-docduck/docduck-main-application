@@ -847,6 +847,9 @@ public class AdminPage extends Page {
                     machineExists = true;
                     // Update machine details if fields are not null
 
+                    if(machineFieldValue != null) {
+                        machine.setName(machineFieldValue);
+                    }
                     if (locationFieldValue != null) {
                         machine.setLocation(locationFieldValue);
                     }
