@@ -4,7 +4,7 @@
   <groupId>com.docduck.application</groupId>
   <artifactId>docduckapplication</artifactId>
   <name>DocDuck Application</name>
-  <version>0.1</version>
+  <version>1.0</version>
   <description>The DocDuck Engineering Maintainance Application</description>
   <build>
     <resources>
