@@ -220,10 +220,10 @@ public class AdminPage extends Page {
         button.removeBorder();
 
         // Disable the buttons for deletion till implemented
-//        if ("Remove User".equals(text) || "Remove Machine".equals(text)) {
-//            button.setDisable(true);
-//            button.setStyle("-fx-opacity: 0.5;");
-//        }
+       if ("Remove User".equals(text) || "Remove Machine".equals(text)) {
+            button.setDisable(true);
+          button.setStyle("-fx-opacity: 0.5;");
+        }
 
         button.setOnAction(event -> {
 
@@ -791,7 +791,6 @@ public class AdminPage extends Page {
         cancelButton.removeBorder();
 
         ButtonWrapper deleteButton = new ButtonWrapper();
-        deleteButton.setText("Delete User");
         deleteButton.setCornerRadius(5);
         deleteButton.setButtonWidth(100);
         deleteButton.setButtonHeight(24);
@@ -938,7 +937,7 @@ public class AdminPage extends Page {
                         // Update machine details if fields are not null
                         try {
                             machine.deleteMachine();
-                            machineList.remove(machine);
+                            machines.remove(machine);
                         } catch (ElementDataNotRemoved e) {
                             throw new RuntimeException(e);
                         }
@@ -958,9 +957,11 @@ public class AdminPage extends Page {
 
 
         if (editingMachines) {
-            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
+            deleteButton.setText("Delete Machine");
+            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton, deleteButton);
         }
         if (editingUsers) {
+            deleteButton.setText("Delete User");
             buttonBox.getChildren().addAll(saveButton, cancelButton, deleteButton);
         }
         return buttonBox;
