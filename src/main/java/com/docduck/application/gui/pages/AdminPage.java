@@ -908,13 +908,15 @@ public class AdminPage extends Page {
                 boolean userExists = false;
 
                 for (User user : allUsersList) {
-                    if (user.getId() == userIdValue && user.getEmail().equals(emailFieldValue) && user.getUsername().equals(nameFieldValue)) {
+                    if (user.getId() == userIdValue && user.getEmail().equals(emailFieldValue) && user.getUsername().equals(usernameFieldValue)) {
                         userExists = true;
                         try {
                             user.deleteUser();
+                            allUsersList.remove(user);
                         } catch (ElementDataNotRemoved e) {
                             throw new RuntimeException(e);
                         }
+                        break;
                     }
                 }
 
@@ -936,10 +938,11 @@ public class AdminPage extends Page {
                         // Update machine details if fields are not null
                         try {
                             machine.deleteMachine();
+                            machineList.remove(machine);
                         } catch (ElementDataNotRemoved e) {
                             throw new RuntimeException(e);
                         }
-
+                        break;
                     }
                 }
 
