@@ -811,7 +811,7 @@ public class AdminPage extends Page {
             boolean userExists = false;
 
             for (User user : allUsersList) {
-                if (user.getId() == userIdValue && user.getEmail().equals(emailFieldValue) && user.getUsername().equals(nameFieldValue)) {
+                if (user.getId() == userIdValue && user.getEmail().equals(emailFieldValue)) {
                     userExists = true;
                     // Update user details if fields are not null
                     if (nameFieldValue != null) {
@@ -955,7 +955,7 @@ public class AdminPage extends Page {
 
 
         if (editingMachines) {
-            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton, deleteButton);
+            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
         }
         if (editingUsers) {
             buttonBox.getChildren().addAll(saveButton, cancelButton, deleteButton);
