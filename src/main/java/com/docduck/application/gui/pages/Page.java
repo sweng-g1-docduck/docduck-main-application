@@ -177,7 +177,7 @@ public class Page extends BorderPane {
      * 
      * @param width  Width of the buttonWrapper
      * @param height Height of the buttonWrapper
-     * @param Text   within the buttonWrapper
+     * @param text   within the buttonWrapper
      * @return ButtonWrapper
      */
     protected ButtonWrapper drawButtonWrapper(int width, int height, String text) {

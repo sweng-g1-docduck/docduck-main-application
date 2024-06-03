@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
+import com.docduck.application.xmldom.ElementDataNotRemoved;
 import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.geometry.Insets;
@@ -219,9 +220,9 @@ public class AdminPage extends Page {
         button.removeBorder();
 
         // Disable the buttons for deletion till implemented
-        if ("Remove User".equals(text) || "Remove Machine".equals(text)) {
+       if ("Remove User".equals(text) || "Remove Machine".equals(text)) {
             button.setDisable(true);
-            button.setStyle("-fx-opacity: 0.5;");
+          button.setStyle("-fx-opacity: 0.5;");
         }
 
         button.setOnAction(event -> {
@@ -789,6 +790,18 @@ public class AdminPage extends Page {
         cancelButton.setFontSize(12);
         cancelButton.removeBorder();
 
+        ButtonWrapper deleteButton = new ButtonWrapper();
+        deleteButton.setCornerRadius(5);
+        deleteButton.setButtonWidth(100);
+        deleteButton.setButtonHeight(24);
+        deleteButton.setFontName(fontName);
+        deleteButton.setBackgroundColour(btnColour);
+        deleteButton.setClickcolour(btnClickColour);
+        deleteButton.setHoverColour(btnHoverColour);
+        deleteButton.setFontColour(lightTextColour);
+        deleteButton.setFontSize(12);
+        deleteButton.removeBorder();
+
         saveButton.setOnAction(event -> {
         // Handle save action
         if (editingUsers) {
@@ -797,7 +810,7 @@ public class AdminPage extends Page {
             boolean userExists = false;
 
             for (User user : allUsersList) {
-                if (user.getId() == userIdValue) {
+                if (user.getId() == userIdValue && user.getEmail().equals(emailFieldValue)) {
                     userExists = true;
                     // Update user details if fields are not null
                     if (nameFieldValue != null) {
@@ -848,7 +861,7 @@ public class AdminPage extends Page {
                     }
                     if(machineNameFieldValue != null) {
                         machine.setName(machineNameFieldValue);
-                        System.out.println(machineNameFieldValue +"editing");
+                        System.out.println(machineNameFieldValue +" editing");
                     }
                     if (statusValue != null) {
                         machine.setStatus(statusValue);
@@ -887,11 +900,69 @@ public class AdminPage extends Page {
         managerPopOutStage.close();
     });
 
+        deleteButton.setOnAction(event -> {
+            // Handle save action
+            if (editingUsers) {
+
+                boolean userExists = false;
+
+                for (User user : allUsersList) {
+                    if (user.getId() == userIdValue && user.getEmail().equals(emailFieldValue) && user.getUsername().equals(usernameFieldValue)) {
+                        userExists = true;
+                        try {
+                            user.deleteUser();
+                            allUsersList.remove(user);
+                        } catch (ElementDataNotRemoved e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    }
+                }
+
+                if (userExists) {
+                    createRightSection();
+                    System.out.println("User updated successfully");
+                    managerPopOutStage.close();
+                } else {
+                    System.out.println("Please fill in all required fields.");
+                }
+            } else if (editingMachines) {
+                System.out.println("Machine Save button pressed");
+
+                boolean machineExists = false;
+
+                for (Machine machine : machines) {
+                    if (machine.getId() == machineIdValue) {
+                        machineExists = true;
+                        // Update machine details if fields are not null
+                        try {
+                            machine.deleteMachine();
+                            machines.remove(machine);
+                        } catch (ElementDataNotRemoved e) {
+                            throw new RuntimeException(e);
+                        }
+                        break;
+                    }
+                }
+
+                if (machineExists) {
+                    createRightSection();
+                    System.out.println("Machine updated successfully");
+                    managerPopOutStage.close();
+                } else {
+                    System.out.println("Please fill in all required fields.");
+                }
+            }
+        });
+
+
         if (editingMachines) {
-            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton);
+            deleteButton.setText("Delete Machine");
+            buttonBox.getChildren().addAll(addMachinePictureButton, saveButton, cancelButton, deleteButton);
         }
         if (editingUsers) {
-            buttonBox.getChildren().addAll(saveButton, cancelButton);
+            deleteButton.setText("Delete User");
+            buttonBox.getChildren().addAll(saveButton, cancelButton, deleteButton);
         }
         return buttonBox;
 }
