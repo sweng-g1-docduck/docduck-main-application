@@ -338,7 +338,7 @@ public class ReportPage extends Page {
      * 
      * @param filePath The path to the file
      * @return Node of the correct type to display the data
-     * @author jrb617 wab513
+     * @author jrb617 wab513 lw2380
      */
     private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
         try {

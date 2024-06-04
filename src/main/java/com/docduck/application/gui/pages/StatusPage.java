@@ -279,7 +279,7 @@ public class StatusPage extends Page {
         descriptionBox.setMaxWidth(reportWidth - 20);
         descriptionBox.setMaxHeight(reportWidth - 20);
         descriptionBox.setWrapText(true);
-        descriptionBox.setPromptText("Decribe the machine fault");
+        descriptionBox.setPromptText("Describe the machine fault");
 
         ButtonWrapper mediaBtn = drawButtonWrapper(reportWidth - 120, 40, "Attach media");
         mediaBtn.setOnAction(events.getActionEvent("chooseMedia"));

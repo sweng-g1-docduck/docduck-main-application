@@ -26,6 +26,7 @@ public class Machine extends BaseData {
     private String imageRef;
     private String datasheetRef;
     private String purchaseLocationRef;
+    private String machineImageLocation;
     private Report currentReport;
     private final ArrayList<Report> oldReports = new ArrayList<>();
 
@@ -42,7 +43,7 @@ public class Machine extends BaseData {
      * @author jrb617 wab513
      */
     public Machine(String name, String room, String status, String serialNumber, String dataSheet,
-            String purchaseLocation) {
+            String purchaseLocation, String machineImageLocation) {
         super();
 
         ArrayList<Integer> machineIDs = domDataHandler.getListOfMachineIDs();
@@ -59,6 +60,7 @@ public class Machine extends BaseData {
         this.datasheetRef = dataSheet;
         this.purchaseLocationRef = purchaseLocation;
         this.status = status;
+        this.machineImageLocation = machineImageLocation;
 
         domDataHandler.addNewMachine(this);
     }
@@ -206,7 +208,10 @@ public class Machine extends BaseData {
         editMachine("purchaseLocationRef", purchaseLocation);
     }
 
-
+    public void setMachineImage(String machineImageLocation) {
+        this.machineImageLocation = this.machineImageLocation;
+        editMachine("imageRef", machineImageLocation);
+    }
 
 
     public void deleteMachine() throws ElementDataNotRemoved {

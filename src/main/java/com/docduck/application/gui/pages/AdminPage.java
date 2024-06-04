@@ -2,6 +2,8 @@ package com.docduck.application.gui.pages;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,6 +15,7 @@ import com.docduck.buttonlibrary.ButtonWrapper;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -34,6 +37,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import uk.co.bookcook.BCMediaControls;
+import uk.co.bookcook.BCMediaPlayer;
 
 /**
  * Represents the admin page of the application, where administrators can manage
@@ -88,8 +93,7 @@ public class AdminPage extends Page {
     private boolean nullSerialNumberField= true;
     private Image tempMachineImage;
     private ImageView machineImageView;
-
-
+    private String machineImageLocation;
 
 
     /**
@@ -347,6 +351,7 @@ public class AdminPage extends Page {
 
         int row = 0;
         if (managerType.equals("User Manager")) {
+
 
             gridPane.add(createLabel("Full Name"), 0, row);
             TextField nameField = createFormField("Full Name", user != null ? user.getName() : "");
@@ -861,7 +866,6 @@ public class AdminPage extends Page {
                     }
                     if(machineNameFieldValue != null) {
                         machine.setName(machineNameFieldValue);
-                        System.out.println(machineNameFieldValue +" editing");
                     }
                     if (statusValue != null) {
                         machine.setStatus(statusValue);
@@ -875,13 +879,15 @@ public class AdminPage extends Page {
                     if (purchaseLocationValue != null) {
                         machine.setPurchaseLocation(purchaseLocationValue);
                     }
+                    if (machineImageLocation != null){
+                        machine.setMachineImage(machineImageLocation);
+                    }
                 }
             }
 
             if (!machineExists && !nullMachineField && !nullStatusField && !nullDatasheetField && !nullPurchaseLocationField) {
-                Machine machine = new Machine(machineNameFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue);
+                Machine machine = new Machine(machineNameFieldValue, locationFieldValue, statusValue, serialNumberValue, datasheetValue, purchaseLocationValue, machineImageLocation);
                 machines.add(machine);
-                System.out.println(machineNameFieldValue +"adding");
                 createRightSection();
                 managerPopOutStage.close();
             } else if (machineExists) {
@@ -1465,4 +1471,75 @@ public class AdminPage extends Page {
         headerLabel.setText(text);
     }
 
+    /**
+     * Creates a node specific to the desired media, img for and image  audio
+     * and video
+     *
+     * @param filePath The path to the file
+     * @return Node of the correct type to display the data
+     * @author jrb617 wab513 lw2380
+     */
+    private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
+        try {
+            String extension = getExtension(filePath);
+            if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg")) {
+                File imgFile = new File(getDocDuckWorkingDirectory() + filePath);
+                Image img = new Image(imgFile.toURI().toString());
+                ImageView view1 = new ImageView(img);
+                view1.setPreserveRatio(true);
+                return view1;
+            }
+
+            else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("mp3")) {
+                BCMediaPlayer BCMP = new BCMediaPlayer(getDocDuckWorkingDirectory() + filePath);
+                BCMP.setWidth(250);
+                BCMediaControls BCMC = new BCMediaControls(BCMP);
+                BCMC.setWidth(250);
+                BCMC.setIconSpacing(5);
+
+                VBox box = new VBox(BCMP, BCMC);
+                box.setAlignment(Pos.CENTER);
+                return box;
+            }
+        }
+        catch (NullPointerException | IllegalArgumentException | IOException e) {
+            throw new FileNotFoundException();
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the extension from the specified filepath
+     *
+     * @param filePath The name of the filepath to the desired file
+     * @return String extension of the file e.g "png"
+     * @author jrb617
+     */
+    private String getExtension(String filePath) throws NullPointerException {
+        return filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
+    }
+
+    /**
+     * Gets the working directory of the application
+     *
+     * @return String woith the working directory
+     * @throws IOException
+     * @author wab513
+     */
+    private String getDocDuckWorkingDirectory() throws IOException {
+        String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        return workingDirectory;
+    }
+
 }
+
+
