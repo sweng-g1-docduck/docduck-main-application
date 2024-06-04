@@ -20,6 +20,7 @@ import javafx.scene.text.TextAlignment;
 import uk.co.bookcook.BCMediaControls;
 import uk.co.bookcook.BCMediaPlayer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -340,18 +341,18 @@ public class ReportPage extends Page {
      * @author jrb617 wab513
      */
     private Node drawAttachedMedia(String filePath) throws FileNotFoundException {
-        String extension = getExtension(filePath);
         try {
-            if (extension.equals("png") || extension.equals("jpeg")) {
-
-                Image img = new Image(getDocDuckWorkingDirectory() + filePath);
+            String extension = getExtension(filePath);
+            if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpeg")) {
+                File imgFile = new File(getDocDuckWorkingDirectory() + filePath);
+                Image img = new Image(imgFile.toURI().toString());
                 ImageView view1 = new ImageView(img);
                 view1.setFitWidth(reportDescWidth - 35); // Offset to fit the bar
                 view1.setPreserveRatio(true);
                 return view1;
             }
 
-            else if (extension.equals("mp4") || extension.equals("mp3")) {
+            else if (extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("mp3")) {
                 BCMediaPlayer BCMP = new BCMediaPlayer(getDocDuckWorkingDirectory() + filePath);
                 BCMP.setWidth(250);
                 BCMediaControls BCMC = new BCMediaControls(BCMP);
@@ -377,7 +378,7 @@ public class ReportPage extends Page {
      * @return String extension of the file e.g "png"
      * @author jrb617
      */
-    private String getExtension(String filePath) {
+    private String getExtension(String filePath) throws NullPointerException {
         return filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length());
     }
 

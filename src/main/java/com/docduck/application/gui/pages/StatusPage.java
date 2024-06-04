@@ -306,7 +306,7 @@ public class StatusPage extends Page {
                 machine.setStatus("OFFLINE");
                 setRight(null);
                 Report report = new Report(user, titleBox.getText(), descriptionBox.getText(),
-                        events.getUploadedMediaFileName());
+                        events.getUploadedMediaFileName(), machine.getId());
                 machine.addReport(report);
                 drawMachineButtons();
             }

@@ -26,7 +26,7 @@ public class Report extends BaseData {
     private int machineID;
     private int userID;
 
-    public Report(User user, String title, String description, String pathToFile) {
+    public Report(User user, String title, String description, String pathToFile, int machineID) {
         super();
         
         ArrayList<Integer> reportIDs = domDataHandler.getListOfReportIDs();
@@ -42,6 +42,7 @@ public class Report extends BaseData {
         this.description = description;
         this.pathToFile = pathToFile;
         this.userID = user.getId();
+        this.machineID = machineID;
 
         domDataHandler.addNewReport(this);
     }
