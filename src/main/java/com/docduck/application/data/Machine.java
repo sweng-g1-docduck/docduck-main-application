@@ -124,6 +124,7 @@ public class Machine extends BaseData {
 
     public void setStatus(String status) {
         this.status = status;
+        editMachine("status",this.status);
         if (this.status.equals("ONLINE") && this.currentReport != null) {
             System.out.println("Archived report");
             oldReports.add(currentReport);
@@ -204,6 +205,8 @@ public class Machine extends BaseData {
         this.purchaseLocationRef = purchaseLocation;
         editMachine("purchaseLocationRef", purchaseLocation);
     }
+
+
 
 
     public void deleteMachine() throws ElementDataNotRemoved {
