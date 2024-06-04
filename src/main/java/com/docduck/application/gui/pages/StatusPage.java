@@ -312,10 +312,46 @@ public class StatusPage extends Page {
             }
         }));
 
+        reportBox.getChildren().addAll(machineName, titleBox, descriptionBox, mediaBtn, submitBtn);
+
+        System.out.println(user.getRole());
+        if (!user.getRole().equals("OPERATOR")) {
+            ButtonWrapper maintenanceBtn = drawButtonWrapper(reportWidth - 120, 40, "Log Maintenance");
+            maintenanceBtn.setOnAction((event -> {
+
+                boolean canSubmit = true;
+
+                if (titleBox.getText().strip().isEmpty()) {
+                    titleBox.setText("");
+                    titleBox.setPromptText("A title is required");
+                    canSubmit = false;
+                }
+
+                if (descriptionBox.getText().strip().isEmpty()) {
+                    descriptionBox.setText("");
+                    descriptionBox.setPromptText("A description of the fault is required");
+                    canSubmit = false;
+                }
+
+                if (canSubmit) {
+                    // Submit report to XML
+                    machine.setStatus("MAINTENANCE");
+                    setRight(null);
+                    Report report = new Report(user, titleBox.getText(), descriptionBox.getText(),
+                            events.getUploadedMediaFileName(), machine.getId());
+                    machine.addReport(report);
+                    drawMachineButtons();
+                }
+            }));
+
+            reportBox.getChildren().add(maintenanceBtn);
+        }
+
         ButtonWrapper cancelBtn = drawButtonWrapper(reportWidth - 120, 40, "Cancel");
         cancelBtn.setOnAction((event -> setRight(null)));
 
-        reportBox.getChildren().addAll(machineName, titleBox, descriptionBox, mediaBtn, submitBtn, cancelBtn);
+        reportBox.getChildren().add(cancelBtn);
+
         setRight(reportBox);
 
     }
@@ -390,7 +426,7 @@ public class StatusPage extends Page {
         drawMachineButtons();
     }
 
-        /**
+    /**
      * Gets the working directory of the application
      *
      * @return String woith the working directory

@@ -42,6 +42,10 @@ public class ReportPage extends Page {
     private final Color buttonHoverColour = Color.web("#e83c28");
     private final Color buttonClickColour = Color.web("#c82815");
 
+    private final Color maintenanceButtonColour = Color.web("#f0db5b");
+    private final Color maintenanceHoverColour = Color.web("#ecd12c");
+    private final Color maintenanceClickColour = Color.web("#d2b713");
+
     private final Color reportTextColour = darkTextColour;
     private final Color btnTextColour = darkTextColour;
 
@@ -114,9 +118,19 @@ public class ReportPage extends Page {
             reportButton.setButtonWidth(reportBoxWidth - 45);
             reportButton.setCornerRadius(10);
             reportButton.setContentDisplay(ContentDisplay.TOP);
-            reportButton.setBackgroundColour(buttonColour);
-            reportButton.setHoverColour(buttonHoverColour);
-            reportButton.setClickcolour(buttonClickColour);
+
+            switch (machine.getStatus()) {
+            case "OFFLINE":
+                reportButton.setBackgroundColour(buttonColour);
+                reportButton.setHoverColour(buttonHoverColour);
+                reportButton.setClickcolour(buttonClickColour);
+                break;
+            case "MAINTENANCE":
+                reportButton.setBackgroundColour(maintenanceButtonColour);
+                reportButton.setHoverColour(maintenanceHoverColour);
+                reportButton.setClickcolour(maintenanceClickColour);
+                break;
+            }
             reportButton.setAlignment(Pos.TOP_LEFT);
 
             BorderPane pane = new BorderPane();
@@ -146,13 +160,24 @@ public class ReportPage extends Page {
             // Recolours button to show it has been clicked if not. Draws the report info
             reportButton.setOnAction((event -> {
                 for (ButtonWrapper button : buttons) {
-                    if (button.getBackground().getFills().get(0).getFill().toString()
-                            .equals(buttonClickColour.toString())) {
+
+                    if (button.getHoverColour() == buttonHoverColour) {
                         button.setBackgroundColour(buttonColour);
-                        button.setBorderWidth(1);
                     }
+
+                    else {
+                        button.setBackgroundColour(maintenanceButtonColour);
+                    }
+                    button.setBorderWidth(1);
                 }
-                reportButton.setBackgroundColour(buttonClickColour);
+                if (reportButton.getHoverColour() == buttonHoverColour) {
+                    reportButton.setBackgroundColour(buttonClickColour);
+                }
+
+                else {
+                    reportButton.setBackgroundColour(maintenanceClickColour);
+                }
+
                 reportButton.setBorderWidth(3);
                 if (currentMachine != machine) {
                     currentMachine = machine;
@@ -287,6 +312,16 @@ public class ReportPage extends Page {
             }
         }));
 
+        infoBox.getChildren().addAll(new Label(), solution, new Label(), completeBtn);
+        if (machine.getStatus().equals("OFFLINE")) {
+            ButtonWrapper maintenanceBtn = drawButtonWrapper(reportDescWidth - 35, 40, "Log in Maintenance");
+            maintenanceBtn.setOnAction((event -> {
+                machine.setStatus("MAINTENANCE");
+                drawReportButtons();
+            }));
+            infoBox.getChildren().addAll(new Label(), maintenanceBtn);
+        }
+
         ButtonWrapper closeBtn = drawButtonWrapper(reportDescWidth - 35, 40, "Close");
         // Removes the report from the page
         closeBtn.setOnAction((event -> {
@@ -294,7 +329,7 @@ public class ReportPage extends Page {
             drawReportButtons();
         }));
 
-        infoBox.getChildren().addAll(new Label(), solution, new Label(), completeBtn, new Label(), closeBtn);
+        infoBox.getChildren().addAll(new Label(), closeBtn);
         reportScroll.setContent(infoBox);
         setRight(reportScroll);
 
@@ -333,8 +368,8 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Creates a node specific to the desired media, img for and image  audio
-     * and video
+     * Creates a node specific to the desired media, img for and image audio and
+     * video
      * 
      * @param filePath The path to the file
      * @return Node of the correct type to display the data
@@ -383,8 +418,8 @@ public class ReportPage extends Page {
     }
 
     /**
-     * Gets the working directory of the application 
-     *  
+     * Gets the working directory of the application
+     * 
      * @return String woith the working directory
      * @throws IOException
      * @author wab513
