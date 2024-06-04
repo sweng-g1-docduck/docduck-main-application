@@ -1,5 +1,12 @@
 package com.docduck.application.files;
 
+import com.docduck.application.gui.GUIBuilder;
+import com.docduck.application.gui.XMLBuilder;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,15 +21,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
-
-import com.docduck.application.gui.GUIBuilder;
-import com.docduck.application.gui.XMLBuilder;
-import com.docduck.application.xmlreader.XMLReader;
-
 public class FTPHandler {
 
     private static XMLBuilder xmlBuilder;
@@ -32,7 +30,7 @@ public class FTPHandler {
     private ScheduledExecutorService executor;
     private final DateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
     private final boolean debug = true;
-    private final static String SERVER_IP = "81.101.49.54";
+    private final static String SERVER_IP = "docduckdata.wabetteridge.co.uk";
     private final static String USERNAME = "docduck";
     private final static String PASSWORD = "sweng";
     private String FILE_STORE;
