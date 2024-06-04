@@ -3,33 +3,30 @@
 <machineData>
     <machine id="1001">
       <name>3D Printer</name>
-	  <status>OFFLINE</status>
+      <status>OFFLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>3d Printing Lab</location>
-      <imageRef>3dPrinter.jpg</imageRef>
+      <imageRef>/com.docduck/resources/3dPrinter.jpg</imageRef>
       <datasheetRef>https://www.creality.com/products/ender-3-3d-printer</datasheetRef>
       <purchaseLocationRef>https://tinyurl.com/8v8yys7w</purchaseLocationRef>
-
     </machine>
     <machine id="1002">
       <name>CNC Mill</name>
-	  <status>ONLINE</status>
+      <status>ONLINE</status>
       <serialNumber>ABC7jkbsv0571001</serialNumber>
       <location>Machine Shop</location>
-      <imageRef>CNC.jpg</imageRef>
+      <imageRef>/com.docduck/resources/CNC.jpg</imageRef>
       <datasheetRef>https://anolexcnc.com/</datasheetRef>
       <purchaseLocationRef>https://tinyurl.com/2h72w99p</purchaseLocationRef>
-
     </machine>
     <machine id="1003">
-    <name>Drill Press</name>
-	  <status>MAINTENANCE</status>
+      <name>Drill Press</name>
+      <status>MAINTENANCE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>3d Printing Lab</location>
-      <imageRef>Drill.jpg</imageRef>
+      <imageRef>/com.docduck/resources/Drill.jpg</imageRef>
       <datasheetRef>https://www.einhell.co.uk/p/4520592-tc-bd-450/</datasheetRef>
       <purchaseLocationRef>https://tinyurl.com/3kwymams</purchaseLocationRef>
-
     </machine>
   </machineData>
   <userData>

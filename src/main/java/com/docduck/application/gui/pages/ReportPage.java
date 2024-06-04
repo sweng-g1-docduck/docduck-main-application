@@ -1,17 +1,9 @@
 package com.docduck.application.gui.pages;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,18 +13,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import uk.co.bookcook.BCMediaControls;
 import uk.co.bookcook.BCMediaPlayer;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * A class which draws the Report page of the program, The report page displays
@@ -53,8 +43,6 @@ public class ReportPage extends Page {
 
     private final Color reportTextColour = darkTextColour;
     private final Color btnTextColour = darkTextColour;
-    
-    private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     public ReportPage(ArrayList<Machine> machines, User user) {
         super(machines, user);
@@ -364,7 +352,6 @@ public class ReportPage extends Page {
             }
 
             else if (extension.equals("mp4") || extension.equals("mp3")) {
-//            	InputStream videoAsStream = classloader.getResourceAsStream(filePath);
                 BCMediaPlayer BCMP = new BCMediaPlayer(getDocDuckWorkingDirectory() + filePath);
                 BCMP.setWidth(250);
                 BCMediaControls BCMC = new BCMediaControls(BCMP);

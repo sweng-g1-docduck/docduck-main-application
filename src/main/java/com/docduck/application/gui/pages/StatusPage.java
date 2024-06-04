@@ -1,19 +1,10 @@
 package com.docduck.application.gui.pages;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import com.docduck.application.data.Machine;
 import com.docduck.application.data.Report;
 import com.docduck.application.data.User;
 import com.docduck.buttonlibrary.ButtonWrapper;
 import com.docduck.textlibrary.TextBox;
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -22,17 +13,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Draws the status of all machines in a grid with colour showing their status.
@@ -60,7 +47,6 @@ public class StatusPage extends Page {
     private final Color offlineClickColour = Color.web("#c82815");
 
     private final Color infoTextColour = darkTextColour;
-    private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     public StatusPage(ArrayList<Machine> machines, User user) {
         super(machines, user);
@@ -171,15 +157,15 @@ public class StatusPage extends Page {
                 ButtonWrapper button = new ButtonWrapper();
                 double buttonWidth = (machineBoxWidth - 75) / 3;
                 try {
-                    InputStream imageAsStream = classloader.getResourceAsStream(machine.getImageRef());
-                    Image img = new Image(imageAsStream);
+                    File imageFile = new File(getDocDuckWorkingDirectory() + machine.getImageRef());
+                    Image img = new Image(imageFile.toURI().toString());
                     ImageView view1 = new ImageView(img);
                     view1.setFitWidth(buttonWidth - 40);
                     view1.setFitHeight(160);
                     view1.setPreserveRatio(true);
                     button.setGraphic(view1);
                 }
-                catch (NullPointerException | IllegalArgumentException e) {
+                catch (NullPointerException | IllegalArgumentException | IOException e) {
                     e.printStackTrace();
                     System.err.println("The path to the machine image could not be found");
                 }
@@ -402,6 +388,26 @@ public class StatusPage extends Page {
         setupRoomSelect();
         setTop(drawMenuBar());
         drawMachineButtons();
+    }
+
+        /**
+     * Gets the working directory of the application
+     *
+     * @return String woith the working directory
+     * @throws IOException
+     * @author wab513
+     */
+    private String getDocDuckWorkingDirectory() throws IOException {
+        String workingDirectory;
+        String OS = System.getProperty("os.name").toUpperCase();
+        if (OS.contains("WIN")) {
+            workingDirectory = System.getenv("AppData");
+        }
+        else {
+            workingDirectory = null;
+        }
+
+        return workingDirectory;
     }
 
 }
