@@ -56,7 +56,7 @@
     <report id="3001">
       <title>3D Printer Not Responding</title>
       <description>The touchscreen on the 3D printer doesn't respond</description>
-      <media>/clock.mp4</media>
+      <media>/com.docduck/resources/clock.mp4</media>
       <machineID>1001</machineID>
       <userID>2002</userID>
     </report>
