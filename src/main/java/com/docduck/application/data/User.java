@@ -26,7 +26,7 @@ public class User extends BaseData {
     private String email;
     private String role;
 
-    public User(String name, String username, String passwordHash, String email, String role) {
+    public User(String name, String username, String password, String email, String role) {
         super();
 
         ArrayList<Integer> userIDs = domDataHandler.getListOfUserIDs();
@@ -39,7 +39,7 @@ public class User extends BaseData {
         this.id = addPrefix(counter, USER_ID_PREFIX);
         this.name = name;
         this.username = username;
-        this.passwordHash = passwordHash;
+        this.passwordHash = hashPassword(password);
         this.email = email;
         this.role = role;
 

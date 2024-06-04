@@ -2,6 +2,7 @@ package com.docduck.application.gui.pages;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -52,6 +53,8 @@ public class ReportPage extends Page {
 
     private final Color reportTextColour = darkTextColour;
     private final Color btnTextColour = darkTextColour;
+    
+    private final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
     public ReportPage(ArrayList<Machine> machines, User user) {
         super(machines, user);
@@ -361,7 +364,8 @@ public class ReportPage extends Page {
             }
 
             else if (extension.equals("mp4") || extension.equals("mp3")) {
-                BCMediaPlayer BCMP = new BCMediaPlayer("src/main/resources/clock.mp4");
+//            	InputStream videoAsStream = classloader.getResourceAsStream(filePath);
+                BCMediaPlayer BCMP = new BCMediaPlayer(getDocDuckWorkingDirectory() + filePath);
                 BCMP.setWidth(250);
                 BCMediaControls BCMC = new BCMediaControls(BCMP);
                 BCMC.setWidth(250);
