@@ -2,7 +2,7 @@
 <docduckData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="DocDuckSchema.xsd">
 <machineData>
     <machine id="1001">
-      <name>3D Printer</name>
+      <name>FDM 3D Printer</name>
       <status>OFFLINE</status>
       <serialNumber>ABC723370571001</serialNumber>
       <location>3d Printing Lab</location>
@@ -27,6 +27,69 @@
       <imageRef>/com.docduck/resources/Drill.jpg</imageRef>
       <datasheetRef>https://www.einhell.co.uk/p/4520592-tc-bd-450/</datasheetRef>
       <purchaseLocationRef>https://tinyurl.com/3kwymams</purchaseLocationRef>
+    </machine>
+    <machine id="1004">
+      <name>Lathe</name>
+      <status>ONLINE</status>
+      <serialNumber>GNJ123467428493</serialNumber>
+      <location>Machine Shop</location>
+      <imageRef>/com.docduck/resources/Lathe.jpg</imageRef>
+      <datasheetRef>https://tinyurl.com/3c5fump4</datasheetRef>
+      <purchaseLocationRef>https://tinyurl.com/3c5fump4</purchaseLocationRef>
+    </machine>
+    <machine id="1005">
+      <name>Mill</name>
+      <status>ONLINE</status>
+      <serialNumber>GAK834495489486</serialNumber>
+      <location>Machine Shop</location>
+      <imageRef>/com.docduck/resources/Mill.jpg</imageRef>
+      <datasheetRef>https://tinyurl.com/y22dzkbv</datasheetRef>
+      <purchaseLocationRef>https://tinyurl.com/y22dzkbv</purchaseLocationRef>
+    </machine>
+    <machine id="1006">
+      <name>Oscilloscope</name>
+      <status>ONLINE</status>
+      <serialNumber>KEW243935295528</serialNumber>
+      <location>Electronics Workshop</location>
+      <imageRef>/com.docduck/resources/Oscilloscope.png</imageRef>
+      <datasheetRef>https://www.mouser.co.uk/datasheet/2/43/2194_datasheet-2887002.pdf</datasheetRef>
+      <purchaseLocationRef>https://tinyurl.com/bdfd74tx</purchaseLocationRef>
+    </machine>
+    <machine id="1007">
+      <name>Multimeter</name>
+      <status>ONLINE</status>
+      <serialNumber>KDG3955290552966</serialNumber>
+      <location>Electronics Workshop</location>
+      <imageRef>/com.docduck/resources/DMM.png</imageRef>
+      <datasheetRef>https://www.mouser.co.uk/datasheet/2/878/5991_1983EN-1143116.pdf</datasheetRef>
+      <purchaseLocationRef>https://tinyurl.com/476cevv9</purchaseLocationRef>
+    </machine>
+    <machine id="1008">
+      <name>Function Generator</name>
+      <status>ONLINE</status>
+      <serialNumber>HJV529552855284</serialNumber>
+      <location>Electronics Workshop</location>
+      <imageRef>/com.docduck/resources/Function Generator.png</imageRef>
+      <datasheetRef>https://www.mouser.co.uk/datasheet/2/227/t3afg200_350_500_datasheet-2487558.pdf</datasheetRef>
+      <purchaseLocationRef>https://tinyurl.com/2p9ruksy</purchaseLocationRef>
+    </machine>
+    <machine id="1009">
+      <name>Spectrum Analyser</name>
+      <status>ONLINE</status>
+      <serialNumber>KDG824492529562</serialNumber>
+      <location>Electronics Workshop</location>
+      <imageRef>/com.docduck/resources/Spectrum Analyser.png</imageRef>
+      <datasheetRef>https://www.mouser.co.uk/datasheet/2/1161/Siretta_11302023_SNYPER_5G_Graphyte_GL_Datasheet_R-3368574.pdf</datasheetRef>
+      <purchaseLocationRef>https://tinyurl.com/2nk93ccc</purchaseLocationRef>
+    </machine>
+    <machine id="10010">
+      <name>SLA 3D Printer</name>
+      <status>ONLINE</status>
+      <serialNumber>DVO52194542856246</serialNumber>
+      <location>3d Printing Lab</location>
+      <imageRef>/com.docduck/resources/SLA.png</imageRef>
+      <datasheetRef>https://www.3djake.uk/elegoo/saturn-3</datasheetRef>
+      <purchaseLocationRef>https://www.3djake.uk/elegoo/saturn-3</purchaseLocationRef>
     </machine>
   </machineData>
   <userData>
@@ -60,5 +123,12 @@
       <machineID>1001</machineID>
       <userID>2002</userID>
     </report>
+    <report id="3002">
+	  <title>Worn Chuck</title>
+      <description>The chuck is so worn it does not hold bits</description>
+      <media>/com.docduck/resources/</media>
+      <machineID>1003</machineID>
+      <userID>2003</userID>
+	</report>
   </machineReport>
 </docduckData>
