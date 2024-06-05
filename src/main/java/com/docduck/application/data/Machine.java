@@ -209,7 +209,7 @@ public class Machine extends BaseData {
     }
 
     public void setMachineImage(String machineImageLocation) {
-        this.machineImageLocation = this.machineImageLocation;
+        this.machineImageLocation = machineImageLocation;
         editMachine("imageRef", machineImageLocation);
     }
 

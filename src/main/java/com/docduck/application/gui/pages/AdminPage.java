@@ -760,13 +760,9 @@ public class AdminPage extends Page {
         addMachinePictureButton.removeBorder();
 
         addMachinePictureButton.setOnAction(event -> {
-        // Handle add machine picture action
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Resource File");
-        File file = fileChooser.showOpenDialog(managerPopOutStage);
-        if (file != null) {
-            System.out.println(file.getPath());
-        }
+            addMachinePictureButton.setOnAction(events.getActionEvent("chooseMedia"));
+            machineImageLocation = events.getUploadedMediaFileName();
+            System.out.println(machineImageLocation);
     });
 
     ButtonWrapper saveButton = new ButtonWrapper();
